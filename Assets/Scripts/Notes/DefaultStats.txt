@@ -1,0 +1,14 @@
+﻿MeleeStats
+	#Total Amount of Life#
+	MaxLife:100
+	#Total Amount of Resource#
+	MaxStamina:100
+	#Attack Power, Parry Mitigation, #
+	Strength:10
+	#z#
+	Endurance:1
+	
+
+RangeStats
+
+MagicStats

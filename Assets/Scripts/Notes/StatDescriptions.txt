@@ -1,0 +1,22 @@
+﻿--- General Stats ---
+MaxLife: Total Amount of Life
+MaxStamina: Total Amount of Melee Resource, Physical Modifier
+Strength: Attack Power, Parry Mitigation, Dodge Mitigation, Physical Modifier
+Intelligence: Total Amount of Magic Resource, Magic Modifier
+Dexterity: Range Power, Critical Rating, Range Modifier
+
+Haste: Attack Speed, Dodge Chance, Reload Speed
+Spirit: Healing Power, 
+
+Endurance: Physical Ailment Resistance
+Willpower: Resistance to CCs
+
+
+Melee - DPS
+	1. MaxLife
+	2. MaxStamina
+	3. Strength
+
+
+
+

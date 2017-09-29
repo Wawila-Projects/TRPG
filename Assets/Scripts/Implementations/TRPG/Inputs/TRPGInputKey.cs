@@ -1,0 +1,5 @@
+﻿class TRPGInputKey
+{
+    string key;
+}
+
