@@ -1,55 +1,54 @@
 ﻿using UnityEngine;
-using System.Collections;
 
-public class GameController : MonoBehaviour
+namespace Assets.Scripts.NotSolid
 {
+    public class GameController : MonoBehaviour
+    {
+    
+        public int Index;
+        public Movement Movement;
 
-	public int index;
-	public Movement movement;
+        void Awake()
+        {
+            StaticInfo.Init ();
+        }
 
-	void Awake()
-	{
-		StaticInfo.init ();
-	}
+        void Update ()
+        {
+            if (Input.GetMouseButtonUp (1))
+                StaticInfo.TargetPlayer = null;
 
-	void Update ()
-	{
-		if (Input.GetMouseButtonUp (1))
-			StaticInfo.targetPlayer = null;
+            StaticInfo.IsTargeting = Input.GetKey (KeyCode.Space);
 
-		if (Input.GetKey (KeyCode.Space)) {
-			StaticInfo.isTargeting = true;
-		} else
-			StaticInfo.isTargeting = false;
-
-		iterateThroughPlayerList ();
-	}
+            IterateThroughPlayerList ();
+        }
 
 
-	void iterateThroughPlayerList()
-	{
+        private void IterateThroughPlayerList()
+        {
 		
-		 index = StaticInfo.currentParty.IndexOf (StaticInfo.selectedPlayer);
+            Index = StaticInfo.CurrentParty.IndexOf (StaticInfo.SelectedPlayer);
 
-		if (index == -1)
-			index = 0;
+            if (Index == -1)
+                Index = 0;
 
-		if (Input.GetKeyDown (KeyCode.Tab)) {
-			if (Input.GetKey (KeyCode.RightShift) || Input.GetKey (KeyCode.LeftShift))
-				index--;
-			else
-				index++;
+            if (Input.GetKeyDown (KeyCode.Tab)) {
+                if (Input.GetKey (KeyCode.RightShift) || Input.GetKey (KeyCode.LeftShift))
+                    Index--;
+                else
+                    Index++;
 			
-			if (index < 0)
-				index = StaticInfo.currentParty.Count-1;
-			if (index > StaticInfo.currentParty.Count-1)
-				index = 0;
+                if (Index < 0)
+                    Index = StaticInfo.CurrentParty.Count-1;
+                if (Index > StaticInfo.CurrentParty.Count-1)
+                    Index = 0;
 
 
-			StaticInfo.selectedPlayer = StaticInfo.currentParty [index];
-			movement.target = StaticInfo.selectedPlayer.transform.position;
-		}
+                StaticInfo.SelectedPlayer = StaticInfo.CurrentParty [Index];
+                Movement.Target = StaticInfo.SelectedPlayer.transform.position;
+            }
 
-	}
+        }
+    }
 }
 

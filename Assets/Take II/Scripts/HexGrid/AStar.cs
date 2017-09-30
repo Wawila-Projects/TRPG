@@ -1,14 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using Assets.Take_II.Scripts.HexGrid;
 using Priority_Queue;
-using UnityEngine;
 
-namespace Assets.Take_II.Scripts
+namespace Assets.Take_II.Scripts.HexGrid
 {
     public class AStar
     {
-        public List<string> FindPath(Tile start, Tile goal)
+        public List<Tile> FindPath(Tile start, Tile goal)
         {
             var cameFrom = new Dictionary<Tile, Tile>();
             var costSoFar = new Dictionary<Tile, int>();
@@ -48,17 +46,17 @@ namespace Assets.Take_II.Scripts
             return Math.Max(Math.Abs(a.GridX - b.GridX), Math.Abs(a.GridY - b.GridY));
         }
 
-        private static List<string> GetPath(IDictionary<Tile, Tile> dict, Tile start)
+        private static List<Tile> GetPath(IDictionary<Tile, Tile> dict, Tile start)
         {
             if (!dict.ContainsKey(start))
                 return null;
 
-            var path = new List<string> { start.Name };
+            var path = new List<Tile> { start };
             var current = dict[start];
 
             while (current != null)
             {
-                path.Add(current.Name);
+                path.Add(current);
                 current = dict[current];
             }
 

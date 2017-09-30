@@ -1,4 +1,5 @@
 ﻿using Assets.Scripts.Interfaces.Characters;
+using Assets.Scripts.NotSolid;
 using UnityEngine;
 
 public class Player : MonoBehaviour, ICharacter {
@@ -6,43 +7,43 @@ public class Player : MonoBehaviour, ICharacter {
 	void Start()
 	{
 		if(CompareTag("Player"))
-			StaticInfo.currentParty.Add (this);
+			StaticInfo.CurrentParty.Add (this);
 	}
 		
 	void OnMouseOver()
 	{
-		if (this == StaticInfo.targetPlayer)
-			StaticInfo.mouseOverTargetPlayer = true;
+		if (this == StaticInfo.TargetPlayer)
+			StaticInfo.MouseOverTargetPlayer = true;
 
-		if(canTargetPlayer()) {
-			if (StaticInfo.isTargeting) 
-				StaticInfo.targetPlayer = this;
+		if(CanTargetPlayer()) {
+			if (StaticInfo.IsTargeting) 
+				StaticInfo.TargetPlayer = this;
 			
-			if (this != StaticInfo.selectedPlayer)
-				StaticInfo.clickedUnselectedUnit = true;
+			if (this != StaticInfo.SelectedPlayer)
+				StaticInfo.ClickedUnselectedUnit = true;
 		}
 
 		if (this.CompareTag ("Player"))
-			playerAction ();
+			PlayerAction ();
 	}
 
-	void playerAction()
+	void PlayerAction()
 	{
-		if (this == StaticInfo.selectedPlayer)
-			StaticInfo.mouseOverSelectedPlayer = true;
+		if (this == StaticInfo.SelectedPlayer)
+			StaticInfo.MouseOverSelectedPlayer = true;
 
-		if (StaticInfo.selectedPlayer == null && Input.GetMouseButton (0)) {
-			StaticInfo.selectedPlayer = this;
-			StaticInfo.targetPlayer = null;
+		if (StaticInfo.SelectedPlayer == null && Input.GetMouseButton (0)) {
+			StaticInfo.SelectedPlayer = this;
+			StaticInfo.TargetPlayer = null;
 		}
 
 	}
 
-	bool canTargetPlayer()
+	bool CanTargetPlayer()
 	{
 		bool selectedPlayerExist = false, correctInput = false;
 
-		if (StaticInfo.selectedPlayer != null)
+		if (StaticInfo.SelectedPlayer != null)
 			selectedPlayerExist = true;
 
 		if (Input.GetMouseButton (0))
@@ -53,9 +54,9 @@ public class Player : MonoBehaviour, ICharacter {
 
 	void OnMouseExit()
 	{
-		StaticInfo.clickedUnselectedUnit = false;
-		StaticInfo.mouseOverTargetPlayer = false;
-		StaticInfo.mouseOverSelectedPlayer = false;
+		StaticInfo.ClickedUnselectedUnit = false;
+		StaticInfo.MouseOverTargetPlayer = false;
+		StaticInfo.MouseOverSelectedPlayer = false;
 	}
 		
 }

@@ -1,59 +1,57 @@
 ﻿using UnityEngine;
-using System.Collections;
 
-public class Movement : MonoBehaviour {
+namespace Assets.Scripts.NotSolid
+{
+    public class Movement : MonoBehaviour {
 
-	public Player player;
-	public Vector2 destination;
+        public Player Player;
+        public Vector2 Destination;
 
-	public float speed;
-	public Vector3 target;
+        public float Speed;
+        public Vector3 Target;
 
-	void Update() {
+        void LateUpdate () {
+            if (StaticInfo.SelectedPlayer != null && StaticInfo.SelectedPlayer.CompareTag("Player")) {
+                Player = StaticInfo.SelectedPlayer;
+                SetTargetMousePosition ();
+                Move ();
+                if (IsCancelable ()) {
+                    StaticInfo.SelectedPlayer = null;
+                }
 		
-	}
-
-	void LateUpdate () {
-		if (StaticInfo.selectedPlayer != null && StaticInfo.selectedPlayer.CompareTag("Player")) {
-			player = (Player)StaticInfo.selectedPlayer;
-			setTargetMousePosition ();
-			move ();
-			if (isCancelable ()) {
-				StaticInfo.selectedPlayer = null;
-			}
+            }    
+        }
 		
-		}    
-	}
-		
-	bool isCancelable() {
-		bool inDestination = false, buttonDown = false;
+        bool IsCancelable() {
+            bool inDestination = false, buttonDown = false;
 
-		if (target == player.transform.position)
-			inDestination = true;
+            if (Target == Player.transform.position)
+                inDestination = true;
 
-		if (Input.GetKeyDown (KeyCode.Escape))
-			buttonDown = true;
+            if (Input.GetKeyDown (KeyCode.Escape))
+                buttonDown = true;
 
-		return inDestination && buttonDown;
-	}
+            return inDestination && buttonDown;
+        }
 
-	void setTarget(Vector3 target) {
-		this.target = target;
-	}
+        private void SetTarget(Vector3 target) {
+            this.Target = target;
+        }
 
-	void setTargetMousePosition ()
-	{
-		if (Input.GetMouseButtonDown (0) && !StaticInfo.clickedUnselectedUnit && !StaticInfo.isTargeting) {
-			target = Camera.main.ScreenToWorldPoint (Input.mousePosition);
-			target.z = player.transform.position.z;
-			target.x = Mathf.RoundToInt (target.x);
-			target.y = Mathf.RoundToInt (target.y);
-		} 
-	}
+        private void SetTargetMousePosition ()
+        {
+            if (!Input.GetMouseButtonDown(0) || StaticInfo.ClickedUnselectedUnit || StaticInfo.IsTargeting) return;
 
-	void move()
-	{
-		destination = Vector3.MoveTowards (player.transform.position, target, speed * Time.deltaTime);			
-		player.transform.position = destination;
-	}
+            Target = Camera.main.ScreenToWorldPoint (Input.mousePosition);
+            Target.z = Player.transform.position.z;
+            Target.x = Mathf.RoundToInt (Target.x);
+            Target.y = Mathf.RoundToInt (Target.y);
+        }
+
+        void Move()
+        {
+            Destination = Vector3.MoveTowards (Player.transform.position, Target, Speed * Time.deltaTime);			
+            Player.transform.position = Destination;
+        }
+    }
 }

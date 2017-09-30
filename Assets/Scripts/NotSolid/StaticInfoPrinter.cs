@@ -1,28 +1,31 @@
-﻿using UnityEngine;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using UnityEngine;
 
-public class StaticInfoPrinter : MonoBehaviour
+namespace Assets.Scripts.NotSolid
 {
-	public int currentMap;
-	public List<Player> currentParty;
-	public Player selectedPlayer;
-	public Player targetPlayer;
-	public bool clickedUnselectedUnit;
-	public bool isTargeting;
-	public bool mouseOverSelectedPlayer;
-	public bool mouseOverTarget;
+    public class StaticInfoPrinter : MonoBehaviour
+    {
+        public int CurrentMap;
+        public List<Player> CurrentParty;
+        public Player SelectedPlayer;
+        public Player TargetPlayer;
+        public bool ClickedUnselectedUnit;
+        public bool IsTargeting;
+        public bool MouseOverSelectedPlayer;
+        public bool MouseOverTarget;
 
-	void Update()
-	{
-	 	currentMap = StaticInfo.currentMap;
-		currentParty = StaticInfo.currentParty;
-		selectedPlayer = StaticInfo.selectedPlayer;
-		targetPlayer = StaticInfo.targetPlayer;
-	    clickedUnselectedUnit = StaticInfo.clickedUnselectedUnit;
-		isTargeting = StaticInfo.isTargeting;
-		mouseOverSelectedPlayer = StaticInfo.mouseOverSelectedPlayer;
-		mouseOverTarget = StaticInfo.mouseOverTargetPlayer;
-	}
+        void Update()
+        {
+            CurrentMap = StaticInfo.CurrentMap;
+            CurrentParty = StaticInfo.CurrentParty;
+            SelectedPlayer = StaticInfo.SelectedPlayer;
+            TargetPlayer = StaticInfo.TargetPlayer;
+            ClickedUnselectedUnit = StaticInfo.ClickedUnselectedUnit;
+            IsTargeting = StaticInfo.IsTargeting;
+            MouseOverSelectedPlayer = StaticInfo.MouseOverSelectedPlayer;
+            MouseOverTarget = StaticInfo.MouseOverTargetPlayer;
+        }
 
+    }
 }
 

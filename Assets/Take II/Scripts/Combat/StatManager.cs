@@ -1,17 +1,17 @@
 ﻿using System.Linq;
 
-namespace Assets.Take_II.Scripts
+namespace Assets.Take_II.Scripts.Combat
 {
     public class StatManager
     {
-        public int Hp { private set; get; }
-        public int Str { private set; get; }
-        public int Mag { private set; get; }
-        public int Skl { private set; get; }
-        public int Spd { private set; get; }
-        public int Def { private set; get; }
-        public int Res { private set; get; }
-        public int Luck { private set; get; }
+        public int Hp { get; }
+        public int Str { get; }
+        public int Mag { get; }
+        public int Skl { get; }
+        public int Spd { get; }
+        public int Def { get; }
+        public int Res { get; }
+        public int Luck { get; }
 
         public StatManager(int hp, int str, int mag, int skl, int spd, int def, int res, int luck)
         {
