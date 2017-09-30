@@ -7,11 +7,13 @@ namespace Assets.Take_II.Scripts.HexGrid
 {
     public class Tile : MonoBehaviour
     {
+        public string Name;
         public float WorldX;
         public float WorldY;
         public int GridX;
         public int GridY;
         public int TerrainType;
+        public int Cost;
 
         public List<GameObject> Neighbors;
 
@@ -47,6 +49,21 @@ namespace Assets.Take_II.Scripts.HexGrid
             var go = GameObject.Find("Hex_" + (GridX + x) + "_" + (GridY + y));
             if (go != null)
                 Neighbors.Add(go);
+        }
+
+        
+
+    }
+
+    public static class TileUtils
+    {
+        public static bool IsEqualTo(this Tile t, Tile other)
+        {
+            var sameName = t.Name == other.Name;
+            var sameCost = t.Cost == other.Cost;
+            var sameTerrain = t.TerrainType == other.TerrainType;
+
+            return sameName && sameCost && sameTerrain;
         }
     }
 }
