@@ -18,8 +18,6 @@ namespace Assets.Take_II.Scripts.HexGrid
 
         void Awake()
         {
-            var rand = new System.Random();
-
             for (var x = 0; x < XSize; x++)
             {
                 for (var y = 0; y < YSize; y++)
@@ -42,7 +40,7 @@ namespace Assets.Take_II.Scripts.HexGrid
                     t.WorldY = yPos;
                     t.GridX = x;
                     t.GridY = y;
-                    t.Cost = rand.Next(0, 10);
+                    t.Cost = 1;
                 }
             }
         }

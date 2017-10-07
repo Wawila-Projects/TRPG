@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 
@@ -15,7 +16,7 @@ namespace Assets.Take_II.Scripts.HexGrid
         public int TerrainType;
         public int Cost;
 
-        public List<GameObject> Neighbors;
+        public List<Tile> Neighbors;
 
         void Update()
         {
@@ -48,11 +49,8 @@ namespace Assets.Take_II.Scripts.HexGrid
         {
             var go = GameObject.Find("Hex_" + (GridX + x) + "_" + (GridY + y));
             if (go != null)
-                Neighbors.Add(go);
+                Neighbors.Add(go.GetComponent<Tile>());
         }
-
-        
-
     }
 
     public static class TileUtils
@@ -64,6 +62,11 @@ namespace Assets.Take_II.Scripts.HexGrid
             var sameTerrain = t.TerrainType == other.TerrainType;
 
             return sameName && sameCost && sameTerrain;
+        }
+
+        public static bool HasNeighbor(this Tile t, Tile other)
+        {
+            return t.Neighbors.Any(neighbor => neighbor.IsEqualTo(other));
         }
     }
 }
