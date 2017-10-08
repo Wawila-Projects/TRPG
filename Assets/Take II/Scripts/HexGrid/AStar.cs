@@ -49,7 +49,7 @@ namespace Assets.Take_II.Scripts.HexGrid
         private static List<Tile> GetPath(IDictionary<Tile, Tile> dict, Tile start)
         {
             if (!dict.ContainsKey(start))
-                return null;
+                return new List<Tile>();
 
             var path = new List<Tile> { start };
             var current = dict[start];

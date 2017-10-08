@@ -1,160 +1,90 @@
-﻿using System.Collections.Generic;
-using Assets.Take_II.Scripts.HexGrid;
+﻿using Assets.Take_II.Scripts.HexGrid;
+using Assets.Take_II.Scripts.PlayerManager;
 using UnityEngine;
 
 namespace Assets.Take_II.Scripts.InputManger
 {
     public class InputManager : MonoBehaviour
     {
-        public Tile Current;
-        public Tile Target;
-        private readonly AStar _pathfinding = new AStar();
-        public List<Tile> List;
-        public int Total;
+
+        public MapInteractions _mapInteractions;
+        public PlayerInteractions _playerInteractions;
+
 
         void Update()
         {
-            MapRayCasting();
-        }
-
-        private void PlayerRaycasting()
-        {
-            
-        }
-
-        private void MapRayCasting()
-        {
-            var raycast = Physics2D.Raycast(Camera.main.ScreenToWorldPoint(Input.mousePosition), Vector2.zero, Mathf.Infinity, 9);
+            var raycast = Physics2D.Raycast(Camera.main.ScreenToWorldPoint(Input.mousePosition), Vector2.zero);
 
             if (!raycast) return;
 
             var obj = raycast.collider.transform.gameObject;
-            
-            var tile = obj.GetComponent<Tile>();
-            if (tile == null) return;
 
+            var tile = obj.GetComponent<Tile>();
+
+            if (obj.GetComponent<Player>() != null || _playerInteractions.Selected != null)
+            {
+                PlayerRaycasting(obj);
+            }
+            else if(tile != null)
+            {
+                MapRayCasting(tile);
+            }
+
+
+            if (Input.GetKeyDown(KeyCode.Escape) && !_playerInteractions.IsMoving)
+            {
+                if (_playerInteractions.Selected != null)
+                {
+                    _mapInteractions.ClearReachableArea(_playerInteractions.Selected.Stats.Movement,
+                        _playerInteractions.Selected.Location);
+
+                    _mapInteractions.Selected = null;
+                }
+
+                if (_playerInteractions.Target != null)
+                {
+                    _playerInteractions.Target = null;
+
+                }
+                else
+                    _playerInteractions.Selected = null;
+
+            }
+        }
+
+        
+        private void PlayerRaycasting(GameObject obj)
+        {
             if (Input.GetMouseButtonDown(0))
             {
-                if (Current == null)
+                if (_playerInteractions.Selected == null)
                 {
-                    Current = tile;
-                    DrawReachableArea(Total, Current);
+                    _playerInteractions.Selected = obj.GetComponent<Player>();
+                    _mapInteractions.Selected = null;
+
+                    _mapInteractions.DrawReachableArea(_playerInteractions.Selected.Stats.Movement, _playerInteractions.Selected.Location);
                 }
-                else
-                    Target = tile;
-
-               // if (!DrawPath()) return;
-            }
-
-
-            if (Input.GetKeyDown(KeyCode.Escape))
-            {
-                //ClearPath();
-                ClearReachableArea(Total, Current);
-
-                Total = 2;
-
-                if (Target == null)
-                    Current = null;
-                else
-                    Target = null;
-            }
-                
-        }
-
-        private static void DrawReachableArea(int total, Tile selected)
-        {
-            if(total < 0 || selected == null) return;
-
-            total -= selected.Cost;
-
-            SpriteRenderer sprite;
-
-            foreach (var neighbor in selected.Neighbors)
-            {
-                sprite = neighbor.GetComponentInChildren<SpriteRenderer>();
-
-                if (sprite.color != Color.green)
-                    sprite.color = Color.red;
-
-                DrawReachableArea(total, neighbor.GetComponent<Tile>());
-            }
-
-            sprite = selected.GetComponentInChildren<SpriteRenderer>();
-            sprite.color = Color.green;
-        }
-
-        private static void ClearReachableArea(int total, Tile selected)
-        {
-            if (total < 0 || selected == null) return;
-
-            total -= selected.Cost;
-
-            SpriteRenderer sprite;
-
-            foreach (var neighbor in selected.Neighbors)
-            {
-                sprite = neighbor.GetComponentInChildren<SpriteRenderer>();
-                sprite.color = Color.white;
-                ClearReachableArea(total, neighbor.GetComponent<Tile>());
-            }
-
-            sprite = selected.GetComponentInChildren<SpriteRenderer>();
-            sprite.color = Color.white;
-        }
-
-
-
-        private bool DrawPath()
-        {
-            if (Current == null || Target == null) return false;
-
-            List = _pathfinding.FindPath(Current, Target);
-
-            foreach (var tile in List)
-            {
-                if (Total < tile.Cost)
-                    return false;
-
-                SpriteRenderer s;
-
-                /*
-                foreach (var neighbor in tile.Neighbors)
+                else if (_playerInteractions.Selected != null && _playerInteractions.Target == null)
+                    _playerInteractions.Target = obj;
+                else if (_playerInteractions.Target == obj)
                 {
-                    s = neighbor.GetComponentInChildren<SpriteRenderer>();
-
-                    if (s.color == Color.green) continue;
-                    s.color = Color.red;
-                }
-                */
-
-                s = tile.GetComponentInChildren<SpriteRenderer>();
-                s.color = Color.green;
-
-                Total -= tile.Cost;
+                    bool clearMap;
+                    _playerInteractions.Act(out clearMap);
+                    if(clearMap)
+                        _mapInteractions.ClearReachableArea(_playerInteractions.Selected.Stats.Movement, _playerInteractions.Selected.Location);
+                }   
             }
-
-            return true;
         }
 
-        private void ClearPath()
+        public void MapRayCasting(Tile tile)
         {
-            if (List.Count == 0)
-                return;
-
-            foreach (var tile in List)
+            if (Input.GetMouseButtonDown(0))
             {
-                SpriteRenderer s;
-                foreach (var neighbor in tile.Neighbors)
-                {
-                    s = neighbor.GetComponentInChildren<SpriteRenderer>();
-                    s.color = Color.white;
-                }
+                if (_mapInteractions.Selected != null) return;
 
-                s = tile.GetComponentInChildren<SpriteRenderer>();
-                s.color = Color.white;
+                _mapInteractions.Selected = tile;
             }
-            List.Clear();
+
         }
     }
 }

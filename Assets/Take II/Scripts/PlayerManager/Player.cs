@@ -1,45 +1,28 @@
 ﻿using System.Collections.Generic;
-using System.Security.Cryptography;
 using Assets.Take_II.Scripts.Combat;
 using Assets.Take_II.Scripts.HexGrid;
 using UnityEngine;
-using UnityEngine.Assertions.Must;
 using Random = System.Random;
 
-namespace Assets.Take_II.Scripts.Player
+namespace Assets.Take_II.Scripts.PlayerManager
 {
-    
     public class Player : MonoBehaviour
     {
-        public float PosX;
-        public float Posy;
         public Tile Location;
-        public int CurrentHealth;
-        public bool IsDead;
-
-
-        public bool att;
-        public Player tar;
-
         public StatManager Stats;
+        public int CurrentHealth;
 
-        [SerializeField]
-        private List<string> _keys;
-        [SerializeField]
-        private List<int> _values;
+        public bool IsDead;
+        public bool IsEnemy;
+        public bool IsHealer;
 
-        void Update()
-        {
-            if (!att) return;
-
-            Combat(tar);
-            att = false;
-        }
+        [SerializeField] internal List<string> StatsKeys;
+        [SerializeField] internal List<int> StatsValues;
 
         void Awake()
         {
-            _keys = new List<string>();
-            _values = new List<int>();
+            StatsKeys = new List<string>();
+            StatsValues = new List<int>();
             var rand = new Random();
 
             var stats = new Dictionary<string, int>
@@ -60,11 +43,22 @@ namespace Assets.Take_II.Scripts.Player
             foreach (var stat in stats)
             {
 
-                _keys.Add(stat.Key);
-                _values.Add(stat.Value);
+                StatsKeys.Add(stat.Key);
+                StatsValues.Add(stat.Value);
             }
 
             CurrentHealth = Stats.Hp;
+        }
+
+
+        void Update()
+        {
+            if(CurrentHealth > 0)
+                return;
+
+            CurrentHealth = 0;
+            IsDead = true;
+
         }
 
         public void Combat(Player target)
@@ -117,6 +111,23 @@ namespace Assets.Take_II.Scripts.Player
                 Stats.Damage(attackPower, tarDefencePower);
 
             return damage;
+        }
+    }
+
+    public static class PlayerUtils
+    {
+        public static bool IsEqualTo(this Player p, Player other)
+        {
+            var leftNull = p == null;
+            var rightNull = other == null;
+
+            if (leftNull || rightNull)
+                return false;
+
+            var sameName = p.name == other.name;
+            var sameLocation = p.Location.IsEqualTo(other.Location);
+
+            return sameName && sameLocation;
         }
     }
 }

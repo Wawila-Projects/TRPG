@@ -14,8 +14,10 @@ namespace Assets.Take_II.Scripts.Combat
         public int Res { get; }
         public int Luck { get; }
 
+        public int Movement { get; }
 
-        public StatManager(IDictionary<string, int> stats)
+
+        public StatManager(IDictionary<string, int> stats, int movement = 2)
         {
             Hp = stats["hp"];
             Str = stats["str"];
@@ -25,6 +27,8 @@ namespace Assets.Take_II.Scripts.Combat
             Def = stats["def"];
             Res = stats["res"];
             Luck = stats["luck"];
+
+            Movement = movement;
         }
 
         public float HitRate(params int[] modifiers)

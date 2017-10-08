@@ -1,6 +1,6 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
+using Assets.Take_II.Scripts.PlayerManager;
 using UnityEngine;
 
 
@@ -15,15 +15,15 @@ namespace Assets.Take_II.Scripts.HexGrid
         public int GridY;
         public int TerrainType;
         public int Cost;
+        public Player OccupiedBy;
 
         public List<Tile> Neighbors;
 
-        void Update()
+        void LateUpdate()
         {
             if(Neighbors.Count == 0)
                 GetNeighbors();
         }
-        
 
         public void GetNeighbors()
         {

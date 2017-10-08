@@ -1,0 +1,155 @@
+﻿using System;
+using Assets.Take_II.Scripts.HexGrid;
+using Assets.Take_II.Scripts.PlayerManager;
+using UnityEngine;
+
+namespace Assets.Take_II.Scripts.InputManger
+{
+    public class PlayerInteractions : MonoBehaviour
+    {
+        public Player Selected;
+        public GameObject Target;
+
+        public bool IsMoving { get; private set; }
+        //private bool _isInteractingWithObject;
+        private bool _isInCombat;
+        private bool _isHealing;
+        
+
+        //private CombatManager combatManager;
+
+        void Update()
+        {
+            if (IsMoving)
+            {
+                Debug.Log("Moving");
+                Move();
+                return;
+            }
+
+            if (_isInCombat)
+            {
+                Debug.Log("Attacking: " + Target.name);
+                _isInCombat = false;
+            }
+            else if (_isHealing)
+            {
+                Debug.Log("Healing: " + Target.name);
+                _isHealing = false;
+            }
+        }
+
+        public void Act(out bool clearMap)
+        {
+            clearMap = false;
+            if (ActOnTile(ref clearMap)) return;
+
+            ActOnPlayer(ref clearMap);
+
+        }
+
+        private bool ActOnPlayer(ref bool clearMap)
+        {
+            var player = Target.GetComponent<Player>();
+
+            if (player == null) return false;
+
+            if (player.IsEnemy)
+                _isInCombat = true;
+            else
+                _isHealing = true;
+
+            clearMap = _isInCombat || _isHealing;
+            return true;
+        }
+
+        private bool ActOnTile(ref bool clearMap)
+        {
+            var tile = Target.GetComponent<Tile>();
+            if (tile == null) return false;
+
+            if (!IsReachable(Selected.Location, tile))
+            {
+                Selected = null;
+                Target = null;
+                clearMap = true;
+                return true;
+            }
+
+            if (tile.OccupiedBy != null)
+            {
+                Target = null;
+                clearMap = false;
+                return true;
+            }
+
+            IsMoving = true;
+            clearMap = true;
+            return true;
+        }
+
+        public void Move()
+        { 
+            var tile = Target.GetComponent<Tile>();
+            if (tile == null)
+                return;
+           
+            var dest = new Vector3
+            {
+                x = tile.WorldX,
+                y = tile.WorldY,
+                z = Selected.transform.position.z
+            };
+
+            if (Selected.transform.position == dest)
+            {
+                Selected.Location.OccupiedBy = null;
+                tile.OccupiedBy = Selected;
+                Selected.Location = tile;
+                IsMoving = false;
+                Selected = null;
+                Target = null;
+                return;
+            }
+
+            var destination = Vector3.MoveTowards(Selected.transform.position, dest, 3 * Time.deltaTime);
+            Selected.transform.position = destination;
+            
+        }
+
+        private bool IsReachable(Tile origin, Tile destiny)
+        {
+
+            var distance = Math.Max(Math.Abs(origin.GridX - destiny.GridX), Math.Abs(origin.GridY - destiny.GridY));
+            Debug.Log("Move Distance: " + distance);
+
+            return distance <= Selected.Stats.Movement;
+        }
+
+        private bool IsInMeleeRange()
+        {
+            var player = Target.GetComponent<Player>();
+            if (player == null)
+                return false;
+
+            var distance = Math.Max(Math.Abs(Selected.Location.GridX - player.Location.GridX), 
+                                    Math.Abs(Selected.Location.GridY - player.Location.GridY));
+
+            Debug.Log("Melee Distance: " + distance);
+            return distance <= Selected.Stats.Movement+1;
+        }
+
+        private bool IsInRange()
+        {
+            var player = Target.GetComponent<Player>();
+            if (player == null)
+                return false;
+
+            var distance = Math.Max(Math.Abs(Selected.Location.GridX - player.Location.GridX),
+                Math.Abs(Selected.Location.GridY - player.Location.GridY));
+
+            Debug.Log("Range Distance: " + distance);
+            return distance <= Selected.Stats.Movement + 2;
+        }
+    }
+}
