@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using Assets.Take_II.Scripts.HexGrid;
 using Assets.Take_II.Scripts.PlayerManager;
 using UnityEngine;
@@ -12,9 +13,10 @@ namespace Assets.Take_II.Scripts.InputManger
 
         public bool IsMoving { get; private set; }
         //private bool _isInteractingWithObject;
-        private bool _isInCombat;
-        private bool _isHealing;
-        
+        public bool IsInCombat { get; private set; }
+        public bool IsHealing { get; private set; }
+
+        private readonly AStar _pathfinding = new AStar();
 
         //private CombatManager combatManager;
 
@@ -27,15 +29,17 @@ namespace Assets.Take_II.Scripts.InputManger
                 return;
             }
 
-            if (_isInCombat)
+            if (IsInCombat)
             {
                 Debug.Log("Attacking: " + Target.name);
-                _isInCombat = false;
+                IsInCombat = false;
+                ClearSelected();
             }
-            else if (_isHealing)
+            else if (IsHealing)
             {
                 Debug.Log("Healing: " + Target.name);
-                _isHealing = false;
+                IsHealing = false;
+                ClearSelected();
             }
         }
 
@@ -54,12 +58,25 @@ namespace Assets.Take_II.Scripts.InputManger
 
             if (player == null) return false;
 
-            if (player.IsEnemy)
-                _isInCombat = true;
-            else
-                _isHealing = true;
+            if (!IsReachable(Selected.Location, player.Location))
+            {
+                var path = _pathfinding.FindPath(Selected.Location, player.Location);
 
-            clearMap = _isInCombat || _isHealing;
+                if(path.Count == 0 )
+                    return false;
+
+                Target = path.ElementAt(Selected.Stats.Movement).gameObject;
+                IsMoving = true;
+                clearMap = true;
+                return true;
+            }
+
+            if (player.IsEnemy)
+                IsInCombat = true;
+            else
+                IsHealing = true;
+
+            clearMap = IsInCombat || IsHealing;
             return true;
         }
 
@@ -70,8 +87,7 @@ namespace Assets.Take_II.Scripts.InputManger
 
             if (!IsReachable(Selected.Location, tile))
             {
-                Selected = null;
-                Target = null;
+                ClearSelected();
                 clearMap = true;
                 return true;
             }
@@ -107,8 +123,7 @@ namespace Assets.Take_II.Scripts.InputManger
                 tile.OccupiedBy = Selected;
                 Selected.Location = tile;
                 IsMoving = false;
-                Selected = null;
-                Target = null;
+                ClearSelected();
                 return;
             }
 
@@ -119,10 +134,7 @@ namespace Assets.Take_II.Scripts.InputManger
 
         private bool IsReachable(Tile origin, Tile destiny)
         {
-
             var distance = Math.Max(Math.Abs(origin.GridX - destiny.GridX), Math.Abs(origin.GridY - destiny.GridY));
-            Debug.Log("Move Distance: " + distance);
-
             return distance <= Selected.Stats.Movement;
         }
 
@@ -134,8 +146,7 @@ namespace Assets.Take_II.Scripts.InputManger
 
             var distance = Math.Max(Math.Abs(Selected.Location.GridX - player.Location.GridX), 
                                     Math.Abs(Selected.Location.GridY - player.Location.GridY));
-
-            Debug.Log("Melee Distance: " + distance);
+            
             return distance <= Selected.Stats.Movement+1;
         }
 
@@ -147,9 +158,14 @@ namespace Assets.Take_II.Scripts.InputManger
 
             var distance = Math.Max(Math.Abs(Selected.Location.GridX - player.Location.GridX),
                 Math.Abs(Selected.Location.GridY - player.Location.GridY));
-
-            Debug.Log("Range Distance: " + distance);
+            
             return distance <= Selected.Stats.Movement + 2;
+        }
+
+        private void ClearSelected()
+        {
+            Selected = null;
+            Target = null;
         }
     }
 }

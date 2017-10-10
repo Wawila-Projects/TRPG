@@ -66,12 +66,15 @@ namespace Assets.Take_II.Scripts.InputManger
                 }
                 else if (_playerInteractions.Selected != null && _playerInteractions.Target == null)
                     _playerInteractions.Target = obj;
-                else if (_playerInteractions.Target == obj)
+                else if (_playerInteractions.Target == obj)     
                 {
                     bool clearMap;
+                    var clearAmount = _playerInteractions.Selected.Stats.Movement;
+                    var clearLocation = _playerInteractions.Selected.Location;
+
                     _playerInteractions.Act(out clearMap);
                     if(clearMap)
-                        _mapInteractions.ClearReachableArea(_playerInteractions.Selected.Stats.Movement, _playerInteractions.Selected.Location);
+                        _mapInteractions.ClearReachableArea(clearAmount, clearLocation);
                 }   
             }
         }
