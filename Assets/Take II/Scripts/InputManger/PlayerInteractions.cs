@@ -10,6 +10,7 @@ namespace Assets.Take_II.Scripts.InputManger
     {
         public Player Selected;
         public GameObject Target;
+        private Player _target;
 
         public bool IsMoving { get; private set; }
         //private bool _isInteractingWithObject;
@@ -29,7 +30,11 @@ namespace Assets.Take_II.Scripts.InputManger
                 return;
             }
 
-            if (IsInCombat)
+            if (_target != null)
+            {
+                OnPlayerAction();
+            }
+            else if (IsInCombat)
             {
                 Debug.Log("Attacking: " + Target.name);
                 IsInCombat = false;
@@ -41,6 +46,7 @@ namespace Assets.Take_II.Scripts.InputManger
                 IsHealing = false;
                 ClearSelected();
             }
+
         }
 
         public void Act(out bool clearMap)
@@ -55,29 +61,54 @@ namespace Assets.Take_II.Scripts.InputManger
         private bool ActOnPlayer(ref bool clearMap)
         {
             var player = Target.GetComponent<Player>();
-
+       
             if (player == null) return false;
+
+            _target = player;
+            var path = _pathfinding.FindPath(Selected.Location, player.Location);
+
+            if (path.Count == 0) return false;
 
             if (!IsReachable(Selected.Location, player.Location))
             {
-                var path = _pathfinding.FindPath(Selected.Location, player.Location);
-
-                if(path.Count == 0 )
-                    return false;
-
+                
                 Target = path.ElementAt(Selected.Stats.Movement).gameObject;
                 IsMoving = true;
                 clearMap = true;
                 return true;
             }
 
-            if (player.IsEnemy)
+            if (!player.Location.HasNeighbor(Selected.Location))
+            {
+                path.RemoveAt(path.Count - 1);
+                
+
+                Target = path.Last().gameObject;
+                IsMoving = true;
+                clearMap = true;
+                return true;
+            }
+
+            clearMap = OnPlayerAction();
+            return true;
+        }
+
+        private bool OnPlayerAction()
+        {
+            
+            if (_target == null)
+                return false;
+
+            if (_target.IsEnemy)
                 IsInCombat = true;
             else
                 IsHealing = true;
 
-            clearMap = IsInCombat || IsHealing;
-            return true;
+            Target = _target.gameObject;
+            _target = null;
+
+            var clearMap = IsInCombat || IsHealing;
+            return clearMap;
         }
 
         private bool ActOnTile(ref bool clearMap)
@@ -94,7 +125,7 @@ namespace Assets.Take_II.Scripts.InputManger
 
             if (tile.OccupiedBy != null)
             {
-                Target = null;
+                Target = tile.OccupiedBy.gameObject;
                 clearMap = false;
                 return true;
             }
