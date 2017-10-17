@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Assets.Take_II.Scripts.HexGrid;
 using Assets.Take_II.Scripts.PlayerManager;
@@ -16,8 +17,6 @@ namespace Assets.Take_II.Scripts.InputManger
         //private bool _isInteractingWithObject;
         public bool IsInCombat { get; private set; }
         public bool IsHealing { get; private set; }
-
-        private readonly AStar _pathfinding = new AStar();
 
         //private CombatManager combatManager;
 
@@ -64,27 +63,21 @@ namespace Assets.Take_II.Scripts.InputManger
        
             if (player == null) return false;
 
-            _target = player;
-            var path = _pathfinding.FindPath(Selected.Location, player.Location);
+            if (player.IsEqualTo(Selected))
+                return false;
 
-            if (path.Count == 0) return false;
+            _target = player;
 
             if (!IsReachable(Selected.Location, player.Location))
             {
-                
-                Target = path.ElementAt(Selected.Stats.Movement).gameObject;
-                IsMoving = true;
+                MoveTowardsPlayer(player, false);
                 clearMap = true;
                 return true;
             }
 
             if (!player.Location.HasNeighbor(Selected.Location))
             {
-                path.RemoveAt(path.Count - 1);
-                
-
-                Target = path.Last().gameObject;
-                IsMoving = true;
+                MoveTowardsPlayer(player, true);
                 clearMap = true;
                 return true;
             }
@@ -93,13 +86,39 @@ namespace Assets.Take_II.Scripts.InputManger
             return true;
         }
 
+        private void MoveTowardsPlayer(Player player, bool isReachable)
+        { 
+            var pathfinding = new AStar();
+            var path = pathfinding.FindPath(Selected.Location, player.Location);
+
+            if (path.Count == 0) return;
+
+            var length = isReachable ? path.Count - 2 : Selected.Stats.Movement;
+
+            if (path.ElementAt(length) == null)
+                return;
+
+            
+            while (path.ElementAt(length).GetComponent<Tile>().OccupiedBy != null)
+            {
+                if(path.ElementAt(length) == null)
+                    return;
+                
+                length--;
+            }
+            
+
+            Target = path.ElementAt(length < path.Count ? 0 : length).gameObject;
+            IsMoving = true;
+        }
+
         private bool OnPlayerAction()
         {
             
-            if (_target == null)
+            if (_target == null || Selected == null)
                 return false;
 
-            if (_target.IsEnemy)
+            if (_target.IsEnemy != Selected.IsEnemy)
                 IsInCombat = true;
             else
                 IsHealing = true;

@@ -64,8 +64,9 @@ namespace Assets.Take_II.Scripts.InputManger
 
                     _mapInteractions.DrawReachableArea(_playerInteractions.Selected.Stats.Movement, _playerInteractions.Selected.Location);
                 }
-                else if (_playerInteractions.Selected != null && _playerInteractions.Target == null)
+                else if (_playerInteractions.Selected != null && _playerInteractions.Target == null && _playerInteractions.Selected.gameObject != obj)
                     _playerInteractions.Target = obj;
+                // TODO Implement Double Click Correctly
                 else if (_playerInteractions.Target == obj)     
                 {
                     bool clearMap;
