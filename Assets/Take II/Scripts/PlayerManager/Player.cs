@@ -1,7 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Assets.Take_II.Scripts.Combat;
 using Assets.Take_II.Scripts.HexGrid;
+using JetBrains.Annotations;
 using UnityEngine;
+using Object = System.Object;
 using Random = System.Random;
 
 namespace Assets.Take_II.Scripts.PlayerManager
@@ -11,10 +14,13 @@ namespace Assets.Take_II.Scripts.PlayerManager
         public Tile Location;
         public StatManager Stats;
         public int CurrentHealth;
+        //public Equipment Equipment;
+
 
         public bool IsDead;
         public bool IsEnemy;
         public bool IsHealer;
+        public int WeaponRange; // { get { return Equipment.isRange } } 
 
         [SerializeField] internal List<string> StatsKeys;
         [SerializeField] internal List<int> StatsValues;
@@ -47,6 +53,8 @@ namespace Assets.Take_II.Scripts.PlayerManager
                 StatsValues.Add(stat.Value);
             }
 
+
+            WeaponRange = 1;
             CurrentHealth = Stats.Hp;
         }
 
@@ -128,6 +136,14 @@ namespace Assets.Take_II.Scripts.PlayerManager
             var sameLocation = p.Location.IsEqualTo(other.Location);
 
             return sameName && sameLocation;
+        }
+
+        public static Player ClonePlayer(this Player p)
+        {
+            var temp = UnityEngine.Object.Instantiate(p);
+            var player = temp.GetComponent<Player>();
+            UnityEngine.Object.Destroy(temp.gameObject);
+            return player;
         }
     }
 }

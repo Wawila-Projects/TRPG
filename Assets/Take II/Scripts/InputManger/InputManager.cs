@@ -20,6 +20,7 @@ namespace Assets.Take_II.Scripts.InputManger
             var obj = raycast.collider.transform.gameObject;
 
             var tile = obj.GetComponent<Tile>();
+            
 
             if (obj.GetComponent<Player>() != null || _playerInteractions.Selected != null)
             {
@@ -29,7 +30,6 @@ namespace Assets.Take_II.Scripts.InputManger
             {
                 MapRayCasting(tile);
             }
-
 
             if (Input.GetKeyDown(KeyCode.Escape) && !_playerInteractions.IsMoving)
             {
@@ -52,7 +52,6 @@ namespace Assets.Take_II.Scripts.InputManger
             }
         }
 
-        
         private void PlayerRaycasting(GameObject obj)
         {
             if (Input.GetMouseButtonDown(0))
@@ -64,8 +63,11 @@ namespace Assets.Take_II.Scripts.InputManger
 
                     _mapInteractions.DrawReachableArea(_playerInteractions.Selected.Stats.Movement, _playerInteractions.Selected.Location);
                 }
-                else if (_playerInteractions.Selected != null && _playerInteractions.Target == null)
-                    _playerInteractions.Target = obj;
+                else if (_playerInteractions.Selected != null && _playerInteractions.Target == null &&
+                         _playerInteractions.Selected.gameObject != obj)
+                {
+                        _playerInteractions.Target = obj;
+                }
                 else if (_playerInteractions.Target == obj)     
                 {
                     bool clearMap;
@@ -76,6 +78,10 @@ namespace Assets.Take_II.Scripts.InputManger
                     if(clearMap)
                         _mapInteractions.ClearReachableArea(clearAmount, clearLocation);
                 }   
+                else 
+                {
+                    _playerInteractions.Target = obj;
+                }
             }
         }
 
@@ -89,5 +95,5 @@ namespace Assets.Take_II.Scripts.InputManger
             }
 
         }
-    }
+    } 
 }
