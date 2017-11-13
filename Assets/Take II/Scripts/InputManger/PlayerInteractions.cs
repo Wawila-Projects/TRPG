@@ -101,7 +101,7 @@ namespace Assets.Take_II.Scripts.InputManger
             if (_target == null || !IsInRange())
                 return false;
             
-            if (_target.IsEnemy)
+            if (_target.IsEnemy != _selected.IsEnemy)
                 IsInCombat = true;
             else
                 IsHealing = true;

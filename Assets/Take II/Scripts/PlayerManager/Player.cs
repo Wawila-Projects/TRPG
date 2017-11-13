@@ -1,10 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using Assets.Take_II.Scripts.Combat;
+﻿using System.Collections.Generic;
+using Assets.Take_II.Scripts.Enums;
 using Assets.Take_II.Scripts.HexGrid;
-using JetBrains.Annotations;
+using Assets.Take_II.Scripts.Talent_Structures;
 using UnityEngine;
-using Object = System.Object;
 using Random = System.Random;
 
 namespace Assets.Take_II.Scripts.PlayerManager
@@ -15,6 +13,8 @@ namespace Assets.Take_II.Scripts.PlayerManager
         public StatManager Stats;
         public int CurrentHealth;
         //public Equipment Equipment;
+        public TalentTree TalentTree;
+        public ResistanceManager Resistances;
 
 
         public bool IsDead;
@@ -31,16 +31,16 @@ namespace Assets.Take_II.Scripts.PlayerManager
             StatsValues = new List<int>();
             var rand = new Random();
 
-            var stats = new Dictionary<string, int>
+            var stats = new Dictionary<Statistics, int>
             {
-                {"hp", rand.Next(9, 15)+1},
-                {"str", rand.Next(1, 7)+1},
-                {"mag", rand.Next(0, 5)+1},
-                {"skl", rand.Next(1, 7)+1},
-                {"spd", rand.Next(0, 2)+1},
-                {"def", rand.Next(0, 2)+1},
-                {"res", rand.Next(0, 5)+1},
-                {"luck", rand.Next(0, 3)+1}
+                {Statistics.Hp, rand.Next(9, 15)+1},
+                {Statistics.Str, rand.Next(1, 7)+1},
+                {Statistics.Mag, rand.Next(0, 5)+1},
+                {Statistics.Skl, rand.Next(1, 7)+1},
+                {Statistics.Spd, rand.Next(0, 2)+1},
+                {Statistics.Def, rand.Next(0, 2)+1},
+                {Statistics.Res, rand.Next(0, 5)+1},
+                {Statistics.Luck, rand.Next(0, 3)+1}
 
             };
 
@@ -48,12 +48,10 @@ namespace Assets.Take_II.Scripts.PlayerManager
 
             foreach (var stat in stats)
             {
-
-                StatsKeys.Add(stat.Key);
+                StatsKeys.Add(stat.Key.ToString());
                 StatsValues.Add(stat.Value);
             }
-
-
+            
             WeaponRange = 1;
             CurrentHealth = Stats.Hp;
         }
@@ -87,17 +85,12 @@ namespace Assets.Take_II.Scripts.PlayerManager
             var critChance = Stats.CriticalChance(critRate, tarCritEvade);
 
             var isCritical = critChance > rand.Next(0, 100) + 1;
-            var damage = PhysicalCombat(target, isCritical);
+            var damage = PhysicalDamage(target, isCritical);
 
             target.CurrentHealth -= damage;
-
-            if (target.CurrentHealth >= 0) return;
-
-            target.CurrentHealth = 0;
-            target.IsDead = true;
         }
 
-        public int PhysicalCombat(Player target, bool criticalHit)
+        public int PhysicalDamage(Player target, bool criticalHit)
         {
             var attackPower = Stats.PhysicalAttack();
             var tarDefencePower = target.Stats.PhysicalDefence();
@@ -109,7 +102,7 @@ namespace Assets.Take_II.Scripts.PlayerManager
             return damage;
         }
 
-        public int MagicalCombat(Player target, bool criticalHit)
+        public int MagicalDamage(Player target, bool criticalHit)
         {
             var attackPower = Stats.MagicalAttack();
             var tarDefencePower = target.Stats.MagicalDefence();
