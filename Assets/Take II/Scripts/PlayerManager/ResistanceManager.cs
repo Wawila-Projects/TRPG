@@ -21,14 +21,14 @@ namespace Assets.Take_II.Scripts.PlayerManager
             };
         }
 
-        public int FireResistance { get { return _resistances[Enums.Elements.Fire]; } }
-        public int WaterResistance { get { return _resistances[Enums.Elements.Water]; } }
-        public int EarthResistance { get { return _resistances[Enums.Elements.Earth]; } }
-        public int WindResistance { get { return _resistances[Enums.Elements.Wind]; } }
-        public int LightningResistance { get { return _resistances[Enums.Elements.Lightining]; } }
-        public int IceResistance { get { return _resistances[Enums.Elements.Ice]; } }
+        public int FireResistance => _resistances[Enums.Elements.Fire];
+        public int WaterResistance => _resistances[Enums.Elements.Water];
+        public int EarthResistance => _resistances[Enums.Elements.Earth];
+        public int WindResistance => _resistances[Enums.Elements.Wind];
+        public int LightningResistance => _resistances[Enums.Elements.Lightining];
+        public int IceResistance => _resistances[Enums.Elements.Ice];
 
-        public int ResistedDamage(int damage, Enums.Elements element)
+        public int ResistedDamage(int damage, Enums.Elements element = Enums.Elements.None)
         {
             if (element == Enums.Elements.None)
                 return damage;

@@ -10,8 +10,10 @@ namespace Assets.Take_II.Scripts.InputManger
     {
         public Player Selected;
         public GameObject Target;
+        [SerializeField]
         private Player _target;
-       private Player _selected;
+        [SerializeField]
+        private Player _selected;
 
         public bool IsMoving { get; private set; }
         //private bool _isInteractingWithObject;
@@ -25,7 +27,6 @@ namespace Assets.Take_II.Scripts.InputManger
         { 
             if (IsMoving)
             {
-                Debug.Log("Moving");
                 Move();
                 return;
             }
@@ -60,7 +61,7 @@ namespace Assets.Take_II.Scripts.InputManger
         private bool ActOnPlayer(ref bool clearMap)
         {
             var player = Target.GetComponent<Player>();
-       
+
             if (player == null) return false;
 
             _target = player;
@@ -72,7 +73,7 @@ namespace Assets.Take_II.Scripts.InputManger
 
             if (!IsReachable(Selected.Location, player.Location))
             {
-                
+
                 Target = path.ElementAt(Selected.Stats.Movement).gameObject;
                 IsMoving = true;
                 clearMap = true;
@@ -82,7 +83,7 @@ namespace Assets.Take_II.Scripts.InputManger
             if (!player.Location.HasNeighbor(Selected.Location))
             {
 
-                if(path.Count > 1)
+                if (path.Count > 1)
                     path.RemoveAt(path.Count - 1);
 
                 Target = path.Last().gameObject;
@@ -98,12 +99,12 @@ namespace Assets.Take_II.Scripts.InputManger
         private bool OnPlayerAction()
         {
             
-            if (_target == null || !IsInRange())
+            if (_target == null || !_selected.IsInRange(_target))
                 return false;
             
             if (_target.IsEnemy != _selected.IsEnemy)
                 IsInCombat = true;
-            else
+            else if(_selected.IsHealer)
                 IsHealing = true;
 
             Target = _target.gameObject;
@@ -140,8 +141,7 @@ namespace Assets.Take_II.Scripts.InputManger
                 }
                 else
                 {
-                    Target = null;
-                    Selected = null;
+                    ClearSelected();
                 }
 
                 clearMap = true;
@@ -178,25 +178,12 @@ namespace Assets.Take_II.Scripts.InputManger
 
             var destination = Vector3.MoveTowards(Selected.transform.position, dest, 3 * Time.deltaTime);
             Selected.transform.position = destination;
-            
         }
 
         private bool IsReachable(Tile origin, Tile destiny)
         {
             var distance = Math.Max(Math.Abs(origin.GridX - destiny.GridX), Math.Abs(origin.GridY - destiny.GridY));
             return distance <= Selected.Stats.Movement;
-        }
-
-        private bool IsInRange()
-        {
-            var player = _target.GetComponent<Player>();
-            if (player == null)
-                return false;
-
-            var distance = Math.Max(Math.Abs(_selected.Location.GridX - player.Location.GridX),
-                Math.Abs(_selected.Location.GridY - player.Location.GridY));
-            
-            return distance <= _selected.Stats.Movement + _selected.WeaponRange;
         }
 
         private void ClearSelected()

@@ -7,8 +7,8 @@ namespace Assets.Take_II.Scripts.InputManger
     public class InputManager : MonoBehaviour
     {
 
-        public MapInteractions _mapInteractions;
-        public PlayerInteractions _playerInteractions;
+        public MapInteractions MapInteractions { get; set; }
+        public PlayerInteractions PlayerInteractions { get; set; }
 
 
         void Update()
@@ -22,7 +22,7 @@ namespace Assets.Take_II.Scripts.InputManger
             var tile = obj.GetComponent<Tile>();
             
 
-            if (obj.GetComponent<Player>() != null || _playerInteractions.Selected != null)
+            if (obj.GetComponent<Player>() != null || PlayerInteractions.Selected != null)
             {
                 PlayerRaycasting(obj);
             }
@@ -31,23 +31,23 @@ namespace Assets.Take_II.Scripts.InputManger
                 MapRayCasting(tile);
             }
 
-            if (Input.GetKeyDown(KeyCode.Escape) && !_playerInteractions.IsMoving)
+            if (Input.GetKeyDown(KeyCode.Escape) && !PlayerInteractions.IsMoving)
             {
-                if (_playerInteractions.Selected != null)
+                if (PlayerInteractions.Selected != null)
                 {
-                    _mapInteractions.ClearReachableArea(_playerInteractions.Selected.Stats.Movement,
-                        _playerInteractions.Selected.Location);
+                    MapInteractions.ClearReachableArea(PlayerInteractions.Selected.Stats.Movement,
+                        PlayerInteractions.Selected.Location);
 
-                    _mapInteractions.Selected = null;
+                    MapInteractions.Selected = null;
                 }
 
-                if (_playerInteractions.Target != null)
+                if (PlayerInteractions.Target != null)
                 {
-                    _playerInteractions.Target = null;
+                    PlayerInteractions.Target = null;
 
                 }
                 else
-                    _playerInteractions.Selected = null;
+                    PlayerInteractions.Selected = null;
 
             }
         }
@@ -56,31 +56,31 @@ namespace Assets.Take_II.Scripts.InputManger
         {
             if (Input.GetMouseButtonDown(0))
             {
-                if (_playerInteractions.Selected == null)
+                if (PlayerInteractions.Selected == null)
                 {
-                    _playerInteractions.Selected = obj.GetComponent<Player>();
-                    _mapInteractions.Selected = null;
+                    PlayerInteractions.Selected = obj.GetComponent<Player>();
+                    MapInteractions.Selected = null;
 
-                    _mapInteractions.DrawReachableArea(_playerInteractions.Selected.Stats.Movement, _playerInteractions.Selected.Location);
+                    MapInteractions.DrawReachableArea(PlayerInteractions.Selected.Stats.Movement, PlayerInteractions.Selected.Location);
                 }
-                else if (_playerInteractions.Selected != null && _playerInteractions.Target == null &&
-                         _playerInteractions.Selected.gameObject != obj)
+                else if (PlayerInteractions.Selected != null && PlayerInteractions.Target == null &&
+                         PlayerInteractions.Selected.gameObject != obj)
                 {
-                        _playerInteractions.Target = obj;
+                        PlayerInteractions.Target = obj;
                 }
-                else if (_playerInteractions.Target == obj)     
+                else if (PlayerInteractions.Target == obj)     
                 {
                     bool clearMap;
-                    var clearAmount = _playerInteractions.Selected.Stats.Movement;
-                    var clearLocation = _playerInteractions.Selected.Location;
+                    var clearAmount = PlayerInteractions.Selected.Stats.Movement;
+                    var clearLocation = PlayerInteractions.Selected.Location;
 
-                    _playerInteractions.Act(out clearMap);
+                    PlayerInteractions.Act(out clearMap);
                     if(clearMap)
-                        _mapInteractions.ClearReachableArea(clearAmount, clearLocation);
+                        MapInteractions.ClearReachableArea(clearAmount, clearLocation);
                 }   
                 else 
                 {
-                    _playerInteractions.Target = obj;
+                    PlayerInteractions.Target = obj;
                 }
             }
         }
@@ -89,9 +89,9 @@ namespace Assets.Take_II.Scripts.InputManger
         {
             if (Input.GetMouseButtonDown(0))
             {
-                if (_mapInteractions.Selected != null) return;
+                if (MapInteractions.Selected != null) return;
 
-                _mapInteractions.Selected = tile;
+                MapInteractions.Selected = tile;
             }
 
         }

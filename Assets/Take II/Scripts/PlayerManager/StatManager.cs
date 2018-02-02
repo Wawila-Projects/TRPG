@@ -6,38 +6,64 @@ namespace Assets.Take_II.Scripts.PlayerManager
 {
     public class StatManager
     {
-        private readonly IDictionary<Statistics, int> _stats;
+        private readonly IDictionary<Statistics, int> _buffs;
+        public IDictionary<Statistics, int> AllStats { get; }
 
-        public int Hp { get { return _stats[Statistics.Hp]; } }
+        public int Hp => AllStats[Statistics.Hp] + _buffs[Statistics.Hp];
 
-        public int Str { get { return _stats[Statistics.Str]; } }
+        public int Str => AllStats[Statistics.Str] + _buffs[Statistics.Str];
 
-        public int Mag { get { return _stats[Statistics.Mag]; } }
+        public int Mag => AllStats[Statistics.Mag] + _buffs[Statistics.Mag];
 
-        public int Skl { get { return _stats[Statistics.Skl]; } }
+        public int Skl => AllStats[Statistics.Skl] + _buffs[Statistics.Skl];
 
-        public int Spd { get { return _stats[Statistics.Spd]; } }
+        public int Spd => AllStats[Statistics.Spd] + _buffs[Statistics.Spd];
 
-        public int Def { get { return _stats[Statistics.Def]; } }
+        public int Def => AllStats[Statistics.Def] + _buffs[Statistics.Def];
 
-        public int Res { get { return _stats[Statistics.Res]; } }
+        public int Res => AllStats[Statistics.Res] + _buffs[Statistics.Res];
 
-        public int Luck { get { return _stats[Statistics.Luck]; } }
+        public int Luck => AllStats[Statistics.Luck] + _buffs[Statistics.Luck];
 
-        public int Movement { get; private set; }
-
+        public int Movement { get; }
+        
 
         public StatManager(IDictionary<Statistics, int> stats, int movement = 2)
         {
-            _stats = stats;
+            AllStats = stats;
             Movement = movement;
+
+            _buffs = new Dictionary<Statistics, int>
+            {
+                {Statistics.Hp, 0},
+                {Statistics.Str, 0},
+                {Statistics.Mag, 0},
+                {Statistics.Skl, 0},
+                {Statistics.Spd, 0},
+                {Statistics.Def, 0},
+                {Statistics.Res, 0},
+                {Statistics.Luck, 0}
+            };
+        }
+
+        public void ModifyBuffs(IDictionary<Statistics, int> stats, bool remove = false)
+        {
+            foreach (var buff in stats)
+            {
+                _buffs[buff.Key] += remove ? stats[buff.Key] : -stats[buff.Key];
+            }
+        }
+
+        public void ModifySingleBuff(Statistics stat, int amount)
+        {
+            _buffs[stat] += amount;
         }
 
         public void LevelUp(IDictionary<Statistics, int> statGrowth)
         {
             foreach (var stat in statGrowth)
             {
-                _stats[stat.Key] += stat.Value;
+                AllStats[stat.Key] += stat.Value;
             }
         }
 
@@ -106,6 +132,12 @@ namespace Assets.Take_II.Scripts.PlayerManager
             if (!(chance < 0)) return chance > 100 ? 100 : chance;
             chance = 0;
             return chance * 10;
+        }
+
+        public int Heal(params int[] modifiers)
+        {
+            var heal = Mag/3 + modifiers.DefaultIfEmpty(0).Sum();
+            return heal < 0 ? 0 : heal;
         }
     }
 }

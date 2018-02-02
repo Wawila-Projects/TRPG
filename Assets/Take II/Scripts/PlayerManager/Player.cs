@@ -1,21 +1,29 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Assets.Take_II.Scripts.Enums;
 using Assets.Take_II.Scripts.HexGrid;
-using Assets.Take_II.Scripts.Talent_Structures;
 using UnityEngine;
+using Object = UnityEngine.Object;
 using Random = System.Random;
 
 namespace Assets.Take_II.Scripts.PlayerManager
 {
     public class Player : MonoBehaviour
     {
+        public string Name;
         public Tile Location;
         public StatManager Stats;
         public int CurrentHealth;
         //public Equipment Equipment;
         public TalentTree TalentTree;
         public ResistanceManager Resistances;
+        //public SkillBook SkillBook;
+        //public EffectsHandler EffectsHandler;
 
+        public int Seed;
+
+        [SerializeField]
+        private double _seed;
 
         public bool IsDead;
         public bool IsEnemy;
@@ -27,20 +35,27 @@ namespace Assets.Take_II.Scripts.PlayerManager
 
         void Awake()
         {
+            Resistances = new ResistanceManager();
+
             StatsKeys = new List<string>();
             StatsValues = new List<int>();
-            var rand = new Random();
+            //EffectsHandler = new EffectsHandler(Stats, SkillBook);
+            //var seed = (int) (Math.Sin(gameObject.name.Last()) + Math.Tan(gameObject.name.First()));
+            _seed = Math.Log(Seed);
+            var rand = new Random((int) _seed);
+           
+            Name = gameObject.name;
 
             var stats = new Dictionary<Statistics, int>
             {
-                {Statistics.Hp, rand.Next(9, 15)+1},
-                {Statistics.Str, rand.Next(1, 7)+1},
-                {Statistics.Mag, rand.Next(0, 5)+1},
-                {Statistics.Skl, rand.Next(1, 7)+1},
-                {Statistics.Spd, rand.Next(0, 2)+1},
-                {Statistics.Def, rand.Next(0, 2)+1},
-                {Statistics.Res, rand.Next(0, 5)+1},
-                {Statistics.Luck, rand.Next(0, 3)+1}
+                {Statistics.Hp, rand.Next(100, 200)},
+                {Statistics.Str, rand.Next(1, 20)},
+                {Statistics.Mag, rand.Next(1, 20)},
+                {Statistics.Skl, rand.Next(1, 20)},
+                {Statistics.Spd, rand.Next(1, 10)},
+                {Statistics.Def, rand.Next(1, 10)},
+                {Statistics.Res, rand.Next(1, 20)},
+                {Statistics.Luck, rand.Next(1, 10)}
 
             };
 
@@ -69,7 +84,7 @@ namespace Assets.Take_II.Scripts.PlayerManager
 
         public void Combat(Player target)
         {
-            var rand = new Random();
+            var rand = new Random((int) DateTime.Now.Ticks);
 
             var tarEvade = target.Stats.Evade();
             var hitRate = Stats.HitRate();
@@ -133,10 +148,22 @@ namespace Assets.Take_II.Scripts.PlayerManager
 
         public static Player ClonePlayer(this Player p)
         {
-            var temp = UnityEngine.Object.Instantiate(p);
+            var temp = Object.Instantiate(p);
             var player = temp.GetComponent<Player>();
-            UnityEngine.Object.Destroy(temp.gameObject);
+            Object.Destroy(temp.gameObject);
             return player;
+        }
+
+        public static bool IsInRange(this Player p, Player other)
+        {
+            var player = other.GetComponent<Player>();
+            if (player == null)
+                return false;
+
+            var distance = Math.Max(Math.Abs(p.Location.GridX - player.Location.GridX),
+                Math.Abs(p.Location.GridY - player.Location.GridY));
+
+            return distance <= p.Stats.Movement + p.WeaponRange;
         }
     }
 }
