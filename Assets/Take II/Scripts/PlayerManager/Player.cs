@@ -85,54 +85,6 @@ namespace Assets.Take_II.Scripts.PlayerManager
 
             CurrentHealth = 0;
             IsDead = true;
-
-        }
-
-        public void Combat(Player target)
-        {
-            var rand = new Random((int) DateTime.Now.Ticks);
-
-            var tarEvade = target.Stats.Evade();
-            var hitRate = Stats.HitRate();
-
-            var accuracy = Stats.Accuracy(hitRate, tarEvade);
-
-            if (accuracy < rand.Next(0, 100) + 1)
-                return;
-
-            var tarCritEvade = target.Stats.CriticalEvade();
-            var critRate = Stats.CriticalRate();
-
-            var critChance = Stats.CriticalChance(critRate, tarCritEvade);
-
-            var isCritical = critChance > rand.Next(0, 100) + 1;
-            var damage = PhysicalDamage(target, isCritical);
-
-            target.CurrentHealth -= damage;
-        }
-
-        public int PhysicalDamage(Player target, bool criticalHit)
-        {
-            var attackPower = Stats.PhysicalAttack();
-            var tarDefencePower = target.Stats.PhysicalDefence();
-
-            var damage = criticalHit ? 
-                Stats.CriticalDamage(attackPower, tarDefencePower) : 
-                Stats.Damage(attackPower, tarDefencePower);
-
-            return damage;
-        }
-
-        public int MagicalDamage(Player target, bool criticalHit)
-        {
-            var attackPower = Stats.MagicalAttack();
-            var tarDefencePower = target.Stats.MagicalDefence();
-
-            var damage = criticalHit ?
-                Stats.CriticalDamage(attackPower, tarDefencePower) :
-                Stats.Damage(attackPower, tarDefencePower);
-
-            return damage;
         }
 
         public void EndTurn() {
