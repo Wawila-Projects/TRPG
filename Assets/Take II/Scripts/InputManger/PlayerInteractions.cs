@@ -77,8 +77,8 @@ namespace Assets.Take_II.Scripts.InputManger
                 clearMap = true;
                 return true;
             }
-
-            if (!player.Location.HasNeighbor(Selected.Location))
+            
+            if (!player.Location.HasNeighbor(Selected.Location) && !Selected.IsRange)
             {
 
                 if (path.Count > 1)
