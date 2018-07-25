@@ -85,7 +85,7 @@ namespace Assets.Take_II.Scripts.HexGrid
 
         public static Vector2 GetOpposite(this Tile t, Tile other){ 
             var difference = t.GetDirection(other);
-            return difference * 2
+            return difference * 2;
         }
     }
 }
