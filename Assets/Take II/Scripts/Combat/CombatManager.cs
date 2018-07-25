@@ -9,9 +9,6 @@ namespace Assets.Take_II.Scripts.Combat
 {
     public sealed class /*BasicAttack*/CombatManager : MonoBehaviour
     {
-
-        public static CombatManager Instance { get; } = new CombatManager();
-
         public Player Attacker { get; set; }
         public Player Defender { get; set; }
         
@@ -88,7 +85,7 @@ namespace Assets.Take_II.Scripts.Combat
 
             var critChance = Attacker.Stats.CriticalChance(critRate, tarCritEvade);
 
-            var damage = Attacker.WeaponRange == 1 ? PhysicalDamage() : MagicalDamage();
+            var damage = Attacker.IsPhysical ? PhysicalDamage() : MagicalDamage();
             var resistedDamage = Defender.Resistances.ResistedDamage(damage);
             var resultingHealth = Defender.CurrentHealth - resistedDamage;
 
@@ -111,7 +108,8 @@ namespace Assets.Take_II.Scripts.Combat
             if(combatStats["hit"] < _random.Next(0, 100))
                 return;
 
-            var finalDamage = (int) (combatStats["crit"] >= _random.Next(0, 100) ? combatStats["critDamage"] : combatStats["damage"]);
+            var finalDamage = (int) (combatStats["crit"] >= _random.Next(0, 100) ? 
+                                combatStats["critDamage"] : combatStats["damage"]);
 
             finalDamage = Defender.Resistances.ResistedDamage(finalDamage);
 
@@ -149,8 +147,6 @@ namespace Assets.Take_II.Scripts.Combat
 
             return damage;
         }
-
-
     }
 }
 

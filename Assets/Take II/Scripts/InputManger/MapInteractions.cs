@@ -15,10 +15,14 @@ namespace Assets.Take_II.Scripts.InputManger
         //    DrawTileInfo();
         //}
 
-        public void DrawReachableArea(int total, Tile selected)
+        public void DrawReachableArea(int total, Tile selected, bool isRange = false)
         {
-            if (total < 0 || selected == null) return;
-
+            if (total < 0 || selected == null) {
+                if (!isRange) return;
+                PaintNeighbors(selected, Color.red);
+                return;
+            }
+            
             total -= selected.Cost;
 
             SpriteRenderer sprite;
@@ -26,20 +30,31 @@ namespace Assets.Take_II.Scripts.InputManger
             foreach (var neighbor in selected.Neighbors)
             {
                 sprite = neighbor.GetComponentInChildren<SpriteRenderer>();
-
                 if (sprite.color != Color.cyan)
                     sprite.color = Color.red;
-
-                DrawReachableArea(total, neighbor.GetComponent<Tile>());
+                DrawReachableArea(total, neighbor.GetComponent<Tile>(), isRange);
             }
 
             sprite = selected.GetComponentInChildren<SpriteRenderer>();
             sprite.color = Color.cyan;
         }
 
-        public void ClearReachableArea(int total, Tile selected)
+        private void PaintNeighbors(Tile selected, Color color) {
+           foreach (var neighbor in selected.Neighbors)
+            {
+                SpriteRenderer sprite = neighbor.GetComponentInChildren<SpriteRenderer>();
+                if (sprite.color != Color.cyan)
+                    sprite.color = color;
+            }
+        }
+
+        public void ClearReachableArea(int total, Tile selected, bool isRange = false)
         {
-            if (total < 0 || selected == null) return;
+            if (total < 0 || selected == null) {
+                if (!isRange) return;
+                PaintNeighbors(selected, Color.white);
+                return;
+            }
 
             total -= selected.Cost;
 
@@ -49,7 +64,7 @@ namespace Assets.Take_II.Scripts.InputManger
             {
                 sprite = neighbor.GetComponentInChildren<SpriteRenderer>();
                 sprite.color = Color.white;
-                ClearReachableArea(total, neighbor.GetComponent<Tile>());
+                ClearReachableArea(total, neighbor.GetComponent<Tile>(), isRange);
             }
 
             sprite = selected.GetComponentInChildren<SpriteRenderer>();

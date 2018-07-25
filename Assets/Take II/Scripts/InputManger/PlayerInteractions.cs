@@ -53,9 +53,7 @@ namespace Assets.Take_II.Scripts.InputManger
         {
             clearMap = false;
             if (ActOnTile(ref clearMap)) return;
-
             ActOnPlayer(ref clearMap);
-
         }
 
         private bool ActOnPlayer(ref bool clearMap)

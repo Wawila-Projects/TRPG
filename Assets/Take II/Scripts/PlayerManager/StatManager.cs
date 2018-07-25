@@ -100,7 +100,7 @@ namespace Assets.Take_II.Scripts.PlayerManager
 
         public int MagicalDefence(params int[] modifiers)
         {
-            return Mag + modifiers.DefaultIfEmpty(0).Sum();
+            return Res + modifiers.DefaultIfEmpty(0).Sum();
         }
 
         public int Damage(int attackPower, int defencePower)
@@ -109,7 +109,7 @@ namespace Assets.Take_II.Scripts.PlayerManager
             return damage < 0 ? 0 : damage;
         }
 
-        public int CriticalDamge(int attackPower, int defencePower)
+        public int CriticalDamage(int attackPower, int defencePower)
         {
             var damage = Damage(attackPower, defencePower);
             damage = damage == 0 ? 1 : damage * 3;
@@ -129,15 +129,15 @@ namespace Assets.Take_II.Scripts.PlayerManager
         public float CriticalChance(float criticalRate, float criticalEvade)
         {
             var chance = criticalRate - criticalEvade;
-            if (!(chance < 0)) return chance > 100 ? 100 : chance;
-            chance = 0;
-            return chance * 10;
+            if (chance < 0) return 0;
+            chance = chance > 100 ? 100 : chance;
+            return chance;
         }
 
         public int Heal(params int[] modifiers)
         {
             var heal = Mag/3 + modifiers.DefaultIfEmpty(0).Sum();
-            return heal < 0 ? 0 : heal;
+            return heal < 1 ? 1 : heal;
         }
     }
 }

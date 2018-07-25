@@ -12,14 +12,18 @@ namespace Assets.Take_II.Scripts.PlayerManager
     {
         public string Name;
         public Tile Location;
-        public StatManager Stats;
         public int CurrentHealth;
+        public int CurrentActionPoints;
+
         //public Equipment Equipment;
+        public StatManager Stats;
         public TalentTree TalentTree;
         public ResistanceManager Resistances;
+        public ActionHandler ActionsHandler;
         //public SkillBook SkillBook;
         //public EffectsHandler EffectsHandler;
 
+        public int movement;
         public int Seed;
 
         [SerializeField]
@@ -28,6 +32,9 @@ namespace Assets.Take_II.Scripts.PlayerManager
         public bool IsDead;
         public bool IsEnemy;
         public bool IsHealer;
+        public bool IsRange;
+        public bool IsPhysical; 
+        public bool IsMagical;
         public int WeaponRange; // { get { return Equipment.isRange } } 
 
         [SerializeField] internal List<string> StatsKeys;
@@ -41,7 +48,7 @@ namespace Assets.Take_II.Scripts.PlayerManager
             StatsValues = new List<int>();
             //EffectsHandler = new EffectsHandler(Stats, SkillBook);
             //var seed = (int) (Math.Sin(gameObject.name.Last()) + Math.Tan(gameObject.name.First()));
-            _seed = Math.Log(Seed);
+            _seed = Math.Log(Seed) * 1000;
             var rand = new Random((int) _seed);
            
             Name = gameObject.name;
@@ -59,7 +66,7 @@ namespace Assets.Take_II.Scripts.PlayerManager
 
             };
 
-            Stats = new StatManager(stats);
+            Stats = new StatManager(stats, movement);
 
             foreach (var stat in stats)
             {
@@ -67,10 +74,9 @@ namespace Assets.Take_II.Scripts.PlayerManager
                 StatsValues.Add(stat.Value);
             }
             
-            WeaponRange = 1;
+            WeaponRange = IsRange ? 2 : 1;
             CurrentHealth = Stats.Hp;
         }
-
 
         void Update()
         {
@@ -111,7 +117,7 @@ namespace Assets.Take_II.Scripts.PlayerManager
             var tarDefencePower = target.Stats.PhysicalDefence();
 
             var damage = criticalHit ? 
-                Stats.CriticalDamge(attackPower, tarDefencePower) : 
+                Stats.CriticalDamage(attackPower, tarDefencePower) : 
                 Stats.Damage(attackPower, tarDefencePower);
 
             return damage;
@@ -123,10 +129,14 @@ namespace Assets.Take_II.Scripts.PlayerManager
             var tarDefencePower = target.Stats.MagicalDefence();
 
             var damage = criticalHit ?
-                Stats.CriticalDamge(attackPower, tarDefencePower) :
+                Stats.CriticalDamage(attackPower, tarDefencePower) :
                 Stats.Damage(attackPower, tarDefencePower);
 
             return damage;
+        }
+
+        public void EndTurn() {
+            CurrentActionPoints = ActionsHandler.ActionPoints;
         }
     }
 
