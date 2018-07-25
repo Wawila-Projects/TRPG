@@ -77,7 +77,7 @@ namespace Assets.Take_II.Scripts.InputManger
                 clearMap = true;
                 return true;
             }
-            
+
             if (!player.Location.HasNeighbor(Selected.Location) && !Selected.IsRange)
             {
 
@@ -85,6 +85,18 @@ namespace Assets.Take_II.Scripts.InputManger
                     path.RemoveAt(path.Count - 1);
 
                 Target = path.Last().gameObject;
+                IsMoving = true;
+                clearMap = true;
+                return true;
+            }
+
+            if (player.Location.HasNeighbor(Selected.Location) && Selected.IsRange) {
+                var tile = player.Location.GetOpposite(Selected.Location);
+                if (tile == null) {
+                    clearMap = false;
+                    return false;
+                }
+                Target = tile.gameObject;
                 IsMoving = true;
                 clearMap = true;
                 return true;
