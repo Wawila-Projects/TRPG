@@ -83,9 +83,14 @@ namespace Assets.Take_II.Scripts.HexGrid
             return new Vector2(X, Y);
         }
 
-        public static Vector2 GetOpposite(this Tile t, Tile other){ 
-            var difference = t.GetDirection(other);
-            return difference * 2;
+        public static Tile GetOpposite(this Tile t, Tile other) { 
+            var opposite = t.GetDirection(other) * 2;
+            var go = GameObject.Find("Hex_" + (t.GridX + opposite.x) + "_" + (t.GridY + opposite.y));
+            
+            if (go == null)
+                return null;
+                
+            return go.GetComponent<Tile>();
         }
     }
 }
