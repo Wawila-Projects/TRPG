@@ -23,7 +23,7 @@ namespace Assets.Take_II.Scripts.PlayerManager
         //public SkillBook SkillBook;
         //public EffectsHandler EffectsHandler;
 
-        public int movement;
+        public int Movement;
         public int Seed;
 
         [SerializeField]
@@ -66,7 +66,7 @@ namespace Assets.Take_II.Scripts.PlayerManager
 
             };
 
-            Stats = new StatManager(stats, movement);
+            Stats = new StatManager(stats, Movement);
 
             foreach (var stat in stats)
             {
