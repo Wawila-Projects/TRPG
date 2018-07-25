@@ -68,6 +68,25 @@ namespace Assets.Take_II.Scripts.HexGrid
         {
             return t.Neighbors.Any(neighbor => neighbor.IsEqualTo(other));
         }
+
+        public static Vector2 GetDirection(this Tile origin, Tile destiny) {
+            var Oz = -origin.GridX - origin.GridY;
+            var Dz = -destiny.GridX - destiny.GridY;
+
+            if (Oz == Dz) 
+                return new Vector2(destiny.GridX - origin.GridX, destiny.GridY - origin.GridY);
+            
+
+            var X = Mathf.Abs(destiny.GridX - origin.GridX) * (destiny.GridX - origin.GridX);
+            var Y = Mathf.Abs(destiny.GridY - origin.GridY) * (destiny.GridY - origin.GridY);
+    
+            return new Vector2(X, Y);
+        }
+
+        public static Vector2 GetOpposite(this Tile t, Tile other){ 
+            var difference = t.GetDirection(other);
+            return difference * 2
+        }
     }
 }
 
