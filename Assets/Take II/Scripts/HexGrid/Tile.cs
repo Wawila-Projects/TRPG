@@ -2,7 +2,7 @@
 using System.Linq;
 using Assets.Take_II.Scripts.PlayerManager;
 using UnityEngine;
-
+using System;
 
 namespace Assets.Take_II.Scripts.HexGrid
 {
@@ -45,7 +45,7 @@ namespace Assets.Take_II.Scripts.HexGrid
             }
         }
 
-        public void AddNeighbor(int x, int y)
+        private void AddNeighbor(int x, int y)
         {
             var go = GameObject.Find("Hex_" + (GridX + x) + "_" + (GridY + y));
             if (go != null)
@@ -69,28 +69,15 @@ namespace Assets.Take_II.Scripts.HexGrid
             return t.Neighbors.Any(neighbor => neighbor.IsEqualTo(other));
         }
 
-        public static Vector2 GetDirection(this Tile origin, Tile destiny) {
-            var Oz = -origin.GridX - origin.GridY;
-            var Dz = -destiny.GridX - destiny.GridY;
+        public static Tile MoveAway(this Tile t, Tile other) { 
+            var possibleTiles = other.Neighbors.Except(t.Neighbors);
+            foreach (var tile in possibleTiles) {
+                if (tile.OccupiedBy != null) 
+                    continue;
 
-            if (Oz == Dz) 
-                return new Vector2(destiny.GridX - origin.GridX, destiny.GridY - origin.GridY);
-            
-
-            var X = Mathf.Abs(destiny.GridX - origin.GridX) * (destiny.GridX - origin.GridX);
-            var Y = Mathf.Abs(destiny.GridY - origin.GridY) * (destiny.GridY - origin.GridY);
-    
-            return new Vector2(X, Y);
-        }
-
-        public static Tile GetOpposite(this Tile t, Tile other) { 
-            var opposite = t.GetDirection(other) * 2;
-            var go = GameObject.Find("Hex_" + (t.GridX + opposite.x) + "_" + (t.GridY + opposite.y));
-            
-            if (go == null)
-                return null;
-                
-            return go.GetComponent<Tile>();
+                return tile;
+            }
+            return null;
         }
     }
 }
