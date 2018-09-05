@@ -71,8 +71,8 @@ namespace Assets.Take_II.Scripts.InputManger
 
             if (!IsReachable(Selected.Location, player.Location))
             {
-
-                Target = path.ElementAt(Selected.Stats.Movement).gameObject;
+                var mod = Selected.IsRange ? 1 : 0;
+                Target = path.ElementAt(Selected.Stats.Movement - mod).gameObject;
                 IsMoving = true;
                 clearMap = true;
                 return true;
@@ -80,7 +80,6 @@ namespace Assets.Take_II.Scripts.InputManger
 
             if (!player.Location.HasNeighbor(Selected.Location) && !Selected.IsRange)
             {
-
                 if (path.Count > 1)
                     path.RemoveAt(path.Count - 1);
 
@@ -91,7 +90,7 @@ namespace Assets.Take_II.Scripts.InputManger
             }
 
             if (player.Location.HasNeighbor(Selected.Location) && Selected.IsRange) {
-                var tile = player.Location.GetOpposite(Selected.Location);
+                var tile = player.Location.MoveAway(Selected.Location);
                 if (tile == null) {
                     clearMap = false;
                     return false;
@@ -108,7 +107,6 @@ namespace Assets.Take_II.Scripts.InputManger
 
         private bool OnPlayerAction()
         {
-            
             if (_target == null || !_selected.IsInRange(_target))
                 return false;
             
@@ -137,7 +135,6 @@ namespace Assets.Take_II.Scripts.InputManger
                 clearMap = false;
                 return true;
             }
-
 
             if (!IsReachable(Selected.Location, tile))
             {

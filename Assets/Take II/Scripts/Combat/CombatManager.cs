@@ -33,7 +33,6 @@ namespace Assets.Take_II.Scripts.Combat
             Combat();
         }
         
-        
         public bool Combat()
         {
             if (Attacker == null || Defender == null)
@@ -127,7 +126,6 @@ namespace Assets.Take_II.Scripts.Combat
             Defender.CurrentHealth = (int) combatStats["newhp"];
         }
 
-
         private int PhysicalDamage()
         {
             var attackPower = Attacker.Stats.PhysicalAttack();
@@ -149,4 +147,3 @@ namespace Assets.Take_II.Scripts.Combat
         }
     }
 }
-
