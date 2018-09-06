@@ -79,6 +79,23 @@ namespace Assets.Take_II.Scripts.HexGrid
             }
             return null;
         }
+
+        private static Vector3 oddRToCube(this Tile t) {
+            var x = t.GridY - (t.GridX - (t.GridX % 1)) / 2;
+            var y = t.GridX;
+            var z = -x-y;
+            return new Vector3(x, y, z);
+        }
+
+        public static float Distance(this Tile t, Tile other) {
+            var thisCube = t.oddRToCube();
+            var otherCube = other.oddRToCube();
+
+            var distance = Math.Max(Math.Abs(thisCube.x - otherCube.x),
+                                    Math.Abs(thisCube.y - otherCube.y));
+            distance = Math.Max(Math.Abs(thisCube.z - otherCube.z), distance);                  
+            return distance;
+        }
     }
 }
 
