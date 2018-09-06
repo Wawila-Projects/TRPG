@@ -5,6 +5,7 @@ using Assets.Take_II.Scripts.HexGrid;
 using UnityEngine;
 using Object = UnityEngine.Object;
 using Random = System.Random;
+using System.Linq;
 
 namespace Assets.Take_II.Scripts.PlayerManager
 {
@@ -129,6 +130,17 @@ namespace Assets.Take_II.Scripts.PlayerManager
 
             var distance = Location.Distance(other.Location);
             return distance <= WeaponRange;
+        }
+
+         public Tile MoveAway(Player other) { 
+            var possibleTiles = Location.Neighbors.Except(other.Location.Neighbors);
+            
+            foreach (var tile in possibleTiles) {
+                if (tile.OccupiedBy != null) 
+                    continue;
+                return tile;
+            }
+            return null;
         }
     }
 }

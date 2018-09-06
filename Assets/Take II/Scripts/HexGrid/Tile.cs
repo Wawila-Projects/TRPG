@@ -66,17 +66,6 @@ namespace Assets.Take_II.Scripts.HexGrid
             return Neighbors.Any(neighbor => neighbor.IsEqualTo(other));
         }
 
-        public Tile MoveAway(Tile other) { 
-            var possibleTiles = other.Neighbors.Except(Neighbors);
-            foreach (var tile in possibleTiles) {
-                if (tile.OccupiedBy != null) 
-                    continue;
-
-                return tile;
-            }
-            return null;
-        }
-
         private Vector3 oddRToCube() {
             var x = GridX - (GridY - (GridY % 1)) / 2;
             var y = GridY;
