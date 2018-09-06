@@ -129,7 +129,7 @@ namespace Assets.Take_II.Scripts.PlayerManager
                 return false;
 
             var distance = Location.Distance(other.Location);
-            return distance <= WeaponRange;
+            return distance == WeaponRange;
         }
 
          public Tile MoveAway(Player other) { 
