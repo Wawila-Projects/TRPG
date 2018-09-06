@@ -39,13 +39,17 @@ namespace Assets.Take_II.Scripts.Combat
                 return false;
 
             if(!Attacker.IsInRange(Defender))
+            {
+                ClearCharacter();
                 return false;
+            }   
 
             if (_interactions.IsInCombat)
                 Attack();
             else if(_interactions.IsHealing)
                 Heal();
                 
+            ClearCharacter();
             return true;
         }
 
@@ -113,7 +117,6 @@ namespace Assets.Take_II.Scripts.Combat
             finalDamage = Defender.Resistances.ResistedDamage(finalDamage);
 
             Defender.CurrentHealth -= finalDamage;
-
         }
 
         private void Heal()
@@ -144,6 +147,11 @@ namespace Assets.Take_II.Scripts.Combat
             var damage = Attacker.Stats.Damage(attackPower, tarDefencePower);
 
             return damage;
+        }
+
+        private void ClearCharacter() {
+            Attacker = null;
+            Defender = null;
         }
     }
 }

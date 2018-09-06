@@ -71,10 +71,11 @@ namespace Assets.Take_II.Scripts.InputManger
 
             if (!IsReachable(Selected.Location, player.Location))
             {
-                var mod = Selected.IsRange ? 1 : 0;
-                Target = path.ElementAt(Selected.Stats.Movement - mod).gameObject;
+                Target = path.ElementAt(Selected.Stats.Movement).gameObject;
                 IsMoving = true;
                 clearMap = true;
+                _target = null;
+                _selected = null;
                 return true;
             }
 
