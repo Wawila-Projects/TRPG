@@ -190,7 +190,7 @@ namespace Assets.Take_II.Scripts.InputManger
 
         private bool IsReachable(Tile origin, Tile destiny)
         {
-            var distance = Math.Max(Math.Abs(origin.GridX - destiny.GridX), Math.Abs(origin.GridY - destiny.GridY));
+            var distance = origin.Distance(destiny);
             return distance <= Selected.Stats.Movement;
         }
 
