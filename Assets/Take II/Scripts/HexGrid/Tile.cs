@@ -81,8 +81,8 @@ namespace Assets.Take_II.Scripts.HexGrid
         }
 
         private static Vector3 oddRToCube(this Tile t) {
-            var x = t.GridY - (t.GridX - (t.GridX % 1)) / 2;
-            var y = t.GridX;
+            var x = t.GridX - (t.GridY - (t.GridY % 1)) / 2;
+            var y = t.GridY;
             var z = -x-y;
             return new Vector3(x, y, z);
         }
