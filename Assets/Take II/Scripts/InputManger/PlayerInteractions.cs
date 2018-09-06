@@ -58,18 +58,18 @@ namespace Assets.Take_II.Scripts.InputManger
 
         private bool ActOnPlayer(ref bool clearMap)
         {
-            var player = Target.GetComponent<Player>();
+            var target = Target.GetComponent<Player>();
 
-            if (player == null) return false;
+            if (target == null) return false;
 
-            _target = player;
+            _target = target;
 
             _selected = Selected.ClonePlayer();
-            var path = _pathfinding.FindPath(Selected.Location, player.Location);
+            var path = _pathfinding.FindPath(Selected.Location, target.Location);
 
             if (path.Count == 0) return false;
 
-            if (!IsReachable(Selected.Location, player.Location))
+            if (!IsReachable(Selected.Location, target.Location))
             {
                 Target = path.ElementAt(Selected.Stats.Movement).gameObject;
                 IsMoving = true;
@@ -79,7 +79,7 @@ namespace Assets.Take_II.Scripts.InputManger
                 return true;
             }
 
-            if (!player.Location.HasNeighbor(Selected.Location) && !Selected.IsRange)
+            if (!target.Location.HasNeighbor(Selected.Location) && !Selected.IsRange)
             {
                 if (path.Count > 1)
                     path.RemoveAt(path.Count - 1);
@@ -90,8 +90,8 @@ namespace Assets.Take_II.Scripts.InputManger
                 return true;
             }
 
-            if (player.Location.HasNeighbor(Selected.Location) && Selected.IsRange) {
-                var tile = player.Location.MoveAway(Selected.Location);
+            if (target.Location.HasNeighbor(Selected.Location) && Selected.IsRange) {
+                var tile = Selected.MoveAway(target);
                 if (tile == null) {
                     clearMap = false;
                     return false;
@@ -100,6 +100,10 @@ namespace Assets.Take_II.Scripts.InputManger
                 IsMoving = true;
                 clearMap = true;
                 return true;
+            }
+
+            if (!Selected.IsInCombatRange(target)) {
+
             }
 
             clearMap = OnPlayerAction();
