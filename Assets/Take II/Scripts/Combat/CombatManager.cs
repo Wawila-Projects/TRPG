@@ -123,7 +123,7 @@ namespace Assets.Take_II.Scripts.Combat
         {
             var combatStats = GetCombatStats();
 
-            if (Defender.IsDead || (int)combatStats["isHealing"] == 1) 
+            if (Defender.IsDead || (int) combatStats["isHealing"] != 1) 
                 return;
 
             Defender.CurrentHealth = (int) combatStats["newhp"];
