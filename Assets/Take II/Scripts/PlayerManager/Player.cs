@@ -122,8 +122,7 @@ namespace Assets.Take_II.Scripts.PlayerManager
             if (player == null)
                 return false;
 
-            var distance = Math.Max(Math.Abs(p.Location.GridX - player.Location.GridX),
-                Math.Abs(p.Location.GridY - player.Location.GridY));
+            var distance = p.Location.Distance(other.Location);
 
             return distance <= p.Stats.Movement + p.WeaponRange;
         }
