@@ -51,26 +51,23 @@ namespace Assets.Take_II.Scripts.HexGrid
             if (go != null)
                 Neighbors.Add(go.GetComponent<Tile>());
         }
-    }
-
-    public static class TileUtils
-    {
-        public static bool IsEqualTo(this Tile t, Tile other)
+    
+        public bool IsEqualTo(Tile other)
         {
-            var sameName = t.Name == other.Name;
-            var sameCost = t.Cost == other.Cost;
-            var sameTerrain = t.TerrainType == other.TerrainType;
+            var sameName = Name == other.Name;
+            var sameCost = Cost == other.Cost;
+            var sameTerrain = TerrainType == other.TerrainType;
 
             return sameName && sameCost && sameTerrain;
         }
 
-        public static bool HasNeighbor(this Tile t, Tile other)
+        public bool HasNeighbor(Tile other)
         {
-            return t.Neighbors.Any(neighbor => neighbor.IsEqualTo(other));
+            return Neighbors.Any(neighbor => neighbor.IsEqualTo(other));
         }
 
-        public static Tile MoveAway(this Tile t, Tile other) { 
-            var possibleTiles = other.Neighbors.Except(t.Neighbors);
+        public Tile MoveAway(Tile other) { 
+            var possibleTiles = other.Neighbors.Except(Neighbors);
             foreach (var tile in possibleTiles) {
                 if (tile.OccupiedBy != null) 
                     continue;
@@ -80,15 +77,15 @@ namespace Assets.Take_II.Scripts.HexGrid
             return null;
         }
 
-        private static Vector3 oddRToCube(this Tile t) {
-            var x = t.GridX - (t.GridY - (t.GridY % 1)) / 2;
-            var y = t.GridY;
+        private Vector3 oddRToCube() {
+            var x = GridX - (GridY - (GridY % 1)) / 2;
+            var y = GridY;
             var z = -x-y;
             return new Vector3(x, y, z);
         }
 
-        public static float Distance(this Tile t, Tile other) {
-            var thisCube = t.oddRToCube();
+        public float Distance(Tile other) {
+            var thisCube = oddRToCube();
             var otherCube = other.oddRToCube();
 
             var distance = Math.Max(Math.Abs(thisCube.x - otherCube.x),

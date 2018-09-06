@@ -90,41 +90,45 @@ namespace Assets.Take_II.Scripts.PlayerManager
         public void EndTurn() {
             CurrentActionPoints = ActionsHandler.ActionPoints;
         }
-    }
 
-    public static class PlayerUtils
-    {
-        public static bool IsEqualTo(this Player p, Player other)
+         public bool IsEqualTo(Player other)
         {
-            var leftNull = p == null;
+            var leftNull = this == null;
             var rightNull = other == null;
 
             if (leftNull || rightNull)
                 return false;
 
-            var sameName = p.name == other.name;
-            var sameLocation = p.Location.IsEqualTo(other.Location);
+            var sameName = name == other.name;
+            var sameLocation = Location.IsEqualTo(other.Location);
 
             return sameName && sameLocation;
         }
 
-        public static Player ClonePlayer(this Player p)
+        public Player ClonePlayer()
         {
-            var temp = Object.Instantiate(p);
+            var temp = Object.Instantiate(this);
             var player = temp.GetComponent<Player>();
             Object.Destroy(temp.gameObject);
             return player;
         }
 
-        public static bool IsInRange(this Player p, Player other)
+        public bool IsInRange(Player other)
         {
-            var player = other.GetComponent<Player>();
-            if (player == null)
+            if (other == null)
                 return false;
 
-            var distance = p.Location.Distance(other.Location);
+            var distance = Location.Distance(other.Location);
 
-            return distance <= p.Stats.Movement + p.WeaponRange;
+            return distance <= Stats.Movement + WeaponRange;
+        }
+
+        public bool IsInCombatRange(Player other) {
+            if (other == null)
+                return false;
+
+            var distance = Location.Distance(other.Location);
+            return distance <= WeaponRange;
         }
     }
 }
