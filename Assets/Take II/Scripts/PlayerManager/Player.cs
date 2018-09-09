@@ -133,11 +133,9 @@ namespace Assets.Take_II.Scripts.PlayerManager
 
          public Tile MoveAway(Player other) { 
             var possibleTiles = Location.Neighbors.Except(other.Location.Neighbors);
-            
             foreach (var tile in possibleTiles) {
-                if (tile.OccupiedBy != null) 
-                    continue;
-                return tile;
+                if (tile.OccupiedBy == null) 
+                    return tile;
             }
             return null;
         }
@@ -152,7 +150,16 @@ namespace Assets.Take_II.Scripts.PlayerManager
                     path.Remove(path.Last());
             }
             var tile = path.Last();
-            return tile;
+            if (tile.OccupiedBy == null)
+                return tile;
+        
+            foreach (var neighbor in tile.Neighbors) {
+                var optPath = pathFinder.FindPath(Location, neighbor);
+                if (optPath.Count <= totalSteps && neighbor.OccupiedBy == null)
+                    return neighbor;
+            }
+
+            return null;
         }
 
         public Tile MoveToRange(Player other) {
