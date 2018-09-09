@@ -66,14 +66,16 @@ namespace Assets.Take_II.Scripts.HexGrid
             return Neighbors.Any(neighbor => neighbor.IsEqualTo(other));
         }
 
-        private Vector3 oddRToCube() {
+        private Vector3 oddRToCube() 
+        {
             var x = GridX - (GridY - (GridY % 1)) / 2;
             var y = GridY;
             var z = -x-y;
             return new Vector3(x, y, z);
         }
 
-        public float Distance(Tile other) {
+        public float Distance(Tile other) 
+        {
             var thisCube = oddRToCube();
             var otherCube = other.oddRToCube();
 
@@ -81,6 +83,12 @@ namespace Assets.Take_II.Scripts.HexGrid
                                     Math.Abs(thisCube.y - otherCube.y));
             distance = Math.Max(Math.Abs(thisCube.z - otherCube.z), distance);                  
             return distance;
+        }
+
+        public int DistanceFromCombatRange(Player player, Player other) 
+        {
+            var distance = Distance(other.Location);
+            return (int)(distance - player.WeaponRange);
         }
     }
 }

@@ -123,29 +123,31 @@ namespace Assets.Take_II.Scripts.PlayerManager
             return distance <= Stats.Movement + WeaponRange;
         }
 
-        public int? DistanceFromCombatRange(Player other) {
-            if (other == null)
-                return null;
-
+        public int DistanceFromCombatRange(Player other)
+        {
             var distance = Location.Distance(other.Location);
             return (int)(distance - WeaponRange);
         }
 
-         public Tile MoveAway(Player other) { 
+         public Tile MoveAway(Player other) 
+         { 
             var possibleTiles = Location.Neighbors.Except(other.Location.Neighbors);
-            foreach (var tile in possibleTiles) {
+            foreach (var tile in possibleTiles) 
+            {
                 if (tile.OccupiedBy == null) 
                     return tile;
             }
             return null;
         }
 
-        public Tile MoveTowards(Player other, int steps) {
+        public Tile MoveTowards(Player other, int steps) 
+        {
             var totalSteps = steps > Movement ? Movement : steps;
-            var pathFinder = new AStar();
-            var path = pathFinder.FindPath(Location, other.Location);
+            var pathfinder = new AStar();
+            var path = pathfinder.FindPath(Location, other.Location);
             path.Remove(Location);
-            if (path.Count > steps) {
+            if (path.Count > steps) 
+            {
                 while (path.Count != totalSteps) 
                     path.Remove(path.Last());
             }
@@ -153,12 +155,23 @@ namespace Assets.Take_II.Scripts.PlayerManager
             if (tile.OccupiedBy == null)
                 return tile;
         
-            foreach (var neighbor in tile.Neighbors) {
-                var optPath = pathFinder.FindPath(Location, neighbor);
-                if (optPath.Count <= totalSteps && neighbor.OccupiedBy == null)
+            return MoveTowardsIfOccupied(tile, other, pathfinder);
+        }
+
+        private Tile MoveTowardsIfOccupied(Tile tile, Player other, AStar pathfinder) 
+        {
+            foreach (var neighbor in tile.Neighbors) 
+            {
+                var optPath = pathfinder.FindPath(Location, neighbor);
+                optPath.Remove(Location);
+                
+                var isReachable = optPath.Count <= Movement; 
+                var isInRange = neighbor.DistanceFromCombatRange(this, other) == 0;
+                var isNotOccupied = neighbor.OccupiedBy == null;
+
+                if (isReachable && isInRange && isNotOccupied)
                     return neighbor;
             }
-
             return null;
         }
 
