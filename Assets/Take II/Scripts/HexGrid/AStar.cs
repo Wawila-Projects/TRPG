@@ -2,6 +2,12 @@
 using System.Collections.Generic;
 using Priority_Queue;
 
+/* TODO
+    Hacer que los tiles ocupados cuesten mas para que el
+    algoritmo automaticamente encuentre caminos alternativos 
+    sin tener que buscar por los vecinos de cada Tile.
+ */
+
 namespace Assets.Take_II.Scripts.HexGrid
 {
     public class AStar
