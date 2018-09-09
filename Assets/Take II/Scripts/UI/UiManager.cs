@@ -36,18 +36,16 @@ namespace Assets.Take_II.Scripts.UI
             
             SetPlayerText(selectedPlayer, targetPlayer);
 
-
             if(targetPlayer != null)
                 SetCombatText(targetPlayer, selectedPlayer.IsHealer && selectedPlayer.IsEnemy == targetPlayer.IsEnemy);
             else
                 CombatText.text = "";
         }
 
-
         public void SetCombatText(Player targetPlayer, bool isHealing = false)
         {
             var combatManager = gameObject.GetComponent<CombatManager>();
-
+            
             if (combatManager == null || combatManager.Defender == null)
             {
                 CombatText.text = "";
@@ -74,7 +72,6 @@ Crit: {combatInfo["crit"]}";
 
             CombatText.text = text;
         }
-
 
         public void SetPlayerText(Player selectedPlayer, Player targetPlayer)
         {
@@ -118,7 +115,6 @@ Luck: {targetPlayer.Stats.Luck}";
 
             SelectedText.text = selected;
             TargetText.text = target;
-
         }
     }
 }

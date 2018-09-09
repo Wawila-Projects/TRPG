@@ -6,7 +6,6 @@ using UnityEngine;
 using Object = UnityEngine.Object;
 using Random = System.Random;
 using System.Linq;
-
 namespace Assets.Take_II.Scripts.PlayerManager
 {
     public class Player : MonoBehaviour
@@ -124,12 +123,12 @@ namespace Assets.Take_II.Scripts.PlayerManager
             return distance <= Stats.Movement + WeaponRange;
         }
 
-        public bool IsInCombatRange(Player other) {
+        public int? DistanceFromCombatRange(Player other) {
             if (other == null)
-                return false;
+                return null;
 
             var distance = Location.Distance(other.Location);
-            return distance == WeaponRange;
+            return (int)(distance - WeaponRange);
         }
 
          public Tile MoveAway(Player other) { 
@@ -140,6 +139,28 @@ namespace Assets.Take_II.Scripts.PlayerManager
                     continue;
                 return tile;
             }
+            return null;
+        }
+
+        public Tile MoveTowards(Player other, int steps) {
+            var totalSteps = steps > Movement ? Movement : steps;
+            var pathFinder = new AStar();
+            var path = pathFinder.FindPath(Location, other.Location);
+            path.Remove(Location);
+            if (path.Count > steps) {
+                while (path.Count != totalSteps) 
+                    path.Remove(path.Last());
+            }
+            var tile = path.Last();
+            return tile;
+        }
+
+        public Tile MoveToRange(Player other) {
+            var distance = DistanceFromCombatRange(other);
+            if (distance > 0 )
+                return MoveTowards(other, (int)distance);
+            if (distance < 0) 
+                return MoveAway(other);
             return null;
         }
     }

@@ -65,48 +65,16 @@ namespace Assets.Take_II.Scripts.InputManger
             _target = target;
 
             _selected = Selected.ClonePlayer();
-            var path = _pathfinding.FindPath(Selected.Location, target.Location);
-
-            if (path.Count == 0) return false;
-
-            if (!IsReachable(Selected.Location, target.Location))
-            {
-                Target = path.ElementAt(Selected.Stats.Movement).gameObject;
-                IsMoving = true;
-                clearMap = true;
-                _target = null;
-                _selected = null;
+            var tileInRange = Selected.MoveToRange(target);
+            
+            if (tileInRange == null) {
+                clearMap = OnPlayerAction();
                 return true;
             }
 
-            if (!target.Location.HasNeighbor(Selected.Location) && !Selected.IsRange)
-            {
-                if (path.Count > 1)
-                    path.RemoveAt(path.Count - 1);
-
-                Target = path.Last().gameObject;
-                IsMoving = true;
-                clearMap = true;
-                return true;
-            }
-
-            if (target.Location.HasNeighbor(Selected.Location) && Selected.IsRange) {
-                var tile = Selected.MoveAway(target);
-                if (tile == null) {
-                    clearMap = false;
-                    return false;
-                }
-                Target = tile.gameObject;
-                IsMoving = true;
-                clearMap = true;
-                return true;
-            }
-
-            if (!Selected.IsInCombatRange(target)) {
-
-            }
-
-            clearMap = OnPlayerAction();
+            Target = tileInRange.gameObject;
+            IsMoving = true;
+            clearMap = true;
             return true;
         }
 
