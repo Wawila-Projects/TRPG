@@ -2,6 +2,7 @@
 using System.Linq;
 using Assets.Take_II.Scripts.PlayerManager;
 using UnityEngine;
+using UnityEditor;
 using System;
 
 namespace Assets.Take_II.Scripts.HexGrid
@@ -89,6 +90,16 @@ namespace Assets.Take_II.Scripts.HexGrid
         {
             var distance = Distance(other.Location);
             return (int)(distance - player.WeaponRange);
+        }
+
+        public void OnDrawGizmos() {
+            var text = $"({GridX}, {GridY})";
+            var style = new GUIStyle() {
+                fontSize = 4
+            };
+            var position = transform.position;
+            position.x -= 0.2f; 
+            Handles.Label(position, text, style);
         }
     }
 }
