@@ -12,6 +12,9 @@ namespace Assets.Scenes
         public Player P2;
         public Player Enemy;
 
+        public Vector2 P1Location = new Vector2(0,0);
+        public Vector2 P2Location = new Vector2(1, 0);
+        public Vector2 EnemyLocation = new Vector2(2, 2);
 
 
         // Use this for initialization
@@ -24,21 +27,21 @@ namespace Assets.Scenes
         {
             yield return new WaitForSeconds(time);
 
-            var go = GameObject.Find("Hex_0_0");
+            var go = GameObject.Find($"Hex_{P1Location.x}_{P1Location.y}");
             var tile = go.GetComponent<Tile>();
             P1.Location = tile;
             tile.OccupiedBy = P1;
             P1.Location = tile;
             P1.transform.position = tile.transform.position + new Vector3(0, 0, -1);
 
-            go = GameObject.Find("Hex_1_0");
+            go = GameObject.Find($"Hex_{P2Location.x}_{P2Location.y}");
             tile = go.GetComponent<Tile>();
             P2.Location = tile;
             tile.OccupiedBy = P2;
             P2.Location = tile;
             P2.transform.position = tile.transform.position + new Vector3(0, 0, -1);
 
-            go = GameObject.Find("Hex_4_4");
+            go = GameObject.Find($"Hex_{EnemyLocation.x}_{EnemyLocation.y}");
             tile = go.GetComponent<Tile>();
             Enemy.Location = tile;
             tile.OccupiedBy = Enemy;
