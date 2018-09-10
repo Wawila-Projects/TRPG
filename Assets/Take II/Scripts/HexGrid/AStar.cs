@@ -47,9 +47,9 @@ namespace Assets.Take_II.Scripts.HexGrid
             return GetPath(cameFrom, goal);
         }
 
-        private static int Heuristic(Tile a, Tile b)
+        private static float Heuristic(Tile a, Tile b)
         {
-            return Math.Max(Math.Abs(a.GridX - b.GridX), Math.Abs(a.GridY - b.GridY));
+            return  a.Distance(b);
         }
 
         private static List<Tile> GetPath(IDictionary<Tile, Tile> dict, Tile start)
