@@ -93,7 +93,7 @@ namespace Assets.Take_II.Scripts.InputManger
             _target = null;
             _selected = null;
 
-            var clearMap = IsInCombat || IsHealing;
+            var clearMap = true;
             return clearMap;
         }
 

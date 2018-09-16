@@ -13,11 +13,13 @@ namespace Assets.Take_II.Scripts.UI
         public Text SelectedText;
         public Text CombatText;
         
-        private PlayerInteractions _interactions;
+        public PlayerInteractions Interactions;
+        public CombatManager CombatManager;
 
         void Awake()
         {
-            _interactions = gameObject.GetComponent<PlayerInteractions>();
+            Interactions = gameObject.GetComponent<PlayerInteractions>();
+            CombatManager = gameObject.GetComponent<CombatManager>(); 
             SelectedText.color = Color.white;
             TargetText.color = Color.white;
             CombatText.color = Color.white;
@@ -29,9 +31,9 @@ namespace Assets.Take_II.Scripts.UI
 
         void Update()
         {
-            var selectedPlayer = _interactions.Selected;
+            var selectedPlayer = Interactions.Selected;
 
-            var target = _interactions.Target;
+            var target = Interactions.Target;
             var targetPlayer = target == null ? null : target.GetComponent<Player>();
             
             SetPlayerText(selectedPlayer, targetPlayer);
@@ -44,15 +46,13 @@ namespace Assets.Take_II.Scripts.UI
 
         public void SetCombatText(Player targetPlayer, bool isHealing = false)
         {
-            var combatManager = gameObject.GetComponent<CombatManager>();
-            
-            if (combatManager == null || combatManager.Defender == null)
+            if (CombatManager == null || CombatManager.Defender == null)
             {
                 CombatText.text = "";
                 return;
             }
 
-            var combatInfo = combatManager.GetCombatStats();
+            var combatInfo = CombatManager.GetCombatStats();
 
             var text = "";
 
@@ -61,7 +61,7 @@ namespace Assets.Take_II.Scripts.UI
                 text = $@"Healing: 
 HP: {combatInfo["hp"]} -> {combatInfo["newhp"]}";
             }
-            else if(_interactions.Selected.IsEnemy != targetPlayer.IsEnemy)
+            else if(Interactions.Selected.IsEnemy != targetPlayer.IsEnemy)
             {
                 text = $@"Combat: 
 HP: {combatInfo["hp"]} -> {combatInfo["newhp"]}

@@ -9,8 +9,8 @@ namespace Assets.Take_II.Scripts.Combat
 {
     public sealed class /*BasicAttack*/CombatManager : MonoBehaviour
     {
-        public Player Attacker { get; set; }
-        public Player Defender { get; set; }
+        public Player Attacker;
+        public Player Defender;
         
         [SerializeField]
         private int _seed;
@@ -35,7 +35,8 @@ namespace Assets.Take_II.Scripts.Combat
         
         public bool Combat()
         {
-            if (Attacker == null || Defender == null)
+            if (Attacker == null || Defender == null &&
+                !_interactions.IsInCombat || !_interactions.IsHealing)
                 return false;
 
             if(!Attacker.IsInRange(Defender))
