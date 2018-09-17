@@ -15,13 +15,11 @@ namespace Assets.Take_II.Scripts.InputManger
         [SerializeField]
         private Player _selected;
 
-        public bool IsMoving { get; private set; }
-        //private bool _isInteractingWithObject;
-        public bool IsInCombat { get; private set; }
-        public bool IsHealing { get; private set; }
+        public bool IsMoving;
+        public bool IsInCombat;
+        public bool IsHealing;
 
         private readonly AStar _pathfinding = new AStar();
-        //private CombatManager combatManager;
 
         void Update()
         { 

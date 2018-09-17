@@ -2,6 +2,6 @@
 {
     public enum Elements
     {
-        None, Fire, Water, Earth, Wind, Lightining, Ice, Light, Void
+        Almighty, Darkness, Elec, Fire, Ice, Light, Physical, Wind
     }
 }
