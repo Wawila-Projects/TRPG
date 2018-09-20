@@ -1,7 +1,6 @@
 using Assets.Take_II.Scripts.Enums;
 namespace Assets.Take_II.Scripts.PlayerManager {
-    [System.Serializable]
-    public struct Stats {
+    public class Stats {
         public int Movement;
         public int Level;
         public int Hp;
@@ -11,5 +10,10 @@ namespace Assets.Take_II.Scripts.PlayerManager {
         public int Endurance;
         public int Agility;
         public int Luck;
+
+        public bool AttackBuff;
+        public bool DefenceBuff;
+        public bool EvadeBuff;
+        public bool HitBuff;
     }
 }

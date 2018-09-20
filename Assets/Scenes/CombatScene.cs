@@ -7,7 +7,6 @@ namespace Assets.Scenes
 {
     public class CombatScene : MonoBehaviour
     {
-
         public Player P1;
         public Player P2;
         public Player Enemy;
