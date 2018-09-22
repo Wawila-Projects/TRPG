@@ -17,7 +17,7 @@ namespace Assets.Take_II.Scripts.PlayerManager
 
         //public Equipment Equipment;
         
-        public Stats Stats;
+        public Stats Stats = new Stats();
         public ActionHandler ActionsHandler;
 
         public int Movement => Stats.Movement;
