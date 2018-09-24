@@ -28,9 +28,12 @@ using UnityEngine;
 
          void Update()
          {
-                    
-            EndTurnButton.enabled = TurnManager.Manager.PlayerPhase || TurnManager.Manager.Preround;
-            CombatText.text = $"Turn: {TurnManager.Manager.TurnCounter}";
+
+            var turnManager = TurnManager.Manager;
+            EndTurnButton.enabled = turnManager.PlayerPhase || turnManager.Preround;
+             var turnName = turnManager.Preround ? "Preround:" :
+                 turnManager.PlayerPhase ? "Player Phase:" : "Enemy Phase"; 
+            CombatText.text = $"{turnName}\nTurn: {TurnManager.Manager.TurnCounter}";
              
             Character selectedPlayer = Interactions.Selected;
 
