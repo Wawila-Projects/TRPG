@@ -39,12 +39,20 @@ namespace Assets.Take_II.Scripts.GameManager
                 ++PlayerTurnCounter;
                 EnemyPhase = false;
                 PlayerPhase = true;
+                foreach (var player in GameController.Manager.Players)
+                {
+                    player.TurnFinished = false;
+                }
             }
             else if (TurnCounter > 0)
             {
                 ++EnemyTurnCounter;
                 EnemyPhase = true;
                 PlayerPhase = false;
+                foreach (var enemy in GameController.Manager.Enemies)
+                {
+                    enemy.TurnFinished = false;
+                }
             }
 
             return TurnCounter;

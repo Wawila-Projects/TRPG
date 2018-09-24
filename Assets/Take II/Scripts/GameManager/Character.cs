@@ -34,6 +34,7 @@ namespace Assets.Take_II.Scripts.GameManager
         public bool IsDead;
         public bool IsRange;
         public int WeaponRange;
+        public bool TurnFinished;
 
         public bool IsEqualTo(Character other)
         {

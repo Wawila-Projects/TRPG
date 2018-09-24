@@ -39,7 +39,7 @@ namespace Assets.Take_II.Scripts.EnemyManager
 
             CombatManager.Manager.BasicAttack(this, Target);
             Target = null;
-
+            TurnFinished = true;
         }
 
         public void Act()
@@ -91,6 +91,12 @@ namespace Assets.Take_II.Scripts.EnemyManager
                 Destiny.OccupiedBy = this;
                 Location = Destiny;
                 Destiny = null;
+
+                if (Target == null || DistanceFromCombatRange(Target) != 0)
+                {
+                    TurnFinished = true;
+                }
+
                 return;
             }
 

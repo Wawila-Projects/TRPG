@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections;
+using System.Collections.Generic;
 using Assets.Take_II.Scripts.GameManager;
 using UnityEngine;
 
@@ -15,12 +16,20 @@ namespace Assets.Take_II.Scripts.EnemyManager
             if (!TurnManager.Manager.EnemyPhase)
                 return;
 
+            StartCoroutine(EnemyAct());
+            TurnManager.Manager.NextTurn();
+        }
+        
+        private IEnumerator EnemyAct()
+        {
             foreach (var enemy in Enemies)
             {
-                enemy.Act();
-            }
+                if (enemy.IsDead)
+                    continue;
 
-            TurnManager.Manager.NextTurn();
+                enemy.Act();
+                yield return new WaitUntil(() => enemy.TurnFinished);
+            }
         }
     }
 }
