@@ -1,7 +1,6 @@
 ﻿using Assets.Take_II.Scripts.GameManager;
 using Assets.Take_II.Scripts.InputManger;
- using Assets.Take_II.Scripts.PlayerManager;
- using UnityEngine;
+using UnityEngine;
  using UnityEngine.UI;
 
  namespace Assets.Take_II.Scripts.UI
@@ -11,14 +10,13 @@ using Assets.Take_II.Scripts.InputManger;
          public Text TargetText;
          public Text SelectedText;
          public Text CombatText;
-        
+         public Button EndTurnButton;
+
          public PlayerInteractions Interactions;
          public EnemyInteractions EnemyInteractions;
 
          void Awake()
          {
-             Interactions = gameObject.GetComponent<PlayerInteractions>();
-             EnemyInteractions = gameObject.GetComponent<EnemyInteractions>();
              SelectedText.color = Color.white;
              TargetText.color = Color.white;
              CombatText.color = Color.white;
@@ -30,15 +28,19 @@ using Assets.Take_II.Scripts.InputManger;
 
          void Update()
          {
-             Character selectedPlayer = Interactions.Selected;
+                    
+            EndTurnButton.enabled = TurnManager.Manager.PlayerPhase || TurnManager.Manager.Preround;
+            CombatText.text = $"Turn: {TurnManager.Manager.TurnCounter}";
+             
+            Character selectedPlayer = Interactions.Selected;
 
-             if (selectedPlayer == null )
-                 selectedPlayer = EnemyInteractions.Selected;
+            if (selectedPlayer == null )
+                selectedPlayer = EnemyInteractions.Selected;
 
-             var target = Interactions.Target;
-             var targetPlayer = target == null ? null : target.GetComponent<Character>();
+            var target = Interactions.Target;
+            var targetPlayer = target == null ? null : target.GetComponent<Character>();
             
-             SetPlayerText(selectedPlayer, targetPlayer);
+            SetPlayerText(selectedPlayer, targetPlayer);
          }
 
          public void SetPlayerText(Character selectedCharacter, Character targetCharacter)
@@ -84,5 +86,11 @@ Level: {targetCharacter.Stats.Level}
             SelectedText.text = selected;
              TargetText.text = target;
          }
+
+         public void EndTurnButtonPressed()
+         {
+             TurnManager.Manager.NextTurn();
+         }
+
      }
  }
