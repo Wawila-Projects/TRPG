@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using Assets.Take_II.Scripts.Combat;
+using Assets.Take_II.Scripts.GameManager;
 using UnityEngine;
 
 namespace Assets.Take_II.Scripts.EnemyManager
@@ -8,14 +8,11 @@ namespace Assets.Take_II.Scripts.EnemyManager
     {
         public List<Enemy> Enemies;
 
-        void Awake()
-        {
-            Enemies = new List<Enemy>();
-        }
-
         void Update()
         {
-            if (TurnManager.Manager.PlayerPhase)
+           Enemies = GameController.Manager.Enemies;
+
+            if (!TurnManager.Manager.EnemyPhase)
                 return;
 
             foreach (var enemy in Enemies)
