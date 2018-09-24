@@ -1,23 +1,16 @@
 ﻿using System.Collections;
+using System.Collections.Generic;
 using Assets.Take_II.Scripts.GameManager;
 using Assets.Take_II.Scripts.HexGrid;
-using Assets.Take_II.Scripts.PlayerManager;
 using UnityEngine;
 
 namespace Assets.Scenes
 {
     public class CombatScene : MonoBehaviour
     {
-        public Character P1;
-        public Character P2;
-        public Character Enemy;
+        public List<Character> Characters = new List<Character>();
+        public  List<Vector2> Positions = new List<Vector2>();
 
-        public Vector2 P1Location = new Vector2(0,0);
-        public Vector2 P2Location = new Vector2(1, 0);
-        public Vector2 EnemyLocation = new Vector2(2, 2);
-
-
-        // Use this for initialization
         void Start()
         {
             StartCoroutine(Scenario1(0.2f));
@@ -27,28 +20,16 @@ namespace Assets.Scenes
         {
             yield return new WaitForSeconds(time);
 
-            var go = GameObject.Find($"Hex_{P1Location.x}_{P1Location.y}");
-            var tile = go.GetComponent<Tile>();
-            P1.Location = tile;
-            tile.OccupiedBy = P1;
-            P1.Location = tile;
-            P1.transform.position = tile.transform.position + new Vector3(0, 0, -1);
+            for (var i = 0; i < Characters.Count; i++)
+            {
+                var go = GameObject.Find($"Hex_{Positions[i].x}_{Positions[i].y}");
+                var tile = go.GetComponent<Tile>();
+                Characters[i].Location = tile;
+                tile.OccupiedBy = Characters[i];
+                Characters[i].Location = tile;
+                Characters[i].transform.position = tile.transform.position + new Vector3(0, 0, -1);
 
-            go = GameObject.Find($"Hex_{P2Location.x}_{P2Location.y}");
-            tile = go.GetComponent<Tile>();
-            P2.Location = tile;
-            tile.OccupiedBy = P2;
-            P2.Location = tile;
-            P2.transform.position = tile.transform.position + new Vector3(0, 0, -1);
-
-            go = GameObject.Find($"Hex_{EnemyLocation.x}_{EnemyLocation.y}");
-            tile = go.GetComponent<Tile>();
-            Enemy.Location = tile;
-            tile.OccupiedBy = Enemy;
-            Enemy.Location = tile;
-            Enemy.transform.position = tile.transform.position + new Vector3(0, 0, -1);
-
-
+            }
         }
         
     }
