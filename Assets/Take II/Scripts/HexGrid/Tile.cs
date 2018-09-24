@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using Assets.Take_II.Scripts.PlayerManager;
 using UnityEngine;
 using UnityEditor;
 using System;
@@ -68,7 +67,7 @@ namespace Assets.Take_II.Scripts.HexGrid
             return Neighbors.Any(neighbor => neighbor.IsEqualTo(other));
         }
 
-        private Vector3 oddRToCube() 
+        private Vector3 OddRToCube() 
         {
             var x = GridX - (GridY - (GridY % 1)) / 2;
             var y = GridY;
@@ -78,8 +77,8 @@ namespace Assets.Take_II.Scripts.HexGrid
 
         public float Distance(Tile other) 
         {
-            var thisCube = oddRToCube();
-            var otherCube = other.oddRToCube();
+            var thisCube = OddRToCube();
+            var otherCube = other.OddRToCube();
 
             var distance = Math.Max(Math.Abs(thisCube.x - otherCube.x),
                                     Math.Abs(thisCube.y - otherCube.y));
@@ -91,6 +90,12 @@ namespace Assets.Take_II.Scripts.HexGrid
         {
             var distance = Distance(other.Location);
             return (int)(distance - character.WeaponRange);
+        }
+
+        public bool IsReachable(Tile destiny, int amount)
+        {
+            var distance = Distance(destiny);
+            return distance <= amount;
         }
 
         public void OnDrawGizmos() {

@@ -113,7 +113,7 @@ namespace Assets.Take_II.Scripts.InputManger
                 return true;
             }
 
-            if (!IsReachable(Selected.Location, tile))
+            if (!Selected.Location.IsReachable(tile, Selected.Movement))
             {
                 if (moveTowardsUnreachable)
                 {
@@ -163,13 +163,7 @@ namespace Assets.Take_II.Scripts.InputManger
             var destination = Vector3.MoveTowards(Selected.transform.position, dest, 3 * Time.deltaTime);
             Selected.transform.position = destination;
         }
-
-        private bool IsReachable(Tile origin, Tile destiny)
-        {
-            var distance = origin.Distance(destiny);
-            return distance <= Selected.Stats.Movement;
-        }
-
+        
         private void ClearSelected()
         {
             Selected = null;
