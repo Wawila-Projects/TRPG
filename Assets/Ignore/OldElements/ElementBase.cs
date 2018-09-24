@@ -1,7 +1,7 @@
 ﻿using Assets.Take_II.Scripts.Enums;
 using Assets.Take_II.Scripts.PlayerManager;
 
-namespace Assets.Take_II.Scripts.Elements
+namespace Assets.Ignore.OldElements
 {
     public abstract class ElementBase
     {

@@ -12,12 +12,30 @@ namespace Assets.Take_II.Scripts.PlayerManager
     {
         public string Name;
         public Tile Location;
-        public int CurrentHealth;
+
+        [SerializeField]
+        private int _currentHealth;
+        public int CurrentHealth
+        {
+            get { return _currentHealth; }
+            set
+            {
+                if (value > 0)
+                {
+                    _currentHealth = value;
+                }
+                else
+                {
+                    _currentHealth = 0;
+                    IsDead = true;
+                }
+            }
+        }
+
         public int CurrentActionPoints;
 
-        //public Equipment Equipment;
-        
-        public Stats Stats = new Stats();
+        public Equipment Equipment = new Equipment();
+        public Stats Stats;
         public ActionHandler ActionsHandler;
 
         public int Movement => Stats.Movement;
@@ -29,10 +47,17 @@ namespace Assets.Take_II.Scripts.PlayerManager
 
         void Awake()
         {
-            Name = gameObject.name;   
+            Name = gameObject.name;
+            Stats = new Stats();
+            Equipment = new Equipment();
             WeaponRange = IsRange ? 2 : 1;
+            Stats.Hp = 100;
             CurrentHealth = Stats.Hp;
             Stats.Movement = 3;
+            Stats.Endurance = 5;
+            Stats.Strength = 10;
+            Equipment.Armor = 10;
+            Equipment.AttackPower = 100;
         }
 
         void Update()

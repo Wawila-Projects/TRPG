@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using Assets.Take_II.Scripts.Combat;
 using Assets.Take_II.Scripts.HexGrid;
 using Assets.Take_II.Scripts.PlayerManager;
 using UnityEngine;
@@ -36,6 +37,7 @@ namespace Assets.Take_II.Scripts.InputManger
             else if (IsInCombat)
             {
                 Debug.Log("Attacking: " + Target.name);
+                CombatManager.Manager.BasicAttack(Selected, Target.GetComponent<Player>());
                 IsInCombat = false;
                 ClearSelected();
             }
@@ -82,17 +84,20 @@ namespace Assets.Take_II.Scripts.InputManger
                 return false;
             
             if (_target.IsEnemy != _selected.IsEnemy)
+            {
                 IsInCombat = true;
-            else if(_selected.IsHealer)
+            }
+            else if (_selected.IsHealer)
+            {
                 IsHealing = true;
+            }
 
             Target = _target.gameObject;
-            Selected = _selected;
+            if (Selected == null)
+                Selected = _selected;
             _target = null;
             _selected = null;
-
-            var clearMap = true;
-            return clearMap;
+            return true;
         }
 
         private bool ActOnTile(ref bool clearMap, bool moveTowardsUnreachable = false)
