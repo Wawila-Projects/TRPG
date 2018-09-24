@@ -1,9 +1,8 @@
-using System;
+using Assets.Take_II.Scripts.EnemyManager;
 using Assets.Take_II.Scripts.Enums;
+using Assets.Take_II.Scripts.GameManager;
 using Assets.Take_II.Scripts.PlayerManager;
 using Assets.Take_II.Scripts.Spells;
-using GooglePlayServices;
-using NUnit.Framework;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -13,11 +12,23 @@ namespace Assets.Take_II.Scripts.Combat {
 
         private CombatManager() { }
 
-        public void BasicAttack(Player attacker, Player defender)
+        public void BasicAttack(Character attacker, Character defender)
         {
             if (attacker == null || defender == null) return;
 
-            var damage = Attack(attacker, defender, attacker.Equipment.AttackPower, true);
+            var attackPower = 0;
+            if (attacker is Player)
+            {
+                attackPower = ((Player) attacker).Equipment.AttackPower;
+            }
+            else if (attacker is Enemy)
+            {
+                attackPower = ((Enemy) attacker).BasicAttack;
+            }
+            
+            var player = defender as Player;
+            var damage = player != null ? Attack(attacker, player, attackPower, true) : 
+                Attack(attacker, defender, attackPower, true);
 
             var resistances = defender.Stats.Resistances;
 
@@ -40,20 +51,36 @@ namespace Assets.Take_II.Scripts.Combat {
             }
         }
 
-        public int PhysicalAttack(Player attacker, Player defender, Spell spell) {
-            return Attack(attacker, defender, spell.Power, true);
+        public int PhysicalAttack(Character attacker, Character defender, Spell spell)
+        {
+            var player = defender as Player;
+            return player != null ? Attack(attacker, player, spell.Power, true) : 
+                Attack(attacker, defender, spell.Power, true);
         }
 
-        public int MagicalAttack(Player attacker, Player defender, Spell spell) {
-            return Attack(attacker, defender, spell.Power, false);
+        public int MagicalAttack(Character attacker, Character defender, Spell spell) {
+            var player = defender as Player;
+            return player != null ? Attack(attacker, player, spell.Power, false) :
+                Attack(attacker, defender, spell.Power, false);
         }
 
-        private static int Attack(Player attacker, Player defender, int attackPower, bool isPhysical) {
+        private static int Attack(Character attacker, Player defender, int attackPower, bool isPhysical) {
             float attackStat =  isPhysical ? attacker.Stats.Strength : attacker.Stats.Magic;
             attackStat *= attacker.Stats.AttackBuff ? 2f : 1f;
             float endurance = defender.Equipment.Armor + defender.Stats.Endurance * 8;
             endurance *= defender.Stats.DefenceBuff ? 2f : 1f;
             var netdamage = Mathf.Sqrt((attackStat/endurance) * attackPower);
+            var damage = netdamage * Random.Range(0.95f, 1.06f);
+            return Mathf.RoundToInt(damage);
+        }
+
+        private static int Attack(Character attacker, Character defender, int attackPower, bool isPhysical)
+        {
+            float attackStat = isPhysical ? attacker.Stats.Strength : attacker.Stats.Magic;
+            attackStat *= attacker.Stats.AttackBuff ? 2f : 1f;
+            float endurance = defender.Stats.Endurance * 8;
+            endurance *= defender.Stats.DefenceBuff ? 2f : 1f;
+            var netdamage = Mathf.Sqrt((attackStat / endurance) * attackPower);
             var damage = netdamage * AttackVariance(attacker.Stats.Luck);
             return Mathf.RoundToInt(damage);
         }

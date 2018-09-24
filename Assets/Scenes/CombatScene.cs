@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using Assets.Take_II.Scripts.GameManager;
 using Assets.Take_II.Scripts.HexGrid;
 using Assets.Take_II.Scripts.PlayerManager;
 using UnityEngine;
@@ -7,9 +8,9 @@ namespace Assets.Scenes
 {
     public class CombatScene : MonoBehaviour
     {
-        public Player P1;
-        public Player P2;
-        public Player Enemy;
+        public Character P1;
+        public Character P2;
+        public Character Enemy;
 
         public Vector2 P1Location = new Vector2(0,0);
         public Vector2 P2Location = new Vector2(1, 0);

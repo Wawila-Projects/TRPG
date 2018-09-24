@@ -6,9 +6,9 @@
 // {
 //     public class GameManager: MonoBehaviour {
 //         //public static GameManager Instance { get; } = new TurnManager();
-//         //public List<Func<void, Player>> Actions = new List<Func<void, Player>>;
-//         public List<Player> ActivePlayers = new List<Player>();
-//         public List<Player> Enemies = new List<Player>();
+//         //public List<Func<void, Character>> Actions = new List<Func<void, Character>>;
+//         public List<Character> ActivePlayers = new List<Character>();
+//         public List<Character> Enemies = new List<Character>();
 
 //         private TurnManager _turnManager = new TurnManager();
 //         private CombatManager _combatManager;

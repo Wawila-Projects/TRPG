@@ -15,7 +15,7 @@
 //             EmpowerPoints = empowerPoints;
 //         }
 
-//         public override void ApplyEffect(Player player)
+//         public override void ApplyEffect(Character player)
 //         {
 //              player.TalentTree.AvailableEmpowerPoints[Element] += EmpowerPoints;
 //         }

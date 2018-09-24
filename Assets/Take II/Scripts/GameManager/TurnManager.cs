@@ -2,7 +2,7 @@
 {
     public sealed class TurnManager {
 
-        //public static TurnManager Instance { get; } = new TurnManager();
+        public static TurnManager Manager { get; } = new TurnManager();
 
         public uint TurnCounter { get; private set; }
         public uint PlayerTurnCounter { get; private set; }

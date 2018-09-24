@@ -7,14 +7,6 @@ namespace Assets.Take_II.Scripts.InputManger
     {
         public Tile Selected;
 
-        //void Update()
-        //{
-        //    if(Selected == null)
-        //        return;
-
-        //    DrawTileInfo();
-        //}
-
         public void DrawReachableArea(int total, Tile selected, bool isRange = false)
         {
             if (total < 0 || selected == null) {
@@ -42,7 +34,7 @@ namespace Assets.Take_II.Scripts.InputManger
         private void PaintNeighbors(Tile selected, Color color) {
            foreach (var neighbor in selected.Neighbors)
             {
-                SpriteRenderer sprite = neighbor.GetComponentInChildren<SpriteRenderer>();
+                var sprite = neighbor.GetComponentInChildren<SpriteRenderer>();
                 if (sprite.color != Color.cyan)
                     sprite.color = color;
             }

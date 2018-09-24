@@ -1,9 +1,10 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using Assets.Take_II.Scripts.Combat;
+using Assets.Take_II.Scripts.EnemyManager;
 using Assets.Take_II.Scripts.HexGrid;
 using Assets.Take_II.Scripts.PlayerManager;
 using UnityEngine;
+using Character = Assets.Take_II.Scripts.GameManager.Character;
 
 namespace Assets.Take_II.Scripts.InputManger
 {
@@ -12,7 +13,7 @@ namespace Assets.Take_II.Scripts.InputManger
         public Player Selected;
         public GameObject Target;
         [SerializeField]
-        private Player _target;
+        private Character _target;
         [SerializeField]
         private Player _selected;
 
@@ -37,7 +38,7 @@ namespace Assets.Take_II.Scripts.InputManger
             else if (IsInCombat)
             {
                 Debug.Log("Attacking: " + Target.name);
-                CombatManager.Manager.BasicAttack(Selected, Target.GetComponent<Player>());
+                CombatManager.Manager.BasicAttack(Selected, Target.GetComponent<Character>());
                 IsInCombat = false;
                 ClearSelected();
             }
@@ -58,7 +59,7 @@ namespace Assets.Take_II.Scripts.InputManger
 
         private bool ActOnPlayer(ref bool clearMap)
         {
-            var target = Target.GetComponent<Player>();
+            var target = Target.GetComponent<Character>();
 
             if (target == null) return false;
 
@@ -83,11 +84,11 @@ namespace Assets.Take_II.Scripts.InputManger
             if (_target == null || !_selected.IsInRange(_target))
                 return false;
             
-            if (_target.IsEnemy != _selected.IsEnemy)
+            if (_target is Enemy)
             {
                 IsInCombat = true;
             }
-            else if (_selected.IsHealer)
+            else if (_target is Player)
             {
                 IsHealing = true;
             }

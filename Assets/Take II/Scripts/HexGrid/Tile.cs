@@ -4,6 +4,7 @@ using Assets.Take_II.Scripts.PlayerManager;
 using UnityEngine;
 using UnityEditor;
 using System;
+using Assets.Take_II.Scripts.GameManager;
 
 namespace Assets.Take_II.Scripts.HexGrid
 {
@@ -16,7 +17,7 @@ namespace Assets.Take_II.Scripts.HexGrid
         public int GridY;
         public int TerrainType;
         public int Cost;
-        public Player OccupiedBy;
+        public Character OccupiedBy;
 
         public List<Tile> Neighbors;
 
@@ -86,10 +87,10 @@ namespace Assets.Take_II.Scripts.HexGrid
             return distance;
         }
 
-        public int DistanceFromCombatRange(Player player, Player other) 
+        public int DistanceFromCombatRange(Character character, Character other) 
         {
             var distance = Distance(other.Location);
-            return (int)(distance - player.WeaponRange);
+            return (int)(distance - character.WeaponRange);
         }
 
         public void OnDrawGizmos() {

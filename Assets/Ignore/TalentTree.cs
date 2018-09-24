@@ -7,7 +7,7 @@
 //     public class TalentTree
 //     {
 //         public int AvailableTalentPoints;
-//         public Player Player;
+//         public Character Character;
 //         public Dictionary<string,TalentBase> Talents = new Dictionary<string, TalentBase>();
 //         public Dictionary<Enums.Elements, int> AvailableEmpowerPoints = new Dictionary<Enums.Elements, int>();
 //         public Dictionary<Statistics, int> StatGrowth = new Dictionary<Statistics, int>();

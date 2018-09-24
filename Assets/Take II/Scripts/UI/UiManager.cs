@@ -1,4 +1,5 @@
-﻿using Assets.Take_II.Scripts.InputManger;
+﻿using Assets.Take_II.Scripts.GameManager;
+using Assets.Take_II.Scripts.InputManger;
  using Assets.Take_II.Scripts.PlayerManager;
  using UnityEngine;
  using UnityEngine.UI;
@@ -12,10 +13,12 @@
          public Text CombatText;
         
          public PlayerInteractions Interactions;
+         public EnemyInteractions EnemyInteractions;
 
          void Awake()
          {
              Interactions = gameObject.GetComponent<PlayerInteractions>();
+             EnemyInteractions = gameObject.GetComponent<EnemyInteractions>();
              SelectedText.color = Color.white;
              TargetText.color = Color.white;
              CombatText.color = Color.white;
@@ -27,17 +30,20 @@
 
          void Update()
          {
-             var selectedPlayer = Interactions.Selected;
+             Character selectedPlayer = Interactions.Selected;
+
+             if (selectedPlayer == null )
+                 selectedPlayer = EnemyInteractions.Selected;
 
              var target = Interactions.Target;
-             var targetPlayer = target == null ? null : target.GetComponent<Player>();
+             var targetPlayer = target == null ? null : target.GetComponent<Character>();
             
              SetPlayerText(selectedPlayer, targetPlayer);
          }
 
-         public void SetPlayerText(Player selectedPlayer, Player targetPlayer)
+         public void SetPlayerText(Character selectedCharacter, Character targetCharacter)
          {
-             if (selectedPlayer == null)
+             if (selectedCharacter == null)
              {
                  TargetText.text = "";
                  SelectedText.text = "";
@@ -45,19 +51,19 @@
              }
 
              var selected =
-                 $@"{selectedPlayer.name}: 
- Level: {selectedPlayer.Stats.Level}
- HP: {selectedPlayer.CurrentHealth}/{selectedPlayer.Stats.Hp}
- SP: {selectedPlayer.Stats.Sp} 
- Strength: {selectedPlayer.Stats.Strength}
- Magic: {selectedPlayer.Stats.Magic}
- Endurance: {selectedPlayer.Stats.Endurance}
- Agility: {selectedPlayer.Stats.Agility}
- Luck: {selectedPlayer.Stats.Luck}";
+                 $@"{selectedCharacter.name}: 
+ Level: {selectedCharacter.Stats.Level}
+ HP: {selectedCharacter.CurrentHealth}/{selectedCharacter.Stats.Hp}
+ SP: {selectedCharacter.Stats.Sp} 
+ Strength: {selectedCharacter.Stats.Strength}
+ Magic: {selectedCharacter.Stats.Magic}
+ Endurance: {selectedCharacter.Stats.Endurance}
+ Agility: {selectedCharacter.Stats.Agility}
+ Luck: {selectedCharacter.Stats.Luck}";
 
              SelectedText.text = selected;
 
-             if (targetPlayer == null || selectedPlayer.IsEqualTo(targetPlayer))
+             if (targetCharacter == null || selectedCharacter.IsEqualTo(targetCharacter))
              {
                  SelectedText.text = selected;
                  TargetText.text = "";
@@ -65,15 +71,15 @@
              }
 
              var target =
-                 $@"{targetPlayer.name}: 
-Level: {targetPlayer.Stats.Level}
- HP: {targetPlayer.CurrentHealth}/{targetPlayer.Stats.Hp}
- SP: {targetPlayer.Stats.Sp} 
- Strength: {targetPlayer.Stats.Strength}
- Magic: {targetPlayer.Stats.Magic}
- Endurance: {targetPlayer.Stats.Endurance}
- Agility: {targetPlayer.Stats.Agility}
- Luck: {targetPlayer.Stats.Luck}";
+                 $@"{targetCharacter.name}: 
+Level: {targetCharacter.Stats.Level}
+ HP: {targetCharacter.CurrentHealth}/{targetCharacter.Stats.Hp}
+ SP: {targetCharacter.Stats.Sp} 
+ Strength: {targetCharacter.Stats.Strength}
+ Magic: {targetCharacter.Stats.Magic}
+ Endurance: {targetCharacter.Stats.Endurance}
+ Agility: {targetCharacter.Stats.Agility}
+ Luck: {targetCharacter.Stats.Luck}";
 
             SelectedText.text = selected;
              TargetText.text = target;

@@ -1,4 +1,6 @@
-﻿using Assets.Take_II.Scripts.HexGrid;
+﻿using Assets.Take_II.Scripts.EnemyManager;
+using Assets.Take_II.Scripts.GameManager;
+using Assets.Take_II.Scripts.HexGrid;
 using Assets.Take_II.Scripts.PlayerManager;
 using UnityEngine;
 
@@ -6,100 +8,122 @@ namespace Assets.Take_II.Scripts.InputManger
 {
     public class InputManager : MonoBehaviour
     {
-        private MapInteractions MapInteractions;
-        private PlayerInteractions PlayerInteractions; 
-        public RaycastHit2D raycast;
-        public GameObject _object;
+        public RaycastHit2D Raycast;
+        public GameObject Object;
 
+        private MapInteractions _mapInteractions;
+        private PlayerInteractions _playerInteractions;
+        private EnemyInteractions _enemyInteractions;
+        
         void Awake() {
-            PlayerInteractions = GetComponent<PlayerInteractions>();
-            MapInteractions = GetComponent<MapInteractions>();
+            _playerInteractions = GetComponent<PlayerInteractions>();
+            _mapInteractions = GetComponent<MapInteractions>();
+            _enemyInteractions = GetComponent<EnemyInteractions>();
         }
 
         void Update()
         {
-            raycast = Physics2D.Raycast(Camera.main.ScreenToWorldPoint(Input.mousePosition), Vector2.zero);
+            Raycast = Physics2D.Raycast(Camera.main.ScreenToWorldPoint(Input.mousePosition), Vector2.zero);
 
-            if (!raycast) return;
+            if (!Raycast) return;
 
-            _object = raycast.collider.transform.gameObject;
+            Object = Raycast.collider.transform.gameObject;
 
-            var tile = _object.GetComponent<Tile>();
 
-            if (_object.GetComponent<Player>() != null || PlayerInteractions.Selected != null)
+            var enemy = Object.GetComponent<Enemy>();
+            if (enemy != null && _playerInteractions.Selected == null)
             {
-                PlayerRaycasting(_object);
+               EnemyRayCasting(enemy);
+                return;
             }
-            else if(tile != null)
+            
+            if (Object.GetComponent<Character>() != null || _playerInteractions.Selected != null)
+            {
+                PlayerRaycasting(Object);
+                return;
+            }
+
+            var tile = Object.GetComponent<Tile>();
+            if (tile != null)
             {
                 MapRayCasting(tile);
+                return;
             }
+            
+            if (!Input.GetKeyDown(KeyCode.Escape) || _playerInteractions.IsMoving) return;
 
-            if (!Input.GetKeyDown(KeyCode.Escape) || PlayerInteractions.IsMoving) return;
-
-            if (PlayerInteractions.Selected != null)
+            if (_playerInteractions.Selected != null)
             {
-                var clearAmount = PlayerInteractions.Selected.Stats.Movement;
-                var clearLocation = PlayerInteractions.Selected.Location;
-                var clearRange = PlayerInteractions.Selected.IsRange;
-                MapInteractions.ClearReachableArea(clearAmount, clearLocation, clearRange);
+                var clearAmount = _playerInteractions.Selected.Stats.Movement;
+                var clearLocation = _playerInteractions.Selected.Location;
+                var clearRange = _playerInteractions.Selected.IsRange;
+                _mapInteractions.ClearReachableArea(clearAmount, clearLocation, clearRange);
 
-                MapInteractions.Selected = null;
+                _mapInteractions.Selected = null;
+                _enemyInteractions.Selected = null;
+
             }
 
-            if (PlayerInteractions.Target != null) 
-                PlayerInteractions.Target = null;
+            if (_playerInteractions.Target != null) 
+                _playerInteractions.Target = null;
             else
-                PlayerInteractions.Selected = null;
+                _playerInteractions.Selected = null;
         }
 
         private void PlayerRaycasting(GameObject obj)
         {
-            if (PlayerInteractions.IsMoving) return;
+            if (_playerInteractions.IsMoving) return;
 
             if (!Input.GetMouseButtonDown(0)) return;
 
-            if (PlayerInteractions.Selected == null)
+            if (_playerInteractions.Selected == null)
             {
-                PlayerInteractions.Selected = obj.GetComponent<Player>();
-                MapInteractions.Selected = null;
-                var drawAmount = PlayerInteractions.Selected.Stats.Movement;
-                var drawLocation = PlayerInteractions.Selected.Location;
-                var drawRange = PlayerInteractions.Selected.IsRange;
-                MapInteractions.DrawReachableArea(drawAmount, drawLocation, drawRange);
+                _playerInteractions.Selected = obj.GetComponent<Player>();
+                _mapInteractions.Selected = null;
+                var drawAmount = _playerInteractions.Selected.Stats.Movement;
+                var drawLocation = _playerInteractions.Selected.Location;
+                var drawRange = _playerInteractions.Selected.IsRange;
+                _mapInteractions.DrawReachableArea(drawAmount, drawLocation, drawRange);
             }
-            else if (PlayerInteractions.Selected != null && PlayerInteractions.Target == null &&
-                     PlayerInteractions.Selected.gameObject != obj)
+            else if (_playerInteractions.Selected != null && _playerInteractions.Target == null &&
+                     _playerInteractions.Selected.gameObject != obj)
             {
-                PlayerInteractions.Target = obj;
+                _playerInteractions.Target = obj;
             }
-            else if (PlayerInteractions.Target == obj)     
+            else if (_playerInteractions.Target == obj)     
             {
                 bool clearMap;
-                var clearAmount = PlayerInteractions.Selected.Stats.Movement;
-                var clearLocation = PlayerInteractions.Selected.Location;
-                var clearRange = PlayerInteractions.Selected.IsRange;
-                PlayerInteractions.Act(out clearMap);
+                var clearAmount = _playerInteractions.Selected.Stats.Movement;
+                var clearLocation = _playerInteractions.Selected.Location;
+                var clearRange = _playerInteractions.Selected.IsRange;
+                _playerInteractions.Act(out clearMap);
                 if(clearMap)
-                    MapInteractions.ClearReachableArea(clearAmount, clearLocation, clearRange);
+                    _mapInteractions.ClearReachableArea(clearAmount, clearLocation, clearRange);
             }   
             else 
             {
-                PlayerInteractions.Target = obj;
+                _playerInteractions.Target = obj;
             }
         }
 
         public void MapRayCasting(Tile tile)
         {
-            if (PlayerInteractions.IsMoving) return;
+            if (_playerInteractions.IsMoving) return;
 
             if (Input.GetMouseButtonDown(0))
             {
-                if (MapInteractions.Selected != null) return;
-
-                MapInteractions.Selected = tile;
+                _mapInteractions.Selected = tile;
             }
+        }
 
+        public void EnemyRayCasting(Enemy enemy)
+        {
+            if (_playerInteractions.IsMoving) return;
+
+            if (Input.GetMouseButtonDown(0))
+            {
+                _enemyInteractions.Selected = enemy;
+            }
         }
     } 
 }

@@ -21,12 +21,12 @@
 //                 return false;
 
 //             IsActive = true;
-//             ApplyEffect(TalentTree.Player);
+//             ApplyEffect(TalentTree.Character);
 //             TalentTree.AvailableTalentPoints--;
 
 //             return true;
 //         }
        
-//         public abstract void ApplyEffect(Player player);
+//         public abstract void ApplyEffect(Character player);
 //     }
 // }

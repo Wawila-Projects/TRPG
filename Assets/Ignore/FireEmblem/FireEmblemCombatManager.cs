@@ -9,8 +9,8 @@
 // {
 //     public sealed class FireEmblemCombatManager : MonoBehaviour
 //     {
-//         public Player Attacker;
-//         public Player Defender;
+//         public Character Attacker;
+//         public Character Defender;
         
 //         [SerializeField]
 //         private int _seed;
@@ -28,7 +28,7 @@
 //         {
 //             Attacker = _interactions.Selected;
 //             var target = _interactions.Target;
-//             Defender = target == null ? null : target.GetComponent<Player>();
+//             Defender = target == null ? null : target.GetComponent<Character>();
 
 //             Combat();
 //         }

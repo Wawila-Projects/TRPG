@@ -11,7 +11,7 @@
 //             Resistance = resistance;
 //         }
 
-//         public override void ApplyEffect(Player player)
+//         public override void ApplyEffect(Character player)
 //         {
 //             player.Resistances.ModifyResistance(Element, Resistance);
 //         }

@@ -10,10 +10,10 @@
 //         {
 //         }
 
-//         public override void ApplyEffect(Player player)
+//         public override void ApplyEffect(Character player)
 //         {
 //             TalentTree.AvailableEmpowerPoints[Element]++;
-//             TalentTree.Player.Resistances.ModifyResistance(Element, 2);
+//             TalentTree.Character.Resistances.ModifyResistance(Element, 2);
 //         }
 //     }
 
