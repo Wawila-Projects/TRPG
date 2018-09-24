@@ -1,19 +1,22 @@
-﻿namespace Assets.Take_II.Scripts.Combat
+﻿using UnityEngine;
+
+namespace Assets.Take_II.Scripts.GameManager
 {
-    public sealed class TurnManager {
+    public sealed class TurnManager: MonoBehaviour {
 
-        public static TurnManager Manager { get; } = new TurnManager();
+        public static TurnManager Manager { get; private set; }
 
-        public uint TurnCounter { get; private set; }
-        public uint PlayerTurnCounter { get; private set; }
-        public uint EnemyTurnCounter { get; private set; }
+        public uint TurnCounter;
+        public uint PlayerTurnCounter;
+        public uint EnemyTurnCounter;
 
-        public bool PlayerPhase { get; private set; }
-        public bool EnemyPhase { get; private set; }
+        public bool PlayerPhase;
+        public bool EnemyPhase;
         public bool Preround => TurnCounter == 0;
 
-        public TurnManager()
+        void Awake()
         {
+            Manager = this;
             TurnCounter = 0;
         }
 
