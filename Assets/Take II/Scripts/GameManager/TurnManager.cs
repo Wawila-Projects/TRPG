@@ -17,7 +17,7 @@ namespace Assets.Take_II.Scripts.GameManager
         void Awake()
         {
             Manager = this;
-            TurnCounter = 0;
+            TurnCounter = 1;
         }
 
         public void ResetTurnCounter()
