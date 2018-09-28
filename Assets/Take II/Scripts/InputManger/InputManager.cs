@@ -23,13 +23,38 @@ namespace Assets.Take_II.Scripts.InputManger
 
         void Update()
         {
+            Raycasting();
+            EscapeInput();
+            
+        }
+
+        private void EscapeInput() {
+            if (!Input.GetKeyDown(KeyCode.Escape) || _playerInteractions?.IsMoving == true) return;
+
+            if (_playerInteractions.Selected != null)
+            {
+                _mapInteractions.Selected = null;
+                _enemyInteractions.Selected = null;
+            }
+
+            if (_playerInteractions.Target != null) 
+                _playerInteractions.Target = null;
+            else
+             {
+                var clearAmount = _playerInteractions.Selected?.Stats.Movement ?? 0;
+                var clearLocation = _playerInteractions.Selected?.Location;
+                var clearRange = _playerInteractions.Selected?.IsRange ?? true;
+                _mapInteractions.ClearReachableArea(clearAmount, clearLocation, clearRange);
+                _playerInteractions.Selected = null;
+             }   
+        }
+
+        private void Raycasting() {
             Raycast = Physics2D.Raycast(Camera.main.ScreenToWorldPoint(Input.mousePosition), Vector2.zero);
 
             if (!Raycast) return;
 
             Object = Raycast.collider.transform.gameObject;
-
-
             var enemy = Object.GetComponent<Enemy>();
             if (enemy != null && _playerInteractions.Selected == null)
             {
@@ -49,25 +74,6 @@ namespace Assets.Take_II.Scripts.InputManger
                 MapRayCasting(tile);
                 return;
             }
-            
-            if (!Input.GetKeyDown(KeyCode.Escape) || _playerInteractions.IsMoving) return;
-
-            if (_playerInteractions.Selected != null)
-            {
-                var clearAmount = _playerInteractions.Selected.Stats.Movement;
-                var clearLocation = _playerInteractions.Selected.Location;
-                var clearRange = _playerInteractions.Selected.IsRange;
-                _mapInteractions.ClearReachableArea(clearAmount, clearLocation, clearRange);
-
-                _mapInteractions.Selected = null;
-                _enemyInteractions.Selected = null;
-
-            }
-
-            if (_playerInteractions.Target != null) 
-                _playerInteractions.Target = null;
-            else
-                _playerInteractions.Selected = null;
         }
 
         private void PlayerRaycasting(GameObject obj)
