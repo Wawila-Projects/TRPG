@@ -10,14 +10,15 @@ namespace Assets.Take_II.Scripts.GameManager
         public uint PlayerTurnCounter;
         public uint EnemyTurnCounter;
 
-        public bool PlayerPhase;
-        public bool EnemyPhase;
+        public bool PlayerPhase => TurnCounter % 2 != 0;
+        public bool EnemyPhase => TurnCounter % 2 == 0;
         public bool Preround => TurnCounter == 0;
 
-        void Awake()
+        void Start()
         {
             Manager = this;
-            TurnCounter = 1;
+            TurnCounter = 0;
+            NextTurn();
         }
 
         public void ResetTurnCounter()
@@ -27,7 +28,7 @@ namespace Assets.Take_II.Scripts.GameManager
 
         public void StartRound()
         {
-            TurnCounter = 0;
+            TurnCounter = 1;
         }
 
         public uint NextTurn()
@@ -37,21 +38,19 @@ namespace Assets.Take_II.Scripts.GameManager
             if (TurnCounter % 2 != 0)
             {
                 ++PlayerTurnCounter;
-                EnemyPhase = false;
-                PlayerPhase = true;
                 foreach (var player in GameController.Manager.Players)
                 {
                     player.TurnFinished = false;
+                    player.Movement = player.Stats.Movement;
                 }
             }
             else if (TurnCounter > 0)
             {
                 ++EnemyTurnCounter;
-                EnemyPhase = true;
-                PlayerPhase = false;
                 foreach (var enemy in GameController.Manager.Enemies)
                 {
                     enemy.TurnFinished = false;
+                    enemy.Movement = enemy.Stats.Movement;
                 }
             }
 
