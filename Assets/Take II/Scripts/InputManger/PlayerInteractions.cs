@@ -40,6 +40,7 @@ namespace Assets.Take_II.Scripts.InputManger
                 Debug.Log("Attacking: " + Target.name);
                 CombatManager.Manager.BasicAttack(Selected, Target.GetComponent<Character>());
                 IsInCombat = false;
+                Selected.TurnFinished = true;
                 ClearSelected();
             }
             else if (IsHealing)
@@ -52,6 +53,13 @@ namespace Assets.Take_II.Scripts.InputManger
 
         public void Act(out bool clearMap)
         {
+            if (Selected.TurnFinished)
+            {
+                ClearSelected();
+                clearMap = true;
+                return;
+            }
+
             clearMap = false;
             if (ActOnTile(ref clearMap)) return;
             ActOnPlayer(ref clearMap);
@@ -120,7 +128,6 @@ namespace Assets.Take_II.Scripts.InputManger
                     var path = _pathfinding.FindPath(Selected.Location, tile);
                     if (path.Count == 0) return false;
                     Target = path.ElementAt(Selected.Stats.Movement).gameObject;
-
                     IsMoving = true;
                 }
                 else
