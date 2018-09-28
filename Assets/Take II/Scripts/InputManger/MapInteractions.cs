@@ -9,7 +9,10 @@ namespace Assets.Take_II.Scripts.InputManger
 
         public void DrawReachableArea(int total, Tile selected, bool isRange = false)
         {
-            if (total < 0 || selected == null) {
+            if (selected == null) 
+                return;
+
+            if (total < 0) {
                 if (!isRange) return;
                 PaintNeighbors(selected, Color.red);
                 return;
@@ -32,6 +35,9 @@ namespace Assets.Take_II.Scripts.InputManger
         }
 
         private void PaintNeighbors(Tile selected, Color color) {
+            if (selected == null)
+                return;
+
            foreach (var neighbor in selected.Neighbors)
             {
                 var sprite = neighbor.GetComponentInChildren<SpriteRenderer>();
@@ -42,7 +48,10 @@ namespace Assets.Take_II.Scripts.InputManger
 
         public void ClearReachableArea(int total, Tile selected, bool isRange = false)
         {
-            if (total < 0 || selected == null) {
+            if (selected == null)
+                return;
+
+            if (total < 0) {
                 if (!isRange) return;
                 PaintNeighbors(selected, Color.white);
                 return;
