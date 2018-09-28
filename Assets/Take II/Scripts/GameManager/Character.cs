@@ -30,11 +30,31 @@ namespace Assets.Take_II.Scripts.GameManager
         }
         
         public Stats Stats;
-        public int Movement => Stats.Movement;
+        public int Movement;
         public bool IsDead;
         public bool IsRange;
         public int WeaponRange;
         public bool TurnFinished;
+
+        public virtual void onAwake() { }
+        public virtual void onUpdate() { }
+        
+        void Awake() {
+            Name = gameObject.name;
+            Stats = new Stats();
+            WeaponRange = IsRange ? 2 : 1;
+            Stats.Hp = 100;
+            Stats.Movement = 3;
+            Stats.Strength = 10;
+            Stats.Endurance = 5;
+            CurrentHealth = Stats.Hp;
+            Movement = Stats.Movement;
+            onAwake();
+        }
+
+        void Update() {
+            onUpdate();
+        }
 
         public bool IsEqualTo(Character other)
         {

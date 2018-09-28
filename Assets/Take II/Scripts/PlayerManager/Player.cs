@@ -8,17 +8,8 @@ namespace Assets.Take_II.Scripts.PlayerManager
 
         public Equipment Equipment;
 
-        void Awake()
-        {
-            Name = gameObject.name;
-            Stats = new Stats();
+        public override void onAwake() {
             Equipment = new Equipment();
-            WeaponRange = IsRange ? 2 : 1;
-            Stats.Hp = 100;
-            CurrentHealth = Stats.Hp;
-            Stats.Movement = 3;
-            Stats.Endurance = 5;
-            Stats.Strength = 10;
             Equipment.Armor = 10;
             Equipment.AttackPower = 100;
         }

@@ -14,16 +14,8 @@ namespace Assets.Take_II.Scripts.EnemyManager
         public Player Target;
         private readonly AStar _pathfinding = new AStar();
 
-        void Awake()
+        public override void onAwake()
         {
-            Name = gameObject.name;
-            Stats = new Stats();
-            WeaponRange = IsRange ? 2 : 1;
-            Stats.Hp = 100;
-            CurrentHealth = Stats.Hp;
-            Stats.Movement = 3;
-            Stats.Endurance = 5;
-            Stats.Strength = 10;
             BasicAttack = 100;
         }
 
@@ -60,6 +52,7 @@ namespace Assets.Take_II.Scripts.EnemyManager
                     target = player;
             }
             ActOn(target);
+            TurnFinished = true;
         }
 
         public void ActOn(Tile tile)
