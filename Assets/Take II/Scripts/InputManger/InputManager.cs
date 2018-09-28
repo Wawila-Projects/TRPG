@@ -15,6 +15,9 @@ namespace Assets.Take_II.Scripts.InputManger
         private PlayerInteractions _playerInteractions;
         private EnemyInteractions _enemyInteractions;
         
+        [SerializeField]
+        public bool escpressed;
+
         void Awake() {
             _playerInteractions = GetComponent<PlayerInteractions>();
             _mapInteractions = GetComponent<MapInteractions>();
@@ -86,7 +89,7 @@ namespace Assets.Take_II.Scripts.InputManger
             {
                 _playerInteractions.Selected = obj.GetComponent<Player>();
                 _mapInteractions.Selected = null;
-                var drawAmount = _playerInteractions.Selected.Stats.Movement;
+                var drawAmount = _playerInteractions.Selected.Movement;
                 var drawLocation = _playerInteractions.Selected.Location;
                 var drawRange = _playerInteractions.Selected.IsRange;
                 _mapInteractions.DrawReachableArea(drawAmount, drawLocation, drawRange);
@@ -99,7 +102,7 @@ namespace Assets.Take_II.Scripts.InputManger
             else if (_playerInteractions.Target == obj)     
             {
                 bool clearMap;
-                var clearAmount = _playerInteractions.Selected.Stats.Movement;
+                var clearAmount = _playerInteractions.Selected.Movement;
                 var clearLocation = _playerInteractions.Selected.Location;
                 var clearRange = _playerInteractions.Selected.IsRange;
                 _playerInteractions.Act(out clearMap);

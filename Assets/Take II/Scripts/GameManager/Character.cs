@@ -97,7 +97,10 @@ namespace Assets.Take_II.Scripts.GameManager
             foreach (var tile in possibleTiles) 
             {
                 if (tile.OccupiedBy == null) 
+                {
+                    Movement -= 1;
                     return tile;
+                }
             }
             return null;
         }
@@ -115,8 +118,10 @@ namespace Assets.Take_II.Scripts.GameManager
             }
             var tile = path.Last();
             if (tile.OccupiedBy == null)
+            {
+                Movement -= totalSteps;
                 return tile;
-        
+            }
             return MoveTowardsIfOccupied(tile, other, pathfinder);
         }
 
@@ -132,7 +137,10 @@ namespace Assets.Take_II.Scripts.GameManager
                 var isNotOccupied = neighbor.OccupiedBy == null;
 
                 if (isReachable && isInRange && isNotOccupied)
+                {   
+                    Movement -= optPath.Count;
                     return neighbor;
+                }
             }
             return null;
         }
