@@ -36,8 +36,8 @@ namespace Assets.Take_II.Scripts.GameManager
         public int WeaponRange;
         public bool TurnFinished;
 
-        public virtual void onAwake() { }
-        public virtual void onUpdate() { }
+        public virtual void OnAwake() { }
+        public virtual void OnUpdate() { }
         
         void Awake() {
             Name = gameObject.name;
@@ -49,11 +49,11 @@ namespace Assets.Take_II.Scripts.GameManager
             Stats.Endurance = 5;
             CurrentHealth = Stats.Hp;
             Movement = Stats.Movement;
-            onAwake();
+            OnAwake();
         }
 
         void Update() {
-            onUpdate();
+            OnUpdate();
         }
 
         public bool IsEqualTo(Character other)
@@ -96,11 +96,9 @@ namespace Assets.Take_II.Scripts.GameManager
             var possibleTiles = Location.Neighbors.Except(other.Location.Neighbors);
             foreach (var tile in possibleTiles) 
             {
-                if (tile.OccupiedBy == null) 
-                {
-                    Movement -= 1;
-                    return tile;
-                }
+                if (tile.OccupiedBy != null) continue;
+                Movement -= 1;
+                return tile;
             }
             return null;
         }
@@ -136,11 +134,9 @@ namespace Assets.Take_II.Scripts.GameManager
                 var isInRange = neighbor.DistanceFromCombatRange(this, other) == 0;
                 var isNotOccupied = neighbor.OccupiedBy == null;
 
-                if (isReachable && isInRange && isNotOccupied)
-                {   
-                    Movement -= optPath.Count;
-                    return neighbor;
-                }
+                if (!isReachable || !isInRange || !isNotOccupied) continue;
+                Movement -= optPath.Count;
+                return neighbor;
             }
             return null;
         }

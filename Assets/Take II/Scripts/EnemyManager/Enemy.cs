@@ -14,7 +14,7 @@ namespace Assets.Take_II.Scripts.EnemyManager
         public Player Target;
         private readonly AStar _pathfinding = new AStar();
 
-        public override void onAwake()
+        public override void OnAwake()
         {
             BasicAttack = 100;
         }

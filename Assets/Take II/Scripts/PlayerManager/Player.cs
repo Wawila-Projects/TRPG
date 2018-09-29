@@ -1,5 +1,4 @@
-﻿using System;
-using Assets.Take_II.Scripts.GameManager;
+﻿using Assets.Take_II.Scripts.GameManager;
 
 namespace Assets.Take_II.Scripts.PlayerManager
 {
@@ -8,10 +7,12 @@ namespace Assets.Take_II.Scripts.PlayerManager
 
         public Equipment Equipment;
 
-        public override void onAwake() {
-            Equipment = new Equipment();
-            Equipment.Armor = 10;
-            Equipment.AttackPower = 100;
+        public override void OnAwake() {
+            Equipment = new Equipment
+            {
+                Armor = 10,
+                AttackPower = 100
+            };
         }
         public new Player ClonePlayer()
         {
@@ -19,11 +20,6 @@ namespace Assets.Take_II.Scripts.PlayerManager
             var player = temp.GetComponent<Player>();
             Destroy(temp.gameObject);
             return player;
-        }
-
-        public static explicit operator Player(int v)
-        {
-            throw new NotImplementedException();
         }
     }
 }
