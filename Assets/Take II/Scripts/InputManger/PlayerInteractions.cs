@@ -129,6 +129,7 @@ namespace Assets.Take_II.Scripts.InputManger
                     if (path.Count == 0) return false;
                     Target = path.ElementAt(Selected.Stats.Movement).gameObject;
                     IsMoving = true;
+                    Selected.Movement = 0;
                 }
                 else
                 {
@@ -138,8 +139,9 @@ namespace Assets.Take_II.Scripts.InputManger
                 clearMap = true;
                 return true;
             }
-
+            
             IsMoving = true;
+            Selected.Movement -= Mathf.RoundToInt(Selected.Location.Distance(tile));
             clearMap = true;
             return true;
         }
