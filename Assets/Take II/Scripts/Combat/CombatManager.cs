@@ -16,6 +16,7 @@ namespace Assets.Take_II.Scripts.Combat {
         public void BasicAttack(Character attacker, Character defender)
         {
             if (attacker == null || defender == null) return;
+            if (!attacker.IsInRange(defender)) return;
             
             var attackPower = 0;
             if (attacker is Player)
