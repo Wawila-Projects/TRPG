@@ -64,13 +64,21 @@ namespace Assets.Take_II.Scripts.Combat {
                 Attack(attacker, defender, spell.Power, false);
         }
 
+        public static int AllmightyAttack(Character attacker, Character defender, int attackPower) {
+            float attackStat =  attacker.Stats.Magic;
+            attackStat *= attacker.Stats.AttackBuff ? 2f : 1f;
+            var netdamage = Mathf.Sqrt(attackStat * attackPower);
+            var damage = netdamage * AttackVariance(attacker.Stats.Luck);
+            return Mathf.RoundToInt(damage);
+        }
+
         private static int Attack(Character attacker, Player defender, int attackPower, bool isPhysical) {
             float attackStat =  isPhysical ? attacker.Stats.Strength : attacker.Stats.Magic;
             attackStat *= attacker.Stats.AttackBuff ? 2f : 1f;
             float endurance = defender.Equipment.Armor + defender.Stats.Endurance * 8;
             endurance *= defender.Stats.DefenceBuff ? 2f : 1f;
             var netdamage = Mathf.Sqrt((attackStat/endurance) * attackPower);
-            var damage = netdamage * Random.Range(0.95f, 1.06f);
+            var damage = netdamage * AttackVariance(attacker.Stats.Luck);
             return Mathf.RoundToInt(damage);
         }
 
