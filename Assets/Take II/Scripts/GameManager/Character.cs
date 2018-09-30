@@ -84,8 +84,14 @@ namespace Assets.Take_II.Scripts.GameManager
                 return false;
 
             var distance = Location.Distance(other.Location);
+            var isInRange = distance <= Stats.Movement + WeaponRange;
 
-            return distance <= Stats.Movement + WeaponRange;
+            if (IsRange && isInRange) {
+                return !Location.Neighbors.Contains(other.Location);
+
+            }
+
+            return isInRange;
         }
 
         public int DistanceFromCombatRange(Character other)
