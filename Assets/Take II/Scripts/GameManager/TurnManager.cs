@@ -35,7 +35,7 @@ namespace Assets.Take_II.Scripts.GameManager
         {
             ++TurnCounter;
 
-            if (TurnCounter % 2 != 0)
+            if (PlayerPhase)
             {
                 ++PlayerTurnCounter;
                 foreach (var player in GameController.Manager.Players)
@@ -43,17 +43,15 @@ namespace Assets.Take_II.Scripts.GameManager
                     player.TurnFinished = false;
                     player.Movement = player.Stats.Movement;
                 }
+                return TurnCounter;
             }
-            else if (TurnCounter > 0)
+            
+            ++EnemyTurnCounter;
+            foreach (var enemy in GameController.Manager.Enemies)
             {
-                ++EnemyTurnCounter;
-                foreach (var enemy in GameController.Manager.Enemies)
-                {
-                    enemy.TurnFinished = false;
-                    enemy.Movement = enemy.Stats.Movement;
-                }
+                enemy.TurnFinished = false;
+                enemy.Movement = enemy.Stats.Movement;
             }
-
             return TurnCounter;
         }
     }
