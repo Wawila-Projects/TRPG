@@ -96,6 +96,10 @@ namespace Assets.Take_II.Scripts.GameManager
 
          public Tile MoveAway(Character other) 
          { 
+             if (Movement == 0) {
+                 return Location;
+             }
+
             var possibleTiles = Location.Neighbors.Except(other.Location.Neighbors);
             foreach (var tile in possibleTiles) 
             {
