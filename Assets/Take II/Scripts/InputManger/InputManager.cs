@@ -28,7 +28,6 @@ namespace Assets.Take_II.Scripts.InputManger
         {
             Raycasting();
             EscapeInput();
-            
         }
 
         private void EscapeInput() {
@@ -81,6 +80,7 @@ namespace Assets.Take_II.Scripts.InputManger
 
         private void PlayerRaycasting(GameObject obj)
         {
+            
             if (_playerInteractions.IsMoving) return;
 
             if (!Input.GetMouseButtonDown(0)) return;
@@ -92,7 +92,8 @@ namespace Assets.Take_II.Scripts.InputManger
                 var drawAmount = _playerInteractions.Selected.Movement;
                 var drawLocation = _playerInteractions.Selected.Location;
                 var drawRange = _playerInteractions.Selected.IsRange;
-                _mapInteractions.DrawReachableArea(drawAmount, drawLocation, drawRange);
+                if (!_playerInteractions.Selected.TurnFinished && !_playerInteractions.Selected.IsDead )
+                    _mapInteractions.DrawReachableArea(drawAmount, drawLocation, drawRange);
             }
             else if (_playerInteractions.Selected != null && _playerInteractions.Target == null &&
                      _playerInteractions.Selected.gameObject != obj)

@@ -6,7 +6,7 @@ namespace Assets.Take_II.Scripts.PlayerManager
     {
 
         public Equipment Equipment;
-
+        
         public override void OnAwake() {
             Equipment = new Equipment
             {
@@ -14,6 +14,7 @@ namespace Assets.Take_II.Scripts.PlayerManager
                 AttackPower = 100
             };
         }
+        
         public new Player ClonePlayer()
         {
             var temp = Instantiate(this);
