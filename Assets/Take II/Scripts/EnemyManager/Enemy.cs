@@ -53,6 +53,7 @@ namespace Assets.Take_II.Scripts.EnemyManager
             }
             ActOn(target);
             TurnFinished = true;
+            IsSurrounded = false;
         }
 
         public void ActOn(Tile tile)
@@ -69,6 +70,10 @@ namespace Assets.Take_II.Scripts.EnemyManager
             Target = player;
         }
 
+        public new Enemy ClonePlayer()
+        {
+            return GetComponent<Enemy>().gameObject.GetComponent<Enemy>();
+        }
         private void Move()
         {
             var dest = new Vector3

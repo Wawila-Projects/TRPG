@@ -41,12 +41,17 @@ namespace Assets.Take_II.Scripts.GameManager
         
         void Awake() {
             Name = gameObject.name;
-            Stats = new Stats();
+            Stats = new Stats {
+                Hp = 100,
+                Movement = 3,
+                Strength = 10,
+                Magic = 10,
+                Endurance = 5,
+                Luck = 7,
+                Agility = 6
+            };
+            
             WeaponRange = IsRange ? 2 : 1;
-            Stats.Hp = 100;
-            Stats.Movement = 3;
-            Stats.Strength = 10;
-            Stats.Endurance = 5;
             CurrentHealth = Stats.Hp;
             Movement = Stats.Movement;
             OnAwake();
@@ -69,10 +74,7 @@ namespace Assets.Take_II.Scripts.GameManager
 
         public Character ClonePlayer()
         {
-            var temp = Instantiate(this);
-            var player = temp.GetComponent<Character>();
-            Destroy(temp.gameObject);
-            return player;
+            return GetComponent<Character>().gameObject.GetComponent<Character>();
         }
 
         public bool IsInRange(Character other)

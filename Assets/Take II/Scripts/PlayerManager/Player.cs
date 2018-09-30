@@ -17,10 +17,7 @@ namespace Assets.Take_II.Scripts.PlayerManager
         
         public new Player ClonePlayer()
         {
-            var temp = Instantiate(this);
-            var player = temp.GetComponent<Player>();
-            Destroy(temp.gameObject);
-            return player;
+            return GetComponent<Player>().gameObject.GetComponent<Player>();
         }
     }
 }
