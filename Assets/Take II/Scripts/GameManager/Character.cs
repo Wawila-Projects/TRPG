@@ -35,6 +35,7 @@ namespace Assets.Take_II.Scripts.GameManager
         public bool IsRange;
         public int WeaponRange;
         public bool TurnFinished;
+        public bool IsSurrounded;
 
         public virtual void OnAwake() { }
         public virtual void OnUpdate() { }

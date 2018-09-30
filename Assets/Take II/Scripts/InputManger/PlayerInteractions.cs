@@ -37,7 +37,6 @@ namespace Assets.Take_II.Scripts.InputManger
             }
             else if (IsInCombat)
             {
-                Debug.Log("Attacking: " + Target.name);
                 CombatManager.Manager.BasicAttack(Selected, Target.GetComponent<Character>());
                 IsInCombat = false;
                 Selected.TurnFinished = true;
@@ -45,7 +44,6 @@ namespace Assets.Take_II.Scripts.InputManger
             }
             else if (IsHealing)
             {
-                Debug.Log("Healing: " + Target.name);
                 IsHealing = false;
                 ClearSelected();
             }
@@ -71,7 +69,7 @@ namespace Assets.Take_II.Scripts.InputManger
 
             if (target == null) return false;
 
-            _target = target;
+            _target = target.ClonePlayer();
 
             _selected = Selected.ClonePlayer();
             var tileInRange = Selected.MoveToRange(target);
@@ -165,6 +163,17 @@ namespace Assets.Take_II.Scripts.InputManger
                 tile.OccupiedBy = Selected;
                 Selected.Location = tile;
                 IsMoving = false;
+
+                var enemy = CheckForAllOutAttack();
+                if (enemy != null) {
+                    IsInCombat = false;
+                    enemy.IsSurrounded = true;
+                    Selected.TurnFinished = true;
+                    CombatManager.Manager.AllOutAttack(enemy);
+                    _selected = null;
+                    _target = null;
+                }
+
                 ClearSelected();
                 return;
             }
@@ -173,6 +182,21 @@ namespace Assets.Take_II.Scripts.InputManger
             Selected.transform.position = destination;
         }
         
+        private Enemy CheckForAllOutAttack() {
+            if (IsInCombat) return null;
+
+            foreach (var neighhbor in Selected.Location.Neighbors) {
+                if (neighhbor.OccupiedBy == null) continue;
+                var enemy = neighhbor.OccupiedBy as Enemy;
+                if (enemy == null) continue;
+                
+                if (enemy.Location.Neighbors.TrueForAll(tile => tile.OccupiedBy is Player))
+                    return enemy;
+            }
+
+            return null;
+        }
+
         private void ClearSelected()
         {
             Selected = null;
