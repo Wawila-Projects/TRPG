@@ -5,6 +5,7 @@ using Assets.Take_II.Scripts.PlayerManager;
 using Assets.Take_II.Scripts.Spells;
 using UnityEngine;
 using Random = UnityEngine.Random;
+using System.Linq;
 
 namespace Assets.Take_II.Scripts.Combat {
     public sealed class CombatManager {
@@ -15,7 +16,7 @@ namespace Assets.Take_II.Scripts.Combat {
         public void BasicAttack(Character attacker, Character defender)
         {
             if (attacker == null || defender == null) return;
-    
+            
             var attackPower = 0;
             if (attacker is Player)
             {
@@ -30,8 +31,8 @@ namespace Assets.Take_II.Scripts.Combat {
             var damage = player != null ? Attack(attacker, player, attackPower, true) : 
                 Attack(attacker, defender, attackPower, true);
 
+            
             var resistances = defender.Stats.Resistances;
-
             switch (resistances[Elements.Physical])
             {
                 case Resistances.Resist:
@@ -49,6 +50,24 @@ namespace Assets.Take_II.Scripts.Combat {
                 case Resistances.Null:
                     break;
             }
+            defender.IsSurrounded = true;
+            Debug.Log($"Basic Attack: {attacker.Name} vs {defender.Name} - Damage: {damage}");
+        }
+
+        public void AllOutAttack(Character defender) {
+            if (!defender.IsSurrounded && defender is Enemy) return;
+
+            var players = defender.Location.Neighbors.Select(t => t.OccupiedBy as Player)
+                                                    .Where(p => p != null ).ToList();
+            
+            if (players.Count != defender.Location.Neighbors.Count) return;
+            
+            var damage = players.Sum(a => 
+                AllmightyAttack(a, defender, a.Equipment.AttackPower)
+            ); 
+            
+            Debug.Log($"All Out Attack {defender.Name} - Damage: {damage}");
+            defender.CurrentHealth -= damage;
         }
 
         public int PhysicalAttack(Character attacker, Character defender, Spell spell)
