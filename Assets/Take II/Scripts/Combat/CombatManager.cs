@@ -50,7 +50,6 @@ namespace Assets.Take_II.Scripts.Combat {
                 case Resistances.Null:
                     break;
             }
-            defender.IsSurrounded = true;
             Debug.Log($"Basic Attack: {attacker.Name} vs {defender.Name} - Damage: {damage}");
         }
 
@@ -67,6 +66,7 @@ namespace Assets.Take_II.Scripts.Combat {
             ); 
             
             Debug.Log($"All Out Attack {defender.Name} - Damage: {damage}");
+            defender.IsSurrounded = true;
             defender.CurrentHealth -= damage;
         }
 

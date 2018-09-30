@@ -183,12 +183,13 @@ namespace Assets.Take_II.Scripts.InputManger
         }
         
         private Enemy CheckForAllOutAttack() {
-            if (IsInCombat) return null;
+            if (IsInCombat || _target is Character) return null;
 
             foreach (var neighhbor in Selected.Location.Neighbors) {
                 if (neighhbor.OccupiedBy == null) continue;
                 var enemy = neighhbor.OccupiedBy as Enemy;
                 if (enemy == null) continue;
+                if (enemy.IsSurrounded) continue;
                 
                 if (enemy.Location.Neighbors.TrueForAll(tile => tile.OccupiedBy is Player))
                     return enemy;
