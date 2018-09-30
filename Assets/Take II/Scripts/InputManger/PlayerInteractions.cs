@@ -39,7 +39,6 @@ namespace Assets.Take_II.Scripts.InputManger
             {
                 CombatManager.Manager.BasicAttack(Selected, Target.GetComponent<Character>());
                 IsInCombat = false;
-                Selected.TurnFinished = true;
                 ClearSelected();
             }
             else if (IsHealing)

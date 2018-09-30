@@ -85,14 +85,17 @@ namespace Assets.Take_II.Scripts.GameManager
 
             var distance = Location.Distance(other.Location);
             var isInRange = distance <= Stats.Movement + WeaponRange;
-
-            if (IsRange && isInRange) {
-                return !Location.Neighbors.Contains(other.Location);
-
-            }
-
-            return isInRange;
+            
+             return isInRange;
         }
+
+        public bool IsInCombatRange(Character other) {
+            var isNeighbor = Location.Neighbors.Contains(other.Location); 
+            if (IsRange) {
+                return !isNeighbor;
+            }
+            return isNeighbor;
+        }   
 
         public int DistanceFromCombatRange(Character other)
         {
@@ -133,7 +136,8 @@ namespace Assets.Take_II.Scripts.GameManager
                 Movement -= totalSteps;
                 return tile;
             }
-            return MoveTowardsIfOccupied(tile, other, pathfinder);
+            tile = MoveTowardsIfOccupied(tile, other, pathfinder);
+            return tile ?? Location;
         }
 
         private Tile MoveTowardsIfOccupied(Tile tile, Character other, AStar pathfinder) 

@@ -16,7 +16,7 @@ namespace Assets.Take_II.Scripts.Combat {
         public void BasicAttack(Character attacker, Character defender)
         {
             if (attacker == null || defender == null) return;
-            if (!attacker.IsInRange(defender)) return;
+            if (!attacker.IsInCombatRange(defender)) return;
             
             var attackPower = 0;
             if (attacker is Player)
@@ -51,6 +51,7 @@ namespace Assets.Take_II.Scripts.Combat {
                 case Resistances.Null:
                     break;
             }
+            attacker.TurnFinished = true;
             Debug.Log($"Basic Attack: {attacker.Name} vs {defender.Name} - Damage: {damage}");
         }
 
