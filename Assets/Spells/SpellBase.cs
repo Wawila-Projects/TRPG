@@ -1,23 +1,12 @@
-using System.Collections.Generic;
-using Assets.Take_II.Scripts.Enums;
-public abstract class SpellBase {
-    string Id;
-    string Name;
-    string Description;
-    int Cost;
-    Elements Element; 
-    bool IsExclusive;
-    List<string> ExplusiveUnits;
-    protected bool IsMagical;
-    protected bool IsPhysical {
-        get { return !IsMagical; }   
-        set { IsMagical = !value; }
+namespace Assets.Spells
+{
+    public abstract class SpellBase
+    {
+        protected abstract string Id { get; }
+        public abstract string Name { get; }
+        public abstract string Description { get; }
+        public abstract int Cost { get; }
+        public abstract bool IsMagical { get; }
+        public bool IsPhysical => !IsMagical;
     }
-    protected bool CostsSp;
-    protected bool CostsHp {
-        get { return !CostsSp; }   
-        set { CostsSp = !value; }
-    }
-
-    public abstract void Cast();
 }

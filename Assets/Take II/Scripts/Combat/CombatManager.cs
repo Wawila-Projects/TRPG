@@ -64,7 +64,7 @@ namespace Assets.Take_II.Scripts.Combat {
             if (players.Count != defender.Location.Neighbors.Count) return;
             
             var damage = players.Sum(a => 
-                AllmightyAttack(a, defender, a.Equipment.AttackPower)
+                AlmightyAttack(a, defender, a.Equipment.AttackPower)
             ); 
             
             Debug.Log($"All Out Attack {defender.Name} - Damage: {damage}");
@@ -85,7 +85,7 @@ namespace Assets.Take_II.Scripts.Combat {
                 Attack(attacker, defender, spell.Power, false);
         }
 
-        public static int AllmightyAttack(Character attacker, Character defender, int attackPower) {
+        public static int AlmightyAttack(Character attacker, Character defender, int attackPower) {
             float attackStat =  attacker.Stats.Magic;
             attackStat *= attacker.Stats.AttackBuff ? 2f : 1f;
             var netdamage = Mathf.Sqrt(attackStat * attackPower);
