@@ -2,11 +2,11 @@ using Assets.Take_II.Scripts.Enums;
 
 namespace Assets.Spells.IceSpells
 {
-    public class Mabufula : OffensiveSpell
+    public class Mabufula : SpellBase, IOffensiveSpell
     {
-        public override int AttackPower => 200;
-        public override int Accuracy => 95;
-        public override Elements Element => Elements.Ice;
+        public int AttackPower => 200;
+        public int Accuracy => 95;
+        public Elements Element => Elements.Ice;
         public override string Name => "Mabufala";
         public override string Description => "Deals medium Ice damage to all foe.";
         public override int Cost => 16;
