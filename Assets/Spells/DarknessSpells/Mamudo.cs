@@ -1,0 +1,19 @@
+
+using Assets.Take_II.Scripts.Enums;
+
+namespace Assets.Spells.DarknessSpells
+{
+    public class Mamudo : SpellBase, IElementalSpell, IChanceSpell
+    {
+        protected override string Id => "Darkness1";
+        public override string Name => "Mamudo";
+        public override string Description => "Darkness: low chance of instant kill, all foe.";
+        public override int Cost => 18;
+        public override bool IsMultitarget => true;
+        public override bool IsMagical => true;
+        public Elements Element => Elements.Darkness;
+        public float Chance => 0.3f;
+        public bool IsInstaKillSpell => true;
+        
+    }
+}
