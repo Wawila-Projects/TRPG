@@ -39,6 +39,9 @@ namespace Assets.Take_II.Scripts.EnemyManager
             Player target = null;
             foreach (var player in GameController.Manager.Players)
             {
+                if (player.IsDead)
+                    continue;
+
                 if (target == null)
                 {
                     target = player;
