@@ -31,26 +31,8 @@ namespace Assets.Take_II.Scripts.Combat {
             var player = defender as Player;
             var damage = player != null ? Attack(attacker, player, attackPower, true) : 
                 Attack(attacker, defender, attackPower, true);
+            ResolveResistances(attacker, defender, Elements.Physical, damage);
 
-            
-            var resistances = defender.Stats.Resistances;
-            switch (resistances[Elements.Physical])
-            {
-                case Resistances.Resist:
-                    defender.CurrentHealth -= Mathf.RoundToInt(damage / 2f);
-                    break;
-                case Resistances.Repel:
-                    attacker.CurrentHealth -= damage;
-                    break;
-                case Resistances.Drain:
-                    defender.CurrentHealth += damage;
-                    break;
-                case Resistances.None:
-                    defender.CurrentHealth -= damage;
-                    break;
-                case Resistances.Null:
-                    break;
-            }
             attacker.TurnFinished = true;
             Debug.Log($"Basic Attack: {attacker.Name} vs {defender.Name} - Damage: {damage}");
         }
@@ -122,6 +104,26 @@ namespace Assets.Take_II.Scripts.Combat {
             var newRandom = Random.Range(0.95f, 1.06f);
             random = Mathf.Max(random, newRandom);
             return random;
+        }
+
+        private static void ResolveResistances(Character attacker, Character defender, Elements element, int damage) {
+            switch (defender.Stats.Resistances[element])
+            {
+                case Resistances.Resist:
+                     defender.CurrentHealth -= Mathf.RoundToInt(damage / 2f);
+                     break;
+                case Resistances.Repel:
+                    attacker.CurrentHealth -= damage;
+                    break;
+                case Resistances.Drain:
+                    defender.CurrentHealth += damage;
+                    break;
+                case Resistances.None:
+                    defender.CurrentHealth -= damage;
+                    break;
+                case Resistances.Null:
+                    break;
+            }
         }
     }
 }
