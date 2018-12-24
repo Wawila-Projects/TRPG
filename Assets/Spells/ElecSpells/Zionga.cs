@@ -2,11 +2,11 @@ using Assets.Take_II.Scripts.Enums;
 
 namespace Assets.Spells.ElecSpells
 {
-    public class Zionga : SpellBase, IOffensiveSpell
+    public class Zionga : OffensiveSpell
     {
-        public int AttackPower => 200;
-        public int Accuracy => 98;
-        public Elements Element => Elements.Elec;
+        public override int AttackPower => 200;
+        public override int Accuracy => 98;
+        public override Elements Element => Elements.Elec;
         protected override string Id => "Elec2";
         public override string Name => "Zionga";
         public override string Description => "Deals medium Elec damage to 1 foe.";

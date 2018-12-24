@@ -2,11 +2,11 @@ using Assets.Take_II.Scripts.Enums;
 
 namespace Assets.Spells.WindSpells
 {
-    public class Magarula : SpellBase, IOffensiveSpell
+    public class Magarula : OffensiveSpell
     {
-        public int AttackPower => 200;
-        public int Accuracy => 95;
-        public Elements Element => Elements.Wind;
+        public override int AttackPower => 200;
+        public override int Accuracy => 95;
+        public override Elements Element => Elements.Wind;
         protected override string Id => "Wind3";
         public override string Name => "Magarula";
         public override string Description => "Deals medium Wind damage to all foes.";

@@ -4,11 +4,11 @@ using Assets.Take_II.Scripts.Enums;
 
 namespace Assets.Spells.WindSpells
 {
-    public class PantaRhei : SpellBase, IOffensiveSpell, IExclusiveSpell
+    public class PantaRhei : OffensiveSpell, IExclusiveSpell
     {
-        public int AttackPower => 400;
-        public int Accuracy => 98;
-        public Elements Element => Elements.Wind;
+        public override int AttackPower => 400;
+        public override int Accuracy => 98;
+        public override Elements Element => Elements.Wind;
         protected override string Id => "Wind4";
         public override string Name => "Garudyne";
         public override string Description => "Deals severe Wind damage to 1 foe.";

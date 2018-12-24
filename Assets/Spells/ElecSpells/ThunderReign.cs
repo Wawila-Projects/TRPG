@@ -3,11 +3,11 @@ using Assets.Take_II.Scripts.Enums;
 
 namespace Assets.Spells.ElecSpells
 {
-    public class ThunderReign : SpellBase, IOffensiveSpell, IExclusiveSpell
+    public class ThunderReign : OffensiveSpell, IExclusiveSpell
     {
-        public int AttackPower => 400;
-        public int Accuracy => 98;
-        public Elements Element => Elements.Elec;
+        public override int AttackPower => 400;
+        public override int Accuracy => 98;
+        public override Elements Element => Elements.Elec;
         protected override string Id => "Elec6";
         public override string Name => "Thunder Reign";
         public override string Description => "Deals severe Elec damage to 1 foe.";

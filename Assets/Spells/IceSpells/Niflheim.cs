@@ -3,11 +3,11 @@ using Assets.Take_II.Scripts.Enums;
 
 namespace Assets.Spells.IceSpells
 {
-    public class Niflheim : SpellBase, IOffensiveSpell, IExclusiveSpell
+    public class Niflheim : OffensiveSpell, IExclusiveSpell
     {
-        public int AttackPower => 400;
-        public int Accuracy => 98;
-        public Elements Element => Elements.Ice;
+        public override int AttackPower => 400;
+        public override int Accuracy => 98;
+        public override Elements Element => Elements.Ice;
         public override string Name => "Niflheim";
         public override string Description => "Deals severe Ice damage to 1 foe.";
         public override int Cost => 48;

@@ -2,11 +2,11 @@ using Assets.Take_II.Scripts.Enums;
 
 namespace Assets.Spells.FireSpells
 {
-    public class Maragi : SpellBase, IOffensiveSpell
+    public class Maragi : OffensiveSpell
     {
-        public int AttackPower => 80;
-        public int Accuracy => 95;
-        public Elements Element => Elements.Fire;
+        public override int AttackPower => 80;
+        public override int Accuracy => 95;
+        public override Elements Element => Elements.Fire;
         protected override string Id => "Fire1";
         public override string Name => "Maragi";
         public override string Description => "Deals light Fire damage to all foe.";
