@@ -5,5 +5,6 @@
     {
         public int Armor;
         public int AttackPower;
+        public int Accuracy;
     }
 }
