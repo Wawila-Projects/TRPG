@@ -52,6 +52,7 @@ namespace Assets.Take_II.Scripts.GameManager
                 Agility = 6
             };
             
+            IsRange = false;
             WeaponRange = IsRange ? 2 : 1;
             CurrentHealth = Stats.Hp;
             Movement = Stats.Movement;
