@@ -1,6 +1,7 @@
 ﻿using System.Linq;
 using Assets.Take_II.Scripts.HexGrid;
 using Assets.Take_II.Scripts.PlayerManager;
+using Assets.Take_II.Scripts.Combat;
 using UnityEngine;
 
 namespace Assets.Take_II.Scripts.GameManager
@@ -30,6 +31,7 @@ namespace Assets.Take_II.Scripts.GameManager
         }
         
         public Stats Stats;
+        public SpellBook Spells;
         public int Movement;
         public bool IsDead;
         public bool IsRange;
@@ -70,7 +72,6 @@ namespace Assets.Take_II.Scripts.GameManager
 
             var sameName = name == other.name;
             var sameLocation = Location.IsEqualTo(other.Location);
-
             return sameName && sameLocation;
         }
 
