@@ -4,7 +4,7 @@ using Assets.Take_II.Scripts.Enums;
 
 namespace Assets.Spells.LightSpells
 {
-    public class Samsara : SpellBase, IElementalSpell, IChanceSpell, IExclusiveSpell
+    public class Samsara : SpellBase, IChanceSpell, IExclusiveSpell
     {
         protected override string Id => "Light4";
         public override string Name => "Samsara";
@@ -12,7 +12,7 @@ namespace Assets.Spells.LightSpells
         public override int Cost => 44;
         public override bool IsMultitarget => true;
         public override bool IsMagical => true;
-        public Elements Element => Elements.Light;
+        public override Elements Element => Elements.Light;
         public float Chance => 0.6f;
         public bool IsInstaKillSpell => true;
         public List<string> ExclusiveUnits => new List<string> {

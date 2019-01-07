@@ -3,7 +3,7 @@ using Assets.Take_II.Scripts.Enums;
 
 namespace Assets.Spells.DarknessSpells
 {
-    public class Mamudo : SpellBase, IElementalSpell, IChanceSpell
+    public class Mamudo : SpellBase, IChanceSpell
     {
         protected override string Id => "Darkness1";
         public override string Name => "Mamudo";
@@ -11,7 +11,7 @@ namespace Assets.Spells.DarknessSpells
         public override int Cost => 18;
         public override bool IsMultitarget => true;
         public override bool IsMagical => true;
-        public Elements Element => Elements.Darkness;
+        public override Elements Element => Elements.Darkness;
         public float Chance => 0.3f;
         public bool IsInstaKillSpell => true;
         

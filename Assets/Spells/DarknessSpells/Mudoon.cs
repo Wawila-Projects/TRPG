@@ -2,7 +2,7 @@ using Assets.Take_II.Scripts.Enums;
 
 namespace Assets.Spells.DarknessSpells
 {
-    public class Mudoon : SpellBase, IElementalSpell, IChanceSpell
+    public class Mudoon : SpellBase, IChanceSpell
     {
         protected override string Id => "Darkness2";
         public override string Name => "Mudoon";
@@ -10,7 +10,7 @@ namespace Assets.Spells.DarknessSpells
         public override int Cost => 15;
         public override bool IsMultitarget => false;
         public override bool IsMagical => true;
-        public Elements Element => Elements.Darkness;
+        public override Elements Element => Elements.Darkness;
         public float Chance => 0.6f;
         public bool IsInstaKillSpell => true;
         

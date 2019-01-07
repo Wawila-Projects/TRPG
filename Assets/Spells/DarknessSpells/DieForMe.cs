@@ -4,7 +4,7 @@ using Assets.Take_II.Scripts.Enums;
 
 namespace Assets.Spells.DarknessSpells
 {
-    public class DieForMe : SpellBase, IElementalSpell, IChanceSpell, IExclusiveSpell
+    public class DieForMe : SpellBase, IChanceSpell, IExclusiveSpell
     {
         protected override string Id => "Darkness4";
         public override string Name => "Die For Me";
@@ -12,7 +12,7 @@ namespace Assets.Spells.DarknessSpells
         public override int Cost => 44;
         public override bool IsMultitarget => true;
         public override bool IsMagical => true;
-        public Elements Element => Elements.Darkness;
+        public override Elements Element => Elements.Darkness;
         public float Chance => 0.6f;
         public bool IsInstaKillSpell => true;
         public List<string> ExclusiveUnits => new List<string> {

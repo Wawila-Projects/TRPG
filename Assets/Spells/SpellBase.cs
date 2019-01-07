@@ -1,6 +1,9 @@
+using System;
+using Assets.Take_II.Scripts.Enums;
+
 namespace Assets.Spells
 {
-    public abstract class SpellBase
+    public abstract class SpellBase: IEquatable<SpellBase>
     {
         protected abstract string Id { get; }
         public abstract string Name { get; }
@@ -9,5 +12,11 @@ namespace Assets.Spells
         public abstract bool IsMultitarget { get; } 
         public abstract bool IsMagical { get; }
         public bool IsPhysical => !IsMagical;
+        public abstract Elements Element { get; }
+
+        public bool Equals(SpellBase other)
+        {
+            return this.Id == other.Id;
+        }
     }
 }

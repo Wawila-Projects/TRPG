@@ -2,7 +2,7 @@ using Assets.Take_II.Scripts.Enums;
 
 namespace Assets.Spells.LightSpells
 {
-    public class Hama : SpellBase, IElementalSpell, IChanceSpell
+    public class Hama : SpellBase, IChanceSpell
     {
         protected override string Id => "Light0";
         public override string Name => "Hama";
@@ -10,7 +10,7 @@ namespace Assets.Spells.LightSpells
         public override int Cost => 8;
         public override bool IsMultitarget => false;
         public override bool IsMagical => true;
-        public Elements Element => Elements.Light;
+        public override Elements Element => Elements.Light;
         public float Chance => 0.4f;
         public bool IsInstaKillSpell => true;
     }
