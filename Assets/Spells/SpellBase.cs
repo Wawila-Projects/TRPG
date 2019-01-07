@@ -16,6 +16,7 @@ namespace Assets.Spells
 
         public bool Equals(SpellBase other)
         {
+            if (other == null) return false;
             return this.Id == other.Id;
         }
     }
