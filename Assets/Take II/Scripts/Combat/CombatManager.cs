@@ -38,6 +38,17 @@ namespace Assets.Take_II.Scripts.Combat {
             Debug.Log($"Basic Attack: {attacker.Name} vs {defender.Name} - Damage: {damage}");
         }
 
+        public void SpellAttack(Character attacker, OffensiveSpell spell) {
+            if (!spell.IsMultitarget) {
+                return;
+            }
+            foreach (var tile in attacker.Location.Neighbors) {
+                if (tile.OccupiedBy ==  null) continue;
+                if (tile.OccupiedBy is Enemy) 
+                    SpellAttack(attacker, tile.OccupiedBy, spell);
+            }
+        }
+
         public void SpellAttack(Character attacker, Character defender, OffensiveSpell spell) {
             if (attacker == null || defender == null) return;
             if (!attacker.IsInCombatRange(defender)) return;
