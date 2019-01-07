@@ -2,6 +2,6 @@
 {
     public enum Elements
     {
-        Almighty, Darkness, Elec, Fire, Ice, Light, Physical, Wind
+        Almighty, Darkness, Elec, Fire, Ice, Light, Physical, Wind, Ailement, Recovery
     }
 }
