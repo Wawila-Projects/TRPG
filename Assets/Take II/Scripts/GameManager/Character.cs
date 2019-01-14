@@ -1,7 +1,5 @@
 ﻿using System.Linq;
 using Assets.Take_II.Scripts.HexGrid;
-using Assets.Take_II.Scripts.PlayerManager;
-using Assets.Take_II.Scripts.Combat;
 using UnityEngine;
 using Assets.Personas;
 
@@ -11,6 +9,12 @@ namespace Assets.Take_II.Scripts.GameManager
     {
         public string Name;
         public Tile Location;
+        public int Movement { get; protected set; }        
+        public int CurrentMovement;
+        public int Level;
+        public int Hp;
+        public int Sp;
+        public PersonaBase Persona;
 
         [SerializeField]
         protected int _currentHealth;
@@ -31,13 +35,6 @@ namespace Assets.Take_II.Scripts.GameManager
             }
         }
 
-        public int Movement { get; protected set; }        
-        public int CurrentMovement;
-        public int Level;
-        public int Hp;
-        public int Sp;
-        public PersonaBase Persona;
-
         public bool IsDead;
         public bool IsRange;
         public int WeaponRange;
@@ -54,7 +51,7 @@ namespace Assets.Take_II.Scripts.GameManager
             Sp = 75;
             Movement = 3;
             CurrentMovement = Movement;
-            Persona = new Assets.Personas.TestPersona();
+            Persona = new TestPersona();
 
             CurrentHealth = Hp;
             
@@ -66,7 +63,7 @@ namespace Assets.Take_II.Scripts.GameManager
         void Update() {
             OnUpdate();
         }
-
+        
         public bool IsEqualTo(Character other)
         {
             if (other == null)

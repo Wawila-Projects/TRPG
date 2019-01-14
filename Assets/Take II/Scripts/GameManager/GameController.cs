@@ -8,7 +8,6 @@ namespace Assets.Take_II.Scripts.GameManager
 {
     public class GameController : MonoBehaviour
     {
-
         public static GameController Manager { get; private set; }
 
         public List<Player> Players
