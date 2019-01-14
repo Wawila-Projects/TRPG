@@ -4,7 +4,6 @@ namespace Assets.Take_II.Scripts.PlayerManager
 {
     public class Player: Character
     {
-
         public Equipment Equipment;
         
         public override void OnAwake() {

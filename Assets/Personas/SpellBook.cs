@@ -1,10 +1,9 @@
 ﻿using System.Collections.Generic;
-using Assets.Personas;
 using Assets.Spells;
 using Assets.Take_II.Scripts.Enums;
 using Assets.Take_II.Scripts.GameManager;
 
-namespace Assets.Take_II.Scripts.Combat {
+namespace Assets.Personas {
     public class SpellBook {
         public Elements BaseElement { get; }
         public PersonaBase Owner { get; }

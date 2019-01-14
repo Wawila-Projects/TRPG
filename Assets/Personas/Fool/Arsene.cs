@@ -12,20 +12,20 @@ namespace Assets.Personas.Fool {
         Arsene() : base(Arcana.Fool, Elements.Curse) { 
             Level = 1;
         }
-        protected override Stats GetBaseStats()
+        protected override void SetBaseStats()
         {   
-            var stats = new Stats() {
-                Strength = 2, 
-                Magic = 2, 
-                Endurance = 2, 
-                Agility = 3, 
-                Luck = 1,
-            };
+                Strength = 2; 
+                Magic = 2;
+                Endurance = 2; 
+                Agility = 3; 
+                Luck = 1;
+        }
 
+        protected override void SetResistances()
+        {
             Resistances[Elements.Curse] = ResistanceModifiers.Resist;
             Resistances[Elements.Ice] = ResistanceModifiers.Weak;
             Resistances[Elements.Bless] = ResistanceModifiers.Weak;
-            return stats;
         }
 
         protected override List<SpellBase> GetBaseSpellbook()
