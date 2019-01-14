@@ -118,15 +118,15 @@ namespace Assets.Take_II.Scripts.InputManger
                 return true;
             }
 
-            if (!Selected.Location.IsReachable(tile, Selected.Movement))
+            if (!Selected.Location.IsReachable(tile, Selected.CurrentMovement))
             {
                 if (moveTowardsUnreachable)
                 {
                     var path = _pathfinding.FindPath(Selected.Location, tile);
                     if (path.Count == 0) return false;
-                    Target = path.ElementAt(Selected.Stats.Movement).gameObject;
+                    Target = path.ElementAt(Selected.CurrentMovement).gameObject;
                     IsMoving = true;
-                    Selected.Movement = 0;
+                    Selected.CurrentMovement = 0;
                 }
                 else
                 {
@@ -138,7 +138,7 @@ namespace Assets.Take_II.Scripts.InputManger
             }
             
             IsMoving = true;
-            Selected.Movement -= Mathf.RoundToInt(Selected.Location.Distance(tile));
+            Selected.CurrentMovement -= Mathf.RoundToInt(Selected.Location.Distance(tile));
             clearMap = true;
             return true;
         }

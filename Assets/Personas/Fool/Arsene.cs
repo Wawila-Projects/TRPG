@@ -8,11 +8,13 @@ namespace Assets.Personas.Fool {
     public class Arsene : PersonaBase
     {
         public override string Name => "Arsene";
-        Arsene() : base(Arcana.Fool, Elements.Curse) { }
+    
+        Arsene() : base(Arcana.Fool, Elements.Curse) { 
+            Level = 1;
+        }
         protected override Stats GetBaseStats()
-        {
+        {   
             var stats = new Stats() {
-                Level = 1, 
                 Strength = 2, 
                 Magic = 2, 
                 Endurance = 2, 
@@ -20,9 +22,9 @@ namespace Assets.Personas.Fool {
                 Luck = 1,
             };
 
-            stats.Resistances[Elements.Curse] = Resistances.Resist;
-            stats.Resistances[Elements.Ice] = Resistances.Weak;
-            stats.Resistances[Elements.Bless] = Resistances.Weak;
+            stats.Resistances[Elements.Curse] = ResistanceModifiers.Resist;
+            stats.Resistances[Elements.Ice] = ResistanceModifiers.Weak;
+            stats.Resistances[Elements.Bless] = ResistanceModifiers.Weak;
             return stats;
         }
 

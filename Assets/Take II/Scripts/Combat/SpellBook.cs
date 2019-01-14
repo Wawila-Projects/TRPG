@@ -28,13 +28,13 @@ namespace Assets.Take_II.Scripts.Combat {
             this(owner, baseElement, new List<SpellBase>(), new Dictionary<int, SpellBase>()) {
         }
         public bool LevelUp(out SpellBase spell) {
-            spell = LockedSpells[Owner.Stats.Level];
+            spell = LockedSpells[Owner.Level];
             if (spell == null) return true;
 
             var resolved = AddSpell(spell);
             if (!resolved)  return false;
             
-            LockedSpells.Remove(Owner.Stats.Level);
+            LockedSpells.Remove(Owner.Level);
             return true;
         }
         public bool AddSpell(SpellBase spell) {

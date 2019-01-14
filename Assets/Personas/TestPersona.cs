@@ -9,11 +9,12 @@ namespace Assets.Personas {
     public class TestPersona : PersonaBase
     {
         public override string Name => "TestPersona";
-        TestPersona() : base(Arcana.Fool, Elements.Almighty) { }
+        public TestPersona() : base(Arcana.Fool, Elements.Almighty) {
+            Level = 1;
+         }
         protected override Stats GetBaseStats()
         {
             var stats = new Stats() {
-                Level = 1, 
                 Strength = 30, 
                 Magic = 30, 
                 Endurance = 30, 
@@ -21,10 +22,10 @@ namespace Assets.Personas {
                 Luck = 30,
             };
 
-            stats.Resistances[Elements.Fire] = Resistances.Resist;
-            stats.Resistances[Elements.Ice] = Resistances.Absorb;
-            stats.Resistances[Elements.Wind] = Resistances.Weak;
-            stats.Resistances[Elements.Elec] = Resistances.Block;
+            stats.Resistances[Elements.Fire] = ResistanceModifiers.Resist;
+            stats.Resistances[Elements.Ice] = ResistanceModifiers.Absorb;
+            stats.Resistances[Elements.Wind] = ResistanceModifiers.Weak;
+            stats.Resistances[Elements.Elec] = ResistanceModifiers.Block;
             return stats;
         }
 

@@ -41,7 +41,7 @@ namespace Assets.Take_II.Scripts.GameManager
                 foreach (var player in GameController.Manager.Players)
                 {
                     player.TurnFinished = false;
-                    player.Movement = player.Stats.Movement;
+                    player.CurrentMovement = player.Movement;
                 }
                 return TurnCounter;
             }
@@ -50,7 +50,7 @@ namespace Assets.Take_II.Scripts.GameManager
             foreach (var enemy in GameController.Manager.Enemies)
             {
                 enemy.TurnFinished = false;
-                enemy.Movement = enemy.Stats.Movement;
+                enemy.CurrentMovement = enemy.Movement;
             }
             return TurnCounter;
         }

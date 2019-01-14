@@ -14,13 +14,13 @@ namespace Assets.Take_II.Scripts.GameManager
         public List<Player> Players
         {
             get { return _players; }
-            set { _players = new List<Player>(value.OrderByDescending(p => p.Stats.Agility)); }
+            set { _players = new List<Player>(value.OrderByDescending(p => p.Persona.Stats.Agility)); }
         }
 
         public List<Enemy> Enemies
         {
             get { return _enemies; }
-            set { _enemies = new List<Enemy>(value.OrderByDescending(p => p.Stats.Agility)); }
+            set { _enemies = new List<Enemy>(value.OrderByDescending(p => p.Persona.Stats.Agility)); }
         }
 
         [SerializeField]
