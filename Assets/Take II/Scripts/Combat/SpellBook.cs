@@ -1,25 +1,42 @@
 ﻿using System.Collections.Generic;
+using Assets.Personas;
 using Assets.Spells;
 using Assets.Take_II.Scripts.Enums;
 using Assets.Take_II.Scripts.GameManager;
 
 namespace Assets.Take_II.Scripts.Combat {
     public class SpellBook {
-        public Elements BaseElement { get; private set; }
-        public Character Owner { get; private set; }
-        public List<SpellBase> Spells { get; private set; }
+        public Elements BaseElement { get; }
+        public PersonaBase Owner { get; }
+        public List<SpellBase> Spells { get; }
+        public Dictionary<int, SpellBase> LockedSpells { get; }
         public List<Elements> Restrictions { get; private set; }
 
-        SpellBook(Character owner, Elements baseElement, List<SpellBase> spells) {
+        public SpellBook(PersonaBase owner, Elements baseElement, 
+                         List<SpellBase> spells, Dictionary<int, SpellBase> lockedSpells) {
             Owner = owner;
             BaseElement = baseElement;
             Spells = spells;
+            LockedSpells = lockedSpells;
             Restrictions = GetRestrictions();
         }
-        SpellBook(Character owner, Elements baseElement): 
-            this(owner, baseElement, new List<SpellBase>()) {
-        }
 
+        public SpellBook(PersonaBase owner, Elements baseElement, List<SpellBase> spells):
+            this(owner, baseElement, spells, new Dictionary<int, SpellBase>()) {
+        }
+        public SpellBook(PersonaBase owner, Elements baseElement): 
+            this(owner, baseElement, new List<SpellBase>(), new Dictionary<int, SpellBase>()) {
+        }
+        public bool LevelUp(out SpellBase spell) {
+            spell = LockedSpells[Owner.Stats.Level];
+            if (spell == null) return true;
+
+            var resolved = AddSpell(spell);
+            if (!resolved)  return false;
+            
+            LockedSpells.Remove(Owner.Stats.Level);
+            return true;
+        }
         public bool AddSpell(SpellBase spell) {
             var isAtSpellLimit = Spells.Count == 8;
             var alreadyHaveSpell = Spells.Contains(spell);
