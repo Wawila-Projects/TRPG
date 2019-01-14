@@ -22,9 +22,9 @@ namespace Assets.Personas.Fool {
                 Luck = 1,
             };
 
-            stats.Resistances[Elements.Curse] = ResistanceModifiers.Resist;
-            stats.Resistances[Elements.Ice] = ResistanceModifiers.Weak;
-            stats.Resistances[Elements.Bless] = ResistanceModifiers.Weak;
+            Resistances[Elements.Curse] = ResistanceModifiers.Resist;
+            Resistances[Elements.Ice] = ResistanceModifiers.Weak;
+            Resistances[Elements.Bless] = ResistanceModifiers.Weak;
             return stats;
         }
 

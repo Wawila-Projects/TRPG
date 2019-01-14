@@ -22,10 +22,10 @@ namespace Assets.Personas {
                 Luck = 30,
             };
 
-            stats.Resistances[Elements.Fire] = ResistanceModifiers.Resist;
-            stats.Resistances[Elements.Ice] = ResistanceModifiers.Absorb;
-            stats.Resistances[Elements.Wind] = ResistanceModifiers.Weak;
-            stats.Resistances[Elements.Elec] = ResistanceModifiers.Block;
+            Resistances[Elements.Fire] = ResistanceModifiers.Resist;
+            Resistances[Elements.Ice] = ResistanceModifiers.Absorb;
+            Resistances[Elements.Wind] = ResistanceModifiers.Weak;
+            Resistances[Elements.Elec] = ResistanceModifiers.Block;
             return stats;
         }
 
