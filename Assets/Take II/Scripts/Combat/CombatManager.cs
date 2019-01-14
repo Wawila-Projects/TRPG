@@ -2,7 +2,6 @@ using Assets.Take_II.Scripts.EnemyManager;
 using Assets.Take_II.Scripts.Enums;
 using Assets.Take_II.Scripts.GameManager;
 using Assets.Take_II.Scripts.PlayerManager;
-using Assets.Take_II.Scripts.Spells;
 // ? Quitar unity dependecy 
 using UnityEngine;
 using Random = UnityEngine.Random;

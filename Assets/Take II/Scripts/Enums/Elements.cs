@@ -6,8 +6,5 @@
         Elec, Fire, Ice, Wind, 
         Psy, Nuke, Curse, Bless, 
         Ailment, Recovery
-         
-         
-         
     }
 }
