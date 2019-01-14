@@ -168,18 +168,21 @@ namespace Assets.Take_II.Scripts.Combat {
             switch (defender.Stats.Resistances[element])
             {
                 case Resistances.Resist:
-                     defender.CurrentHealth -= Mathf.RoundToInt(damage / 2f);
-                     break;
-                case Resistances.Repel:
+                    defender.CurrentHealth -= Mathf.RoundToInt(damage * 0.5f);
+                    break;
+                case Resistances.Weak:
+                    defender.CurrentHealth -= Mathf.RoundToInt(damage * 1.5f);
+                    break;
+                case Resistances.Reflect:
                     attacker.CurrentHealth -= damage;
                     break;
-                case Resistances.Drain:
+                case Resistances.Absorb:
                     defender.CurrentHealth += damage;
                     break;
                 case Resistances.None:
                     defender.CurrentHealth -= damage;
                     break;
-                case Resistances.Null:
+                case Resistances.Block:
                     break;
             }
         }
