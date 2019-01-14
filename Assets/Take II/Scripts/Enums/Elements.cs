@@ -2,6 +2,12 @@
 {
     public enum Elements
     {
-        Almighty, Darkness, Elec, Fire, Ice, Light, Physical, Wind, Ailement, Recovery
+        Almighty, Physical, Gun = Physical, 
+        Elec, Fire, Ice, Wind, 
+        Psy, Nuke, Curse, Bless, 
+        Ailment, Recovery
+         
+         
+         
     }
 }

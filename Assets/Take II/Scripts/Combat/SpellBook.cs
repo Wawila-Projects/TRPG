@@ -52,21 +52,21 @@ namespace Assets.Take_II.Scripts.Combat {
                     return new List<Elements> { Elements.Fire };
                 case Elements.Wind:
                     return new List<Elements> { Elements.Elec };
-                case Elements.Ailement:
+                case Elements.Ailment:
                     return new List<Elements> {
-                        Elements.Light, Elements.Recovery
+                        Elements.Bless, Elements.Recovery
                     };
                 case Elements.Recovery:
                     return new List<Elements> {
-                        Elements.Physical, Elements.Darkness
+                        Elements.Physical, Elements.Curse
                     };
-                case Elements.Darkness:
+                case Elements.Curse:
                     return new List<Elements> {
-                        Elements.Physical, Elements.Light, Elements.Recovery
+                        Elements.Physical, Elements.Bless, Elements.Recovery
                     };
-                case Elements.Light: 
+                case Elements.Bless: 
                     return new List<Elements> {
-                        Elements.Physical, Elements.Darkness, Elements.Ailement
+                        Elements.Physical, Elements.Curse, Elements.Ailment
                     };
                 default: 
                     return new List<Elements>();

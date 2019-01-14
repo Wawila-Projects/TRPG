@@ -10,7 +10,7 @@ namespace Assets.Spells.LightSpells
         public override int Cost => 18;
         public override bool IsMultitarget => true;
         public override bool IsMagical => true;
-        public override Elements Element => Elements.Light;
+        public override Elements Element => Elements.Bless;
         public float Chance => 0.3f;
         public bool IsInstaKillSpell => true;
     }
