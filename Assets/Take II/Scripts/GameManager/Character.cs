@@ -1,15 +1,20 @@
 ﻿using System.Linq;
 using Assets.Take_II.Scripts.HexGrid;
-using Assets.Take_II.Scripts.PlayerManager;
-using Assets.Take_II.Scripts.Combat;
 using UnityEngine;
+using Assets.Personas;
 
 namespace Assets.Take_II.Scripts.GameManager
 {
-    public class Character : MonoBehaviour
+    public abstract class Character : MonoBehaviour
     {
         public string Name;
         public Tile Location;
+        public int Movement { get; protected set; }        
+        public int CurrentMovement;
+        public int Level;
+        public int Hp;
+        public int Sp;
+        public PersonaBase Persona;
 
         [SerializeField]
         protected int _currentHealth;
@@ -29,10 +34,7 @@ namespace Assets.Take_II.Scripts.GameManager
                 }
             }
         }
-        
-        public Stats Stats;
-        public SpellBook Spells;
-        public int Movement;
+
         public bool IsDead;
         public bool IsRange;
         public int WeaponRange;
@@ -43,28 +45,25 @@ namespace Assets.Take_II.Scripts.GameManager
         public virtual void OnUpdate() { }
         
         void Awake() {
+            Level = 1;
             Name = gameObject.name;
-            Stats = new Stats {
-                Hp = 100,
-                Movement = 3,
-                Strength = 10,
-                Magic = 10,
-                Endurance = 5,
-                Luck = 7,
-                Agility = 6
-            };
+            Hp = 100;
+            Sp = 75;
+            Movement = 3;
+            CurrentMovement = Movement;
+            Persona = new TestPersona();
+
+            CurrentHealth = Hp;
             
             IsRange = false;
             WeaponRange = IsRange ? 2 : 1;
-            CurrentHealth = Stats.Hp;
-            Movement = Stats.Movement;
             OnAwake();
         }
 
         void Update() {
             OnUpdate();
         }
-
+        
         public bool IsEqualTo(Character other)
         {
             if (other == null)
@@ -86,7 +85,7 @@ namespace Assets.Take_II.Scripts.GameManager
                 return false;
 
             var distance = Location.Distance(other.Location);
-            var isInRange = distance <= Stats.Movement + WeaponRange;
+            var isInRange = distance <= Movement + WeaponRange;
             
              return isInRange;
         }

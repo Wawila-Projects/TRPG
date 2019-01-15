@@ -43,7 +43,7 @@ namespace Assets.Take_II.Scripts.InputManger
                 _playerInteractions.Target = null;
             else
              {
-                var clearAmount = _playerInteractions.Selected?.Stats.Movement ?? 0;
+                var clearAmount = _playerInteractions.Selected?.Movement ?? 0;
                 var clearLocation = _playerInteractions.Selected?.Location;
                 var clearRange = _playerInteractions.Selected?.IsRange ?? true;
                 _mapInteractions.ClearReachableArea(clearAmount, clearLocation, clearRange);
@@ -89,7 +89,7 @@ namespace Assets.Take_II.Scripts.InputManger
             {
                 _playerInteractions.Selected = obj.GetComponent<Player>();
                 _mapInteractions.Selected = null;
-                var drawAmount = _playerInteractions.Selected.Movement;
+                var drawAmount = _playerInteractions.Selected.CurrentMovement;
                 var drawLocation = _playerInteractions.Selected.Location;
                 var drawRange = _playerInteractions.Selected.IsRange;
                 if (!_playerInteractions.Selected.TurnFinished && !_playerInteractions.Selected.IsDead )
@@ -103,7 +103,7 @@ namespace Assets.Take_II.Scripts.InputManger
             else if (_playerInteractions.Target == obj)     
             {
                 bool clearMap;
-                var clearAmount = _playerInteractions.Selected.Movement;
+                var clearAmount = _playerInteractions.Selected.CurrentMovement;
                 var clearLocation = _playerInteractions.Selected.Location;
                 var clearRange = _playerInteractions.Selected.IsRange;
                 _playerInteractions.Act(out clearMap);

@@ -94,60 +94,60 @@ namespace Assets.Take_II.Scripts.Combat {
         }
 
         public static int AlmightyAttack(Character attacker, Character defender, int attackPower) {
-            var attackStat =  attacker.Stats.Magic;
+            var attackStat =  attacker.Persona.Magic;
             var modifier = CalculateDamageModifier(attacker, defender, false);
             var netdamage = Mathf.Sqrt(attackStat * attackPower) * modifier;
-            var damage = netdamage * AttackVariance(attacker.Stats.Luck);
+            var damage = netdamage * AttackVariance(attacker.Persona.Luck);
             return Mathf.RoundToInt(damage);
         }
 
         private static int Attack(Character attacker, Player defender, int attackPower, bool isPhysical) {
-            var attackStat = isPhysical ? attacker.Stats.Strength : attacker.Stats.Magic;
-            var defenceStat = defender.Equipment.Armor + defender.Stats.Endurance * 8;
+            var attackStat = isPhysical ? attacker.Persona.Strength : attacker.Persona.Magic;
+            var defenceStat = defender.Equipment.Armor + defender.Persona.Endurance * 8;
             var modifier = CalculateDamageModifier(attacker, defender, isPhysical);
             var netdamage = Mathf.Sqrt((attackStat / defenceStat) * attackPower) * modifier;
-            var damage = netdamage * AttackVariance(attacker.Stats.Luck);
+            var damage = netdamage * AttackVariance(attacker.Persona.Luck);
             return Mathf.RoundToInt(damage);
         }
 
         private static int Attack(Character attacker, Character defender, int attackPower, bool isPhysical) {
-            var attackStat = isPhysical ? attacker.Stats.Strength : attacker.Stats.Magic;
-            var defenceStat = defender.Stats.Endurance * 8;
+            var attackStat = isPhysical ? attacker.Persona.Strength : attacker.Persona.Magic;
+            var defenceStat = defender.Persona.Endurance * 8;
             var modifier = CalculateDamageModifier(attacker, defender, isPhysical);
             var netdamage = Mathf.Sqrt((attackStat / defenceStat) * attackPower) * modifier;
-            var damage = netdamage * AttackVariance(attacker.Stats.Luck);
+            var damage = netdamage * AttackVariance(attacker.Persona.Luck);
             return Mathf.RoundToInt(damage);
         }
 
         // TODO: Take in consideration chances for evation
         private static bool SpellDidHit(Character attacker, Character defender, OffensiveSpell spell) {
             var firstChanceToHit = Random.value * 100 <= spell.Accuracy;
-            if (Random.value * 100 > attacker.Stats.Agility) return firstChanceToHit;
+            if (Random.value * 100 > attacker.Persona.Agility) return firstChanceToHit;
             var secondChanceToHit = Random.value * 100 <= spell.Accuracy;
             return firstChanceToHit || secondChanceToHit;
         }
 
         private static float CalculateDamageModifier(Character attacker, Character defender, bool isPhysical) {
             var modifier = 1f;
-            if (attacker.Stats.AttackBuff == StatsModifiers.Buff) {
+            if (attacker.Persona.AttackBuff == StatsModifiers.Buff) {
                  modifier *= 1.3f;
             }  
-            else if (attacker.Stats.AttackBuff == StatsModifiers.Debuff) {
+            else if (attacker.Persona.AttackBuff == StatsModifiers.Debuff) {
                 modifier /= 1.3f;
             } 
             
-            if (defender.Stats.DefenceBuff == StatsModifiers.Buff) {
+            if (defender.Persona.DefenceBuff == StatsModifiers.Buff) {
                 modifier /= 1.3f;
             }
-            else if (defender.Stats.DefenceBuff == StatsModifiers.Debuff) {
+            else if (defender.Persona.DefenceBuff == StatsModifiers.Debuff) {
                 modifier *= 1.3f;
             }
 
             if (isPhysical) {
-                if (attacker.Stats.PowerCharged) {
+                if (attacker.Persona.PowerCharged) {
                     modifier *= 2.5f;
                 }
-            } else if (attacker.Stats.MindCharged) {
+            } else if (attacker.Persona.MindCharged) {
                 modifier *= 2.5f;
             }
 
@@ -165,24 +165,24 @@ namespace Assets.Take_II.Scripts.Combat {
         }
 
         private static void ResolveResistances(Character attacker, Character defender, Elements element, int damage) {
-            switch (defender.Stats.Resistances[element])
+            switch (defender.Persona.Resistances[element])
             {
-                case Resistances.Resist:
+                case ResistanceModifiers.Resist:
                     defender.CurrentHealth -= Mathf.RoundToInt(damage * 0.5f);
                     break;
-                case Resistances.Weak:
+                case ResistanceModifiers.Weak:
                     defender.CurrentHealth -= Mathf.RoundToInt(damage * 1.5f);
                     break;
-                case Resistances.Reflect:
+                case ResistanceModifiers.Reflect:
                     attacker.CurrentHealth -= damage;
                     break;
-                case Resistances.Absorb:
+                case ResistanceModifiers.Absorb:
                     defender.CurrentHealth += damage;
                     break;
-                case Resistances.None:
+                case ResistanceModifiers.None:
                     defender.CurrentHealth -= damage;
                     break;
-                case Resistances.Block:
+                case ResistanceModifiers.Block:
                     break;
             }
         }

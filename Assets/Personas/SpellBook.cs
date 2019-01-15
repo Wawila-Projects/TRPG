@@ -1,10 +1,9 @@
 ﻿using System.Collections.Generic;
-using Assets.Personas;
 using Assets.Spells;
 using Assets.Take_II.Scripts.Enums;
 using Assets.Take_II.Scripts.GameManager;
 
-namespace Assets.Take_II.Scripts.Combat {
+namespace Assets.Personas {
     public class SpellBook {
         public Elements BaseElement { get; }
         public PersonaBase Owner { get; }
@@ -28,13 +27,13 @@ namespace Assets.Take_II.Scripts.Combat {
             this(owner, baseElement, new List<SpellBase>(), new Dictionary<int, SpellBase>()) {
         }
         public bool LevelUp(out SpellBase spell) {
-            spell = LockedSpells[Owner.Stats.Level];
+            spell = LockedSpells[Owner.Level];
             if (spell == null) return true;
 
             var resolved = AddSpell(spell);
             if (!resolved)  return false;
             
-            LockedSpells.Remove(Owner.Stats.Level);
+            LockedSpells.Remove(Owner.Level);
             return true;
         }
         public bool AddSpell(SpellBase spell) {
