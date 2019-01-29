@@ -14,11 +14,13 @@ namespace Assets.Personas.Fool {
         }
         protected override void SetBaseStats()
         {   
-                Strength = 2; 
-                Magic = 2;
-                Endurance = 2; 
-                Agility = 3; 
-                Luck = 1;
+            Stats = new Dictionary<Statistics, int> {
+                {Statistics.Strength, 2}, 
+                {Statistics.Magic, 2},
+                {Statistics.Endurance, 2}, 
+                {Statistics.Agility, 3}, 
+                {Statistics.Luck, 1}
+            };       
         }
 
         protected override void SetResistances()

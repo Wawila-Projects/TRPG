@@ -12,11 +12,13 @@ namespace Assets.Personas {
          }
         protected override void SetBaseStats()
         {
-                Strength = 30; 
-                Magic = 30;
-                Endurance = 30; 
-                Agility = 30; 
-                Luck = 30;
+            Stats = new Dictionary<Statistics, int> {
+                {Statistics.Strength, 30}, 
+                {Statistics.Magic, 30},
+                {Statistics.Endurance, 30}, 
+                {Statistics.Agility, 30}, 
+                {Statistics.Luck, 30}
+            };       
         }
 
          protected override void SetResistances()
