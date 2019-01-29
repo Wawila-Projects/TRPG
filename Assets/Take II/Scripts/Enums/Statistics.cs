@@ -2,7 +2,7 @@
 {
     public enum Statistics
     {
-        Level, Hp, Sp, Strength, Magic, Endurance, Agility, Luck
+         Strength, Magic, Endurance, Agility, Luck
     }
 
 }
