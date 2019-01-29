@@ -51,6 +51,32 @@ namespace Assets.Personas
             SetBaseStats();
         }
 
+        public int LevelUp(int statsUp = 3) {
+            ++Level;
+            
+            var random = new Random(DateTime.Now.Millisecond);
+
+            var statistics = (Statistics[]) Enum.GetValues(typeof(Statistics));
+            var statsToLevel = new List<Statistics>();
+            for(var i = 0; i < statsUp; ++i) {
+                var stat = statistics[random.Next(statistics.Length)];
+                statsToLevel.Add(stat);
+                ++Stats[stat];
+            } 
+            
+            return Level;
+        }
+
+        public void BuffStats(Dictionary<Statistics, int> stats) {
+            if(StatBuffs == null) {
+                StatBuffs = new Dictionary<Statistics, int>();
+            }
+
+            foreach(var buff in stats) {
+                StatBuffs[buff.Key] += buff.Value;
+            }
+        }
+        
         protected abstract void SetBaseStats();
         protected abstract void SetResistances();
         protected abstract List<SpellBase> GetBaseSpellbook(); 
