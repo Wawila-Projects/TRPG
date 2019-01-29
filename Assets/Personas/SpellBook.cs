@@ -68,6 +68,10 @@ namespace Assets.Personas {
                     return new List<Elements> { Elements.Fire };
                 case Elements.Wind:
                     return new List<Elements> { Elements.Elec };
+                case Elements.Psy:
+                    return new List<Elements> { Elements.Nuke };
+                case Elements.Nuke:
+                    return new List<Elements> { Elements.Psy };
                 case Elements.Ailment:
                     return new List<Elements> {
                         Elements.Bless, Elements.Recovery
@@ -83,6 +87,11 @@ namespace Assets.Personas {
                 case Elements.Bless: 
                     return new List<Elements> {
                         Elements.Physical, Elements.Curse, Elements.Ailment
+                    };
+                case Elements.Physical:
+                    return new List<Elements> {
+                        Elements.Fire, Elements.Ice, Elements.Elec, Elements.Wind, 
+                        Elements.Psy, Elements.Nuke, Elements.Bless, Elements.Curse
                     };
                 default: 
                     return new List<Elements>();
