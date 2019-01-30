@@ -37,7 +37,7 @@ namespace Assets.Take_II.Scripts.Combat {
             Debug.Log($"Basic Attack: {attacker.Name} vs {defender.Name} - Damage: {damage}");
         }
 
-        public void SpellAttack(Character attacker, OffensiveSpell spell) {
+        public void MultitargetSpellAttack(Character attacker, OffensiveSpell spell) {
             if (!spell.IsMultitarget) {
                 return;
             }

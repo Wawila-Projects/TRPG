@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using Assets.Spells;
 using Assets.Take_II.Scripts.Enums;
+using Assets.Utils;
 
 namespace Assets.Personas
 {
@@ -9,11 +10,11 @@ namespace Assets.Personas
         public abstract string Name { get; }
         public int Level { get; protected set; }
         public Arcana Arcana { get; }
-        public int Strength => Stats[Statistics.Strength] + StatBuffs.GetValueOrDefault(Statistics.Strength, 0);
-        public int Magic => Stats[Statistics.Magic] + StatBuffs.GetValueOrDefault(Statistics.Magic, 0);
-        public int Endurance => Stats[Statistics.Endurance] + StatBuffs.GetValueOrDefault(Statistics.Endurance, 0);
-        public int Agility => Stats[Statistics.Agility] + StatBuffs.GetValueOrDefault(Statistics.Agility, 0);
-        public int Luck => Stats[Statistics.Luck] + StatBuffs.GetValueOrDefault(Statistics.Luck, 0);
+        public int Strength => Stats[Statistics.Strength] + StatBuffs.GetValueOrDefault(Statistics.Strength);
+        public int Magic => Stats[Statistics.Magic] + StatBuffs.GetValueOrDefault(Statistics.Magic);
+        public int Endurance => Stats[Statistics.Endurance] + StatBuffs.GetValueOrDefault(Statistics.Endurance);
+        public int Agility => Stats[Statistics.Agility] + StatBuffs.GetValueOrDefault(Statistics.Agility);
+        public int Luck => Stats[Statistics.Luck] + StatBuffs.GetValueOrDefault(Statistics.Luck);
         public StatsModifiers AttackBuff = StatsModifiers.None;
         public StatsModifiers DefenceBuff = StatsModifiers.None;
         public StatsModifiers EvadeBuff = StatsModifiers.None;
