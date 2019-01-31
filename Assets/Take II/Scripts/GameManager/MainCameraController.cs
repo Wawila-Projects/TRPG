@@ -11,6 +11,8 @@ namespace Assets.Take_II.Scripts.GameManager {
         public Vector3 NewPosition;
         public bool IsInside;
 
+        public Character ToTarget;
+
         private float CameraZoom => MainCamera.orthographicSize;
         private Vector3 CameraPosition => MainCamera.transform.position;
 
@@ -21,8 +23,22 @@ namespace Assets.Take_II.Scripts.GameManager {
         void LateUpdate() {
             HandleZoom(Input.GetAxis("Mouse ScrollWheel"));
             HandleDrag();
+
+            if (ToTarget) {
+                TargetCharacter(ToTarget);
+            }
         }
 
+        public void TargetCharacter(Character character) {
+            MainCamera.orthographicSize = 1.5f;
+            var position = character.transform.position;
+            var newPosition = new Vector3(position.x, position.y, -10);
+            IsInside = PointIsInsideBounds(ref newPosition, CameraBounds);
+            if(IsInside) {
+                transform.Translate(newPosition, Space.World);
+            }
+        }
+        
         private void HandleZoom(float scrollMovement) {
             if (scrollMovement == 0)
                 return;
