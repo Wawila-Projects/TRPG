@@ -33,9 +33,8 @@ namespace Assets.Take_II.Scripts.GameManager {
             MainCamera.orthographicSize = 1.5f;
             var position = character.transform.position;
             var newPosition = new Vector3(position.x, position.y, -10);
-            IsInside = PointIsInsideBounds(ref newPosition, CameraBounds);
-            if(IsInside) {
-                transform.Translate(newPosition, Space.World);
+            if(PointIsInsideBounds(ref newPosition, CameraBounds)) {
+                transform.position = newPosition;
             }
         }
         
