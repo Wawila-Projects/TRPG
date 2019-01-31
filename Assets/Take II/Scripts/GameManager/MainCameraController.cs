@@ -7,12 +7,8 @@ namespace Assets.Take_II.Scripts.GameManager {
         Vector3 MouseStart;
         Vector3 MouseMove;
         public Bounds CameraBounds;
-
         public Vector3 NewPosition;
-        public bool IsInside;
-
         public Character ToTarget;
-
         private float CameraZoom => MainCamera.orthographicSize;
         private Vector3 CameraPosition => MainCamera.transform.position;
 
@@ -30,8 +26,15 @@ namespace Assets.Take_II.Scripts.GameManager {
         }
 
         public void TargetCharacter(Character character) {
-            MainCamera.orthographicSize = 1.5f;
             var position = character.transform.position;
+            
+            if (position.x == CameraPosition.x &&
+                position.y == CameraPosition.y) {
+                    return;
+            }
+
+            ToTarget = character;
+            MainCamera.orthographicSize = 1.5f;
             var newPosition = new Vector3(position.x, position.y, -10);
             if(PointIsInsideBounds(ref newPosition, CameraBounds)) {
                 transform.position = newPosition;
@@ -42,6 +45,8 @@ namespace Assets.Take_II.Scripts.GameManager {
             if (scrollMovement == 0)
                 return;
 
+            ToTarget = null;
+            
             var change = CameraZoom + scrollMovement;
             var newValue = Mathf.Clamp(change, 1, 4);
 
@@ -49,7 +54,7 @@ namespace Assets.Take_II.Scripts.GameManager {
             
             if (scrollMovement < 0) 
                 return;
-            
+
             if (newValue > 3.9) {
                 NewPosition = CameraBounds.center;
                 transform.position = NewPosition;
@@ -65,21 +70,21 @@ namespace Assets.Take_II.Scripts.GameManager {
         private void HandleDrag() {
             if (Input.GetMouseButtonDown (0)) {
                 MouseStart = new Vector2(Input.mousePosition.x, Input.mousePosition.y);
+                return;
             }
-            else if (Input.GetMouseButton (0)) {
-                MouseMove = new Vector2(Input.mousePosition.x - MouseStart.x, 
-                                        Input.mousePosition.y - MouseStart.y);
-                MouseStart = new Vector2(Input.mousePosition.x, Input.mousePosition.y);
+            if (!Input.GetMouseButton (0)) {
+                return;
+            }
+            MouseMove = new Vector2(Input.mousePosition.x - MouseStart.x, 
+                                    Input.mousePosition.y - MouseStart.y);
+            MouseStart = new Vector2(Input.mousePosition.x, Input.mousePosition.y);
 
-                var newX = transform.position.x + MouseMove.x * Time.deltaTime;
-                var newY = transform.position.y + MouseMove.y * Time.deltaTime;
-                NewPosition = new Vector3(newX, newY, -10);
+            var newX = transform.position.x + MouseMove.x * Time.deltaTime;
+            var newY = transform.position.y + MouseMove.y * Time.deltaTime;
+            NewPosition = new Vector3(newX, newY, -10);
 
-                IsInside = PointIsInsideBounds(ref NewPosition, CameraBounds);
-
-                if (IsInside) {
-                    transform.position = NewPosition;
-                }
+            if (PointIsInsideBounds(ref NewPosition, CameraBounds)) {
+                transform.position = NewPosition;
             }
         }
 
