@@ -33,6 +33,12 @@ namespace Assets.Take_II.Scripts.InputManger
         private void EscapeInput() {
             if (!Input.GetKeyDown(KeyCode.Escape) || _playerInteractions?.IsMoving == true) return;
 
+
+            var cameraControl = Camera.main.gameObject.GetComponent<MainCameraController>();
+            if (cameraControl != null) {
+                cameraControl.ToTarget = null;
+            }
+
             if (_playerInteractions.Selected != null)
             {
                 _mapInteractions.Selected = null;
@@ -40,15 +46,16 @@ namespace Assets.Take_II.Scripts.InputManger
             }
 
             if (_playerInteractions.Target != null) 
+            {
                 _playerInteractions.Target = null;
-            else
-             {
-                var clearAmount = _playerInteractions.Selected?.Movement ?? 0;
-                var clearLocation = _playerInteractions.Selected?.Location;
-                var clearRange = _playerInteractions.Selected?.IsRange ?? true;
-                _mapInteractions.ClearReachableArea(clearAmount, clearLocation, clearRange);
-                _playerInteractions.Selected = null;
-             }   
+                return;
+            }
+            
+            var clearAmount = _playerInteractions.Selected?.Movement ?? 0;
+            var clearLocation = _playerInteractions.Selected?.Location;
+            var clearRange = _playerInteractions.Selected?.IsRange ?? true;
+            _mapInteractions.ClearReachableArea(clearAmount, clearLocation, clearRange);
+            _playerInteractions.Selected = null;
         }
 
         private void Raycasting() {
@@ -74,7 +81,6 @@ namespace Assets.Take_II.Scripts.InputManger
             if (tile != null)
             {
                 MapRayCasting(tile);
-                return;
             }
         }
 
@@ -92,28 +98,46 @@ namespace Assets.Take_II.Scripts.InputManger
                 var drawAmount = _playerInteractions.Selected.CurrentMovement;
                 var drawLocation = _playerInteractions.Selected.Location;
                 var drawRange = _playerInteractions.Selected.IsRange;
-                if (!_playerInteractions.Selected.TurnFinished && !_playerInteractions.Selected.IsDead )
+                if (!_playerInteractions.Selected.TurnFinished && !_playerInteractions.Selected.IsDead ) {
                     _mapInteractions.DrawReachableArea(drawAmount, drawLocation, drawRange);
+                }
+                return;
             }
-            else if (_playerInteractions.Selected != null && _playerInteractions.Target == null &&
-                     _playerInteractions.Selected.gameObject != obj)
+            
+
+            // TODO: Remove ability to target other Characters
+            // TODO: Chracter targeting should depend on Spell
+            if (_playerInteractions.Selected != null && _playerInteractions.Target == null) 
             {
-                _playerInteractions.Target = obj;
+                if (_playerInteractions.Selected.gameObject != obj) {
+                    _playerInteractions.Target = obj;
+                    return;
+                }
+
+                var character = obj.GetComponent<Character>();
+                var cameraControl = Camera.main.gameObject.GetComponent<MainCameraController>();
+
+                if (character != null && cameraControl != null) {
+                    cameraControl.TargetCharacter(character);
+                }
+                return;
             }
-            else if (_playerInteractions.Target == obj)     
+             
+            if (_playerInteractions.Target == obj)     
             {
+                // TODO: Move this to End of Action 
                 bool clearMap;
                 var clearAmount = _playerInteractions.Selected.CurrentMovement;
                 var clearLocation = _playerInteractions.Selected.Location;
                 var clearRange = _playerInteractions.Selected.IsRange;
                 _playerInteractions.Act(out clearMap);
-                if(clearMap)
-                    _mapInteractions.ClearReachableArea(clearAmount, clearLocation, clearRange);
+                if(clearMap) {
+                   _mapInteractions.ClearReachableArea(clearAmount, clearLocation, clearRange);    
+                }
+                return;
             }   
-            else 
-            {
-                _playerInteractions.Target = obj;
-            }
+            
+            _playerInteractions.Target = obj;
         }
 
         public void MapRayCasting(Tile tile)
