@@ -2,7 +2,6 @@ using Assets.Take_II.Scripts.EnemyManager;
 using Assets.Take_II.Scripts.Enums;
 using Assets.Take_II.Scripts.GameManager;
 using Assets.Take_II.Scripts.PlayerManager;
-// ? Quitar unity dependecy 
 using UnityEngine;
 using Random = UnityEngine.Random;
 using System.Linq;
@@ -10,7 +9,7 @@ using Assets.Spells;
 
 namespace Assets.Take_II.Scripts.Combat {
     public sealed class CombatManager {
-        public static CombatManager Manager { get; } = new CombatManager();
+        public static CombatManager Manager { get; } = new CombatManager(); 
 
         private CombatManager() { }
 

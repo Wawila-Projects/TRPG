@@ -103,20 +103,20 @@ namespace Assets.Take_II.Scripts.InputManger
                 }
                 return;
             }
-            
 
             // TODO: Remove ability to target other Characters
             // TODO: Chracter targeting should depend on Spell
             if (_playerInteractions.Selected != null && _playerInteractions.Target == null) 
             {
                 if (_playerInteractions.Selected.gameObject != obj) {
-                    _playerInteractions.Target = obj;
+                     if (obj.GetComponent<Tile>() != null) {
+                        _playerInteractions.Target = obj;
+                     }
                     return;
                 }
 
                 var character = obj.GetComponent<Character>();
                 var cameraControl = Camera.main.gameObject.GetComponent<MainCameraController>();
-
                 if (character != null && cameraControl != null) {
                     cameraControl.TargetCharacter(character);
                 }

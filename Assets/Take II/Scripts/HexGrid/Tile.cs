@@ -7,6 +7,7 @@ using Assets.Take_II.Scripts.GameManager;
 
 namespace Assets.Take_II.Scripts.HexGrid
 {
+    //? Is MonoBehaviout necessary?
     public class Tile : MonoBehaviour
     {
         public string Name;
@@ -44,6 +45,18 @@ namespace Assets.Take_II.Scripts.HexGrid
                 AddNeighbor(1, -1);
                 AddNeighbor(1, 1);
             }
+        }
+
+        public List<Tile> GetTilesAtDistance(int distance) {
+            if(distance == 1) {
+                return Neighbors;
+            } 
+            
+            var tiles = new List<Tile>();
+            
+            
+
+            return tiles;
         }
 
         private void AddNeighbor(int x, int y)
