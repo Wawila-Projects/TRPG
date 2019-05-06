@@ -52,7 +52,7 @@ namespace Assets.Personas
             SetBaseStats();
         }
 
-        public int LevelUp(int statsUps = 3) {
+        public (int newLevel, List<Statistics> statUps) LevelUp(int statsUps = 3) {
             ++Level;
             var random = new Random(DateTime.Now.Millisecond);
             var statistics = (Statistics[]) Enum.GetValues(typeof(Statistics));
@@ -63,7 +63,7 @@ namespace Assets.Personas
                 ++Stats[stat];
             } 
             
-            return Level;
+            return (Level, statsToLevel);
         }
 
         public int LevelUp(List<Statistics> stats) {

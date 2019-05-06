@@ -1,6 +1,5 @@
 ﻿using Assets.Take_II.Scripts.EnemyManager;
 using Assets.Take_II.Scripts.GameManager;
-using Assets.Take_II.Scripts.HexGrid;
 using Assets.Take_II.Scripts.PlayerManager;
 using UnityEngine;
 
@@ -8,12 +7,12 @@ namespace Assets.Take_II.Scripts.InputManger
 {
     public class InputManager : MonoBehaviour
     {
-        public RaycastHit2D Raycast;
+        public RaycastHit Raycast;
         public GameObject Object;
 
-        private MapInteractions _mapInteractions;
-        private PlayerInteractions _playerInteractions;
-        private EnemyInteractions _enemyInteractions;
+        public MapInteractions _mapInteractions;
+        public PlayerInteractions _playerInteractions;
+        public EnemyInteractions _enemyInteractions;
         
         [SerializeField]
         public bool escpressed;
@@ -59,9 +58,12 @@ namespace Assets.Take_II.Scripts.InputManger
         }
 
         private void Raycasting() {
-            Raycast = Physics2D.Raycast(Camera.main.ScreenToWorldPoint(Input.mousePosition), Vector2.zero);
-
-            if (!Raycast) return;
+            var ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            
+            if (!Physics.Raycast(ray, out Raycast)) {
+                Object = null;
+                return;
+            }
 
             Object = Raycast.collider.transform.gameObject;
             var enemy = Object.GetComponent<Enemy>();

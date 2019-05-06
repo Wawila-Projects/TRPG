@@ -1,5 +1,4 @@
 ﻿using System.Linq;
-using Assets.Take_II.Scripts.HexGrid;
 using UnityEngine;
 using Assets.Personas;
 
@@ -70,7 +69,7 @@ namespace Assets.Take_II.Scripts.GameManager
                 return false;
 
             var sameName = name == other.name;
-            var sameLocation = Location.IsEqualTo(other.Location);
+            var sameLocation = Location == other.Location;
             return sameName && sameLocation;
         }
 
@@ -84,7 +83,7 @@ namespace Assets.Take_II.Scripts.GameManager
             if (other == null)
                 return false;
 
-            var distance = Location.Distance(other.Location);
+            var distance = Location.GetDistance(other.Location);
             var isInRange = distance <= Movement + WeaponRange;
             
              return isInRange;
@@ -100,7 +99,7 @@ namespace Assets.Take_II.Scripts.GameManager
 
         public int DistanceFromCombatRange(Character other)
         {
-            var distance = Location.Distance(other.Location);
+            var distance = Location.GetDistance(other.Location);
             return (int)(distance - WeaponRange);
         }
 
@@ -113,7 +112,7 @@ namespace Assets.Take_II.Scripts.GameManager
             var possibleTiles = Location.Neighbors.Except(other.Location.Neighbors);
             foreach (var tile in possibleTiles) 
             {
-                if (tile.OccupiedBy != null) continue;
+                if (tile.Occupant != null) continue;
                 Movement -= 1;
                 return tile;
             }
@@ -123,8 +122,7 @@ namespace Assets.Take_II.Scripts.GameManager
         public Tile MoveTowards(Character other, int steps) 
         {
             var totalSteps = steps > Movement ? Movement : steps;
-            var pathfinder = new AStar();
-            var path = pathfinder.FindPath(Location, other.Location);
+            var path = AStar.FindPath(Location, other.Location);
             path.Remove(Location);
             if (path.Count > steps) 
             {
@@ -132,31 +130,36 @@ namespace Assets.Take_II.Scripts.GameManager
                     path.Remove(path.Last());
             }
             var tile = path.Last();
-            if (tile.OccupiedBy == null)
+            if (tile.Occupant == null)
             {
                 Movement -= totalSteps;
                 return tile;
             }
-            tile = MoveTowardsIfOccupied(tile, other, pathfinder);
+            tile = MoveTowardsIfOccupied(tile, other);
             return tile ?? Location;
         }
 
-        private Tile MoveTowardsIfOccupied(Tile tile, Character other, AStar pathfinder) 
+        private Tile MoveTowardsIfOccupied(Tile tile, Character other) 
         {
             foreach (var neighbor in tile.Neighbors) 
             {
-                var optPath = pathfinder.FindPath(Location, neighbor);
+                var optPath = AStar.FindPath(Location, neighbor);
                 optPath.Remove(Location);
                 
                 var isReachable = optPath.Count <= Movement; 
-                var isInRange = neighbor.DistanceFromCombatRange(this, other) == 0;
-                var isNotOccupied = neighbor.OccupiedBy == null;
+                var isInRange = TileDistanceFromCombat() == 0;
+                var isNotOccupied = !neighbor.IsOccupied;
 
                 if (!isReachable || !isInRange || !isNotOccupied) continue;
                 Movement -= optPath.Count;
                 return neighbor;
             }
             return null;
+
+            int TileDistanceFromCombat() {
+                var distance = tile.GetDistance(other.Location);
+                return (int)(distance - WeaponRange);
+            }
         }
 
         public Tile MoveToRange(Character other) {
