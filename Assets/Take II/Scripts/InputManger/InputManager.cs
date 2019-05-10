@@ -107,19 +107,20 @@ namespace Assets.Take_II.Scripts.InputManger {
 
                 var character = obj.GetComponent<Character> ();
                 var cameraControl = Camera.main.gameObject.GetComponent<MainCameraController> ();
-                if (character != null && cameraControl != null) {
-                    cameraControl.TargetCharacter (character);
+                if (character != null) {
+                    _playerInteractions.Target = obj;
+                    cameraControl?.TargetCharacter (character);
                 }
                 return;
             }
 
             if (_playerInteractions.Target == obj) {
                 // TODO: Move this to End of Action 
-                var clearAmount = _playerInteractions.Selected.CurrentMovement;
-                var clearLocation = _playerInteractions.Selected.Location;
-                var clearRange = _playerInteractions.Selected.IsRange;
                 _playerInteractions.Act (out bool clearMap);
                 if (clearMap) {
+                    var clearAmount = _playerInteractions.Selected.CurrentMovement;
+                    var clearLocation = _playerInteractions.Selected.Location;
+                    var clearRange = _playerInteractions.Selected.IsRange;
                     _mapInteractions.ClearReachableArea (clearAmount, clearLocation, clearRange);
                 }
                 return;
