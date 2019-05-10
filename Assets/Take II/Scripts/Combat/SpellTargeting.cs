@@ -17,7 +17,7 @@ namespace Assets.Take_II.Scripts.Combat {
             var neighbors = Attacker.Location.Neighbors;
             
             foreach(var neighbor in neighbors) {
-                var target = neighbor.OccupiedBy;
+                var target = neighbor.Occupant;
                 if (target == null) {
                     continue;
                 }    

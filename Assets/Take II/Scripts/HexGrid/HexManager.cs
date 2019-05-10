@@ -1,49 +1,78 @@
-﻿using UnityEngine;
+﻿// using System.Collections.Generic;
+// using UnityEngine;
 
-namespace Assets.Take_II.Scripts.HexGrid
-{
-    public class HexManager : MonoBehaviour
-    {
+// namespace Assets.Take_II.Scripts.HexGrid {
+//     public class HexManager : MonoBehaviour {
 
-        public GameObject Prefab;
-        public int[,] Map;
+//         public MapShapes Shape = MapShapes.Rectangular;
+//         public MapType Type = MapType.PointyEven;
+//         public bool DoneShowing = false;
 
-        public int XSize = 19;
-        public int YSize = 12;
+//         public List<Tile> Map;
+//         public int Width;
+//         public int Height;
+//         public GameObject Prefab;
 
-        private const float XOffset = 0.882f;
-        private const float YOffset = 0.764f;
+//         void Awake () {
+//             Map = new List<Tile> ();
+//             var map = new HashSet<Hex> ();
 
+//             switch (Shape) {
+//                 case MapShapes.Triangle:
+//                     map = MapConstructor.TriangleMap (Width);
+//                     break;
+//                 case MapShapes.ReverseTrianlge:
+//                     map = MapConstructor.ReverseTriangleMap (Width);
+//                     break;
+//                 case MapShapes.Rectangular:
+//                     map = MapConstructor.RectangularlMap (Width, Height);
+//                     break;
+//                 case MapShapes.Hexagonal:
+//                     map = MapConstructor.HexagonalMap (Width);
+//                     break;
+//             }
 
-        void Awake()
-        {
-            for (var x = 0; x < XSize; x++)
-            {
-                for (var y = 0; y < YSize; y++)
-                {
-                    var xPos = x * XOffset;
-                    var yPos = y * YOffset;
+//             var obstacles = new List<Hex> () {
+//                 // new Hex(1, 0 ,-1), new Hex(1,1,-2), new Hex(0,3,-3), new Hex(1,4,-5),
+//                 // new Hex(2,3,-5), new Hex(2,2,-4), new Hex(3,1,-4), new Hex(0,2,-2)
+//             };
 
-                    if (y % 2 == 1)
-                    {
-                        xPos += XOffset / 2;
-                    }
+//             foreach (var hex in map) {
+//                 var prefab = GameObject.Instantiate (Prefab, hex, Quaternion.identity);
+//                 prefab.name = hex.ToString ();
+//                 var tile = prefab.GetComponent<Tile> ();
 
-                    var tile = Instantiate(Prefab, new Vector3(xPos, yPos), Quaternion.identity);
-                    tile.name = "Hex_" + x + "_" + y;
-                    tile.transform.SetParent(transform);
+//                 if (tile == null) continue;
 
-                    var t = tile.GetComponent<Tile>();
-                    t.Name = tile.name;
-                    t.WorldX = xPos;
-                    t.WorldY = yPos;
-                    t.GridX = x;
-                    t.GridY = y;
-                    t.Cost = 1;
-                }
-            }
-        }
-    }
+//                 var isEven = Type == MapType.PointyOdd || Type == MapType.FlatOdd || Shape != MapShapes.Rectangular;
+//                 if (Type == MapType.FlatEven || Type == MapType.FlatOdd) {
+//                     tile.InitFlat (hex, isEven);
+//                 } else {
+//                     tile.InitPointy (hex, isEven);
+//                 }
+//                 Map.Add (tile);
+//                 prefab.transform.SetParent (transform);
 
-}
+//                 if (!obstacles.Contains (hex)) continue;
+//                 prefab.GetComponent<Renderer> ().material.SetColor ("_Color", Color.green);
+//                 prefab.transform.localScale = new Vector3 (1, 1, 0.3f);
+//                 var z = (1 - prefab.transform.localScale.z) * 0.125f;
+//                 prefab.transform.position += new Vector3 (0, 0, z);
+//                 tile.isObstacle = true;
+//             }
 
+//             Map.ForEach ((T) => T.GetNeighbors ());
+//             transform.rotation = Quaternion.Euler (90, 0, 0);
+//             DoneShowing = true;
+//         }
+
+//         void Update () {
+//             if (!Input.GetKeyDown (KeyCode.Space)) return;
+//             // var path = AStar.FindPath(Start, End);
+//             // foreach(var tile in path) {
+//             //     tile.GetComponent<Renderer>()?.material.SetColor("_Color", Color.red);
+//             // }
+//         }
+//     }
+
+// }

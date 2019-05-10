@@ -41,9 +41,9 @@ namespace Assets.Take_II.Scripts.Combat {
                 return;
             }
             foreach (var tile in attacker.Location.Neighbors) {
-                if (tile.OccupiedBy ==  null) continue;
-                if (tile.OccupiedBy is Enemy) 
-                    SpellAttack(attacker, tile.OccupiedBy, spell);
+                if (!tile.IsOccupied) continue;
+                if (tile.Occupant is Enemy) 
+                    SpellAttack(attacker, tile.Occupant, spell);
             }
         }
 
@@ -66,7 +66,7 @@ namespace Assets.Take_II.Scripts.Combat {
         public void AllOutAttack(Character defender) {
             if (!defender.IsSurrounded && defender is Enemy) return;
 
-            var players = defender.Location.Neighbors.Select(t => t.OccupiedBy as Player)
+            var players = defender.Location.Neighbors.Select(t => t.Occupant as Player)
                                                     .Where(p => p != null ).ToList();
             
             if (players.Count != defender.Location.Neighbors.Count) return;

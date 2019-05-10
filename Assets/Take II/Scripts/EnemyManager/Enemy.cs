@@ -1,7 +1,6 @@
 ﻿using System.Linq;
 using Assets.Take_II.Scripts.Combat;
 using Assets.Take_II.Scripts.GameManager;
-using Assets.Take_II.Scripts.HexGrid;
 using Assets.Take_II.Scripts.PlayerManager;
 using UnityEngine;
 
@@ -12,7 +11,6 @@ namespace Assets.Take_II.Scripts.EnemyManager
         public int BasicAttack;
         public Tile Destiny;
         public Player Target;
-        private readonly AStar _pathfinding = new AStar();
 
         public override void OnAwake()
         {
@@ -61,9 +59,9 @@ namespace Assets.Take_II.Scripts.EnemyManager
 
         public void ActOn(Tile tile)
         {
-            var distance = Location.Distance(tile);
+            var distance = Location.GetDistance(tile);
             if (!(distance > Movement)) return;
-            var path = _pathfinding.FindPath(Location, tile);
+            var path = AStar.FindPath(Location, tile);
             Destiny = path[Movement] ?? path.First();
         }
 
@@ -88,8 +86,8 @@ namespace Assets.Take_II.Scripts.EnemyManager
 
             if (transform.position == dest)
             {
-                Location.OccupiedBy = null;
-                Destiny.OccupiedBy = this;
+                Location.Occupant = null;
+                Destiny.Occupant = this;
                 Location = Destiny;
                 Destiny = null;
 
