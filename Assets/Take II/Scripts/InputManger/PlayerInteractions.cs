@@ -113,7 +113,7 @@ namespace Assets.Take_II.Scripts.InputManger {
             }
 
             IsMoving = true;
-            Selected.CurrentMovement -= Mathf.RoundToInt (Selected.Location.GetDistance (tile));
+            Selected.CurrentMovement -= Selected.Location.GetDistance (tile);
             clearMap = true;
             return true;
 
@@ -128,11 +128,7 @@ namespace Assets.Take_II.Scripts.InputManger {
             if (tile == null)
                 return;
 
-            var dest = new Vector3 {
-                x = tile.WorldX,
-                y = tile.WorldY,
-                z = Selected.transform.position.z
-            };
+            var dest = Target.transform.position;
 
             if (Selected.transform.position == dest) {
                 Selected.Location.Occupant = null;
