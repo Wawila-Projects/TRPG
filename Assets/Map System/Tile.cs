@@ -67,6 +67,20 @@ public class Tile : MonoBehaviour, IEquatable<Tile> {
         return Hex.GetDistance (other);
     }
 
+    public static List<Tile> GetTilesInsideRangeFromOrigin (int range) {
+        var tiles = new List<Tile> ();
+        foreach (var tile in MapCoordinator.Coordinator.Map) {
+            var checkX = Math.Abs (tile.Hex.X) <= range;
+            var checkY = Math.Abs (tile.Hex.Y) <= range;
+            var checkZ = Math.Abs (tile.Hex.Z) <= range;
+            var validHex = (tile.Hex.X + tile.Hex.Y + tile.Hex.Z) == 0;
+            if (checkX && checkY && checkZ && validHex) {
+                tiles.Add (tile);
+            }
+        }
+        return tiles;
+    }
+
     public List<Tile> GetTilesAtDistance (int distance) {
         if (distance == 1) {
             return Neighbors;
@@ -74,7 +88,6 @@ public class Tile : MonoBehaviour, IEquatable<Tile> {
 
         var tiles = new List<Tile> ();
         foreach (var tile in MapCoordinator.Coordinator.Map) {
-            if (tiles.Count == 6) break;
             if (tile == this || tile.GetDistance (Hex) != distance) continue;
             tiles.Add (tile);
         }
@@ -89,9 +102,12 @@ public class Tile : MonoBehaviour, IEquatable<Tile> {
         var tiles = new List<Tile> ();
         foreach (var tile in MapCoordinator.Coordinator.Map) {
             if (tile == this) continue;
-            var checkX = Math.Abs (tile.Hex.X) <= range;
-            var checkY = Math.Abs (tile.Hex.Y) <= range;
-            var checkZ = Math.Abs (tile.Hex.Z) <= range;
+            var checkX = tile.Hex.X <= Hex.X + range &&
+                tile.Hex.X >= Hex.X - range;
+            var checkY = (tile.Hex.Y) <= Hex.Y + range &&
+                (tile.Hex.Y) >= Hex.Y - range;
+            var checkZ = (tile.Hex.Z) <= Hex.Z + range &&
+                (tile.Hex.Z) >= Hex.Z - range;
             var validHex = (tile.Hex.X + tile.Hex.Y + tile.Hex.Z) == 0;
             if (checkX && checkY && checkZ && validHex) {
                 tiles.Add (tile);
