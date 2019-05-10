@@ -39,10 +39,10 @@ public abstract class HexBase<T> : IEquatable<HexBase<T>> where T: IEquatable<T>
     }
 
     public static bool operator ==(HexBase<T> lhs, HexBase<T> rhs) {
-        return lhs.Equals(rhs);
+        return lhs?.Equals(rhs) ??  false;
     }
 
     public static bool operator !=(HexBase<T> lhs, HexBase<T> rhs) {
-        return !lhs.Equals(rhs);
+        return !lhs?.Equals(rhs) ?? false;
     }
 }

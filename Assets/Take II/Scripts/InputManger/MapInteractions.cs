@@ -15,7 +15,7 @@ namespace Assets.Take_II.Scripts.InputManger {
             if (selected == null)
                 return;
 
-            var tiles = selected.GetTilesInsideRange (total);
+            var tiles = selected?.GetTilesInsideRange (total);
             foreach (var tile in tiles) {
                 var renderer = tile.GetComponent<Renderer> ();
                 renderer.material.color = color;
