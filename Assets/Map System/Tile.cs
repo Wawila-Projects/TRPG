@@ -136,11 +136,18 @@ public class Tile : MonoBehaviour, IEquatable<Tile> {
     }
 
     public static bool operator == (Tile lhs, Tile rhs) {
+        if (System.Object.ReferenceEquals (lhs, rhs)) {
+            return true;
+        }
+        if (lhs is null || rhs is null) {
+            return false;
+        }
+
         return lhs?.Hex == rhs?.Hex;
     }
 
     public static bool operator != (Tile lhs, Tile rhs) {
-        return lhs?.Hex != rhs?.Hex;
+        return !(lhs == rhs);
     }
 
     // public void OnDrawGizmos() {

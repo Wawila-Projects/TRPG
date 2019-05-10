@@ -12,10 +12,9 @@ namespace Assets.Take_II.Scripts.InputManger {
             ColorReachableArea (total, selected, Color.white, isRange);
         }
         public void ColorReachableArea (int total, Tile selected, Color color, bool isRange) {
-            if (selected == null)
-                return;
+            if (selected == null) return;
 
-            var tiles = selected?.GetTilesInsideRange (total);
+            var tiles = selected.GetTilesInsideRange (total);
             foreach (var tile in tiles) {
                 var renderer = tile.GetComponent<Renderer> ();
                 renderer.material.color = color;
