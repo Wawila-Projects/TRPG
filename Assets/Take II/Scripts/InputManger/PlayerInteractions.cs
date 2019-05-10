@@ -154,7 +154,7 @@ namespace Assets.Take_II.Scripts.InputManger {
             Selected.transform.position = destination;
         }
 
-        private Enemy CheckForAllOutAttack () {
+        private Enemy CheckForAllOutAttack (bool needsSixCount = false) {
             if (IsInCombat || _target is Character) return null;
 
             foreach (var neighhbor in Selected.Location.Neighbors) {
@@ -163,7 +163,8 @@ namespace Assets.Take_II.Scripts.InputManger {
                 if (enemy == null) continue;
                 if (enemy.IsSurrounded) continue;
 
-                if (enemy.Location.Neighbors.TrueForAll (tile => tile.Occupant is Player))
+                if (needsSixCount || enemy.Location.Neighbors.Count == 6 &&
+                    enemy.Location.Neighbors.TrueForAll (tile => tile.Occupant is Player))
                     return enemy;
             }
 
