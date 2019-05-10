@@ -24,7 +24,7 @@ namespace Assets.Scenes {
                 Characters[i].Location = tile;
                 tile.Occupant = Characters[i];
                 Characters[i].Location = tile;
-                Characters[i].transform.position = tile.transform.position + new Vector3 (0, 0, -1);
+                Characters[i].transform.position = tile.transform.position;
             }
         }
     }
