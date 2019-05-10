@@ -120,11 +120,11 @@ public class Tile : MonoBehaviour, IEquatable<Tile> {
     }
 
     public static bool operator == (Tile lhs, Tile rhs) {
-        return lhs.Hex == rhs?.Hex;
+        return lhs?.Hex == rhs?.Hex;
     }
 
     public static bool operator != (Tile lhs, Tile rhs) {
-        return lhs.Hex != rhs?.Hex;
+        return lhs?.Hex != rhs?.Hex;
     }
 
     // public void OnDrawGizmos() {

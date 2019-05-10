@@ -88,6 +88,9 @@ public class Hex : HexBase<int>
 
     public override bool Equals(Object other)
     {   
+        if (other is null) {
+            return false;
+        }
         if (other is Hex hex) { 
             return Equals(hex);
         }
@@ -99,11 +102,11 @@ public class Hex : HexBase<int>
     }
 
     public static bool operator ==(Hex lhs, Hex rhs) {
-        return lhs.Equals(rhs);
+        return lhs?.Equals(rhs) ?? false;
     }
 
     public static bool operator !=(Hex lhs, Hex rhs) {
-        return !lhs.Equals(rhs);
+        return !lhs?.Equals(rhs) ?? false;
     }
     
     public static Hex operator +(Hex lhs, Hex rhs) {
