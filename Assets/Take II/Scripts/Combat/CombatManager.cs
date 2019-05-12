@@ -18,15 +18,15 @@ namespace Assets.Take_II.Scripts.Combat {
             if (!attacker.IsInCombatRange(defender)) return;
             
             var attackPower = 0;
-            if (attacker is Player)
-            {
-                attackPower = ((Player) attacker).Equipment.AttackPower;
-            }
-            else if (attacker is Enemy)
-            {
-                attackPower = ((Enemy) attacker).BasicAttack;
-            }
-            
+            switch(attacker) {
+                case Player playerAttacker: 
+                    attackPower = playerAttacker.Equipment.AttackPower;
+                    break;
+                case Enemy enemyAttacker:
+                    attackPower = enemyAttacker.BasicAttack;
+                    break;
+            }   
+
             var player = defender as Player;
             var damage = player != null ? Attack(attacker, player, attackPower, true) : 
                 Attack(attacker, defender, attackPower, true);
@@ -50,15 +50,17 @@ namespace Assets.Take_II.Scripts.Combat {
         public void SpellAttack(Character attacker, Character defender, OffensiveSpell spell) {
             if (attacker == null || defender == null) return;
             if (!attacker.IsInCombatRange(defender)) return;
+            if (!spell.CanBeCasted(attacker)) return;
             if (SpellDidHit(attacker, defender, spell)) return;
 
             int damage;
-            if (spell.Element == Elements.Physical) {
-                damage = PhysicalAttack(attacker, defender, spell);
-            } else {
+            if (spell.IsMagical) {
                 damage = MagicalAttack(attacker, defender, spell);
+            } else {
+                damage = PhysicalAttack(attacker, defender, spell);
             }
             ResolveResistances(attacker, defender, spell.Element, damage);
+            spell.HandleCostReduction(attacker);
             attacker.TurnFinished = true;
             Debug.Log($"{spell.Name}: {attacker.Name} vs {defender.Name} - Damage: {damage}");
         }

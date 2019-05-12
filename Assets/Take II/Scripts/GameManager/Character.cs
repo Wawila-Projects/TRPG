@@ -25,12 +25,26 @@ namespace Assets.Take_II.Scripts.GameManager
                 if (value > 0)
                 {
                     _currentHealth = value;
+                    return;
                 }
-                else
+                _currentHealth = 0;
+                IsDead = true;
+            }
+        }
+
+        [SerializeField]
+        protected int _currentSpiritPoints;
+        public int CurrentSpiritPoints
+        {
+            get { return _currentSpiritPoints; }
+            set
+            {
+                if (value > 0)
                 {
-                    _currentHealth = 0;
-                    IsDead = true;
+                    _currentSpiritPoints = value >= Sp ? Sp: value;
+                    return;
                 }
+                _currentSpiritPoints = 0;
             }
         }
 
@@ -40,8 +54,8 @@ namespace Assets.Take_II.Scripts.GameManager
         public bool TurnFinished;
         public bool IsSurrounded;
 
-        public virtual void OnAwake() { }
-        public virtual void OnUpdate() { }
+        protected virtual void OnAwake() { }
+        protected virtual void OnUpdate() { }
         
         void Awake() {
             Level = 1;
@@ -50,7 +64,7 @@ namespace Assets.Take_II.Scripts.GameManager
             Sp = 75;
             Movement = 3;
             CurrentMovement = Movement;
-            Persona = new TestPersona();
+            // Persona = new TestPersona();
 
             CurrentHealth = Hp;
             

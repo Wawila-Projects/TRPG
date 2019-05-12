@@ -6,7 +6,7 @@ namespace Assets.Take_II.Scripts.PlayerManager
     {
         public Equipment Equipment;
         
-        public override void OnAwake() {
+        protected override void OnAwake() {
             Equipment = new Equipment
             {
                 Armor = 10,

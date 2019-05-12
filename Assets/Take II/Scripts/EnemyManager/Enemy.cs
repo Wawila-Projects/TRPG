@@ -12,7 +12,7 @@ namespace Assets.Take_II.Scripts.EnemyManager
         public Tile Destiny;
         public Player Target;
 
-        public override void OnAwake()
+        protected override void OnAwake()
         {
             BasicAttack = 100;
         }
