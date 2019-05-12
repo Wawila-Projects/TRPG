@@ -116,10 +116,10 @@ namespace Assets.Take_II.Scripts.InputManger {
 
             if (_playerInteractions.Target == obj) {
                 // TODO: Move this to End of Action 
+                var clearLocation = _playerInteractions.Selected.Location;
+                var clearAmount = _playerInteractions.Selected.CurrentMovement;
                 _playerInteractions.Act (out bool clearMap);
                 if (clearMap) {
-                    var clearAmount = _playerInteractions.Selected.CurrentMovement;
-                    var clearLocation = _playerInteractions.Selected.Location;
                     var clearRange = _playerInteractions.Selected.IsRange;
                     _mapInteractions.ClearReachableArea (clearAmount, clearLocation, clearRange);
                 }
