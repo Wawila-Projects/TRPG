@@ -53,12 +53,21 @@ namespace Assets.Take_II.Scripts.Combat {
             if (!spell.CanBeCasted(attacker)) return;
             if (SpellDidHit(attacker, defender, spell)) return;
 
-            int damage;
-            if (spell.IsMagical) {
-                damage = MagicalAttack(attacker, defender, spell);
-            } else {
-                damage = PhysicalAttack(attacker, defender, spell);
+            int damage = 0;
+            switch(spell) {
+                case PhysicalSpell physicalSpell:
+                for (var i = 0; i < physicalSpell.HitCount; i++) {
+                    damage += PhysicalAttack(attacker, defender, physicalSpell);
+                }
+                break;
+                case var almightySpell when almightySpell.Element == Elements.Almighty:
+                    damage = AlmightyAttack(attacker, defender, almightySpell.AttackPower);
+                break;
+                default:
+                    damage = MagicalAttack(attacker, defender, spell);
+                break;
             }
+
             ResolveResistances(attacker, defender, spell.Element, damage);
             spell.HandleCostReduction(attacker);
             attacker.TurnFinished = true;
@@ -82,7 +91,7 @@ namespace Assets.Take_II.Scripts.Combat {
             defender.CurrentHealth -= damage;
         }
 
-        public int PhysicalAttack(Character attacker, Character defender, OffensiveSpell spell) {
+        public int PhysicalAttack(Character attacker, Character defender, PhysicalSpell spell) {
             var player = defender as Player;
             return player != null ? Attack(attacker, player, spell.AttackPower, true) : 
                 Attack(attacker, defender, spell.AttackPower, true);
@@ -122,9 +131,9 @@ namespace Assets.Take_II.Scripts.Combat {
 
         // TODO: Take in consideration chances for evation
         private static bool SpellDidHit(Character attacker, Character defender, OffensiveSpell spell) {
-            var firstChanceToHit = Random.value * 100 <= spell.Accuracy;
+            var firstChanceToHit = Random.value <= spell.Accuracy;
             if (Random.value * 100 > attacker.Persona.Agility) return firstChanceToHit;
-            var secondChanceToHit = Random.value * 100 <= spell.Accuracy;
+            var secondChanceToHit = Random.value <= spell.Accuracy;
             return firstChanceToHit || secondChanceToHit;
         }
 
