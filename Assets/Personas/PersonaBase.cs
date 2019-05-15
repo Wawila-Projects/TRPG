@@ -6,10 +6,11 @@ using Assets.Utils;
 
 namespace Assets.Personas
 {
-    public abstract class PersonaBase {
+    public abstract class PersonaBase: UnityEngine.MonoBehaviour {
         public abstract string Name { get; }
         public int Level { get; protected set; }
-        public Arcana Arcana { get; }
+        public abstract Arcana Arcana { get; }
+        public abstract Elements InheritanceElement { get; }
         public int Strength => Stats[Statistics.Strength] + StatBuffs.GetValueOrDefault(Statistics.Strength);
         public int Magic => Stats[Statistics.Magic] + StatBuffs.GetValueOrDefault(Statistics.Magic);
         public int Endurance => Stats[Statistics.Endurance] + StatBuffs.GetValueOrDefault(Statistics.Endurance);
@@ -21,7 +22,7 @@ namespace Assets.Personas
         public StatsModifiers HitBuff = StatsModifiers.None;
         public bool MindCharged = false;
         public bool PowerCharged = false;
-        public bool IsPlayerPersona = false;
+        public virtual bool IsPlayerPersona => false;
 
         // TODO: Add buffs for Elemental Attacks; Amp, Boost and accesories
         public SpellBook SpellBook { get; protected set; }
@@ -30,10 +31,9 @@ namespace Assets.Personas
         protected Dictionary<Statistics, int> Stats;
         protected Dictionary<Statistics, int> StatBuffs;
     
-        public PersonaBase(Arcana arcana, Elements inheritanceElement) {
-            Arcana = arcana;
-            SpellBook = new SpellBook(this, inheritanceElement, GetBaseSpellbook()); 
-
+         protected virtual void Awake() {
+            SpellBook = new SpellBook(this, InheritanceElement, GetBaseSpellbook());
+            
             Resistances = new Dictionary<Elements, ResistanceModifiers>
             {
                 {Elements.Almighty, ResistanceModifiers.None },
