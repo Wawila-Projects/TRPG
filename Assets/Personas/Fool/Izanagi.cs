@@ -1,25 +1,29 @@
 using System.Collections.Generic;
 using Assets.Spells;
-using Assets.Take_II.Scripts.Combat;
+using Assets.Spells.SpellLexicon;
 using Assets.Take_II.Scripts.Enums;
-using Assets.Take_II.Scripts.PlayerManager;
 
 namespace Assets.Personas.Fool {
-    public class Arsene : PersonaBase
+    public class Izanagi : PersonaBase
     {
-        public override string Name => "Arsene";
-    
-        Arsene() : base(Arcana.Fool, Elements.Curse) { 
+        public override string Name => "Izanagi";
+        public override bool IsPlayerPersona => true;
+
+        public override Arcana Arcana => Arcana.Fool;
+        public override Elements InheritanceElement => Elements.None;
+
+        protected override void Awake() {
             Level = 1;
+            base.Awake();
         }
         protected override void SetBaseStats()
         {   
             Stats = new Dictionary<Statistics, int> {
-                {Statistics.Strength, 2}, 
-                {Statistics.Magic, 2},
-                {Statistics.Endurance, 2}, 
-                {Statistics.Agility, 3}, 
-                {Statistics.Luck, 1}
+                {Statistics.Strength,   2}, 
+                {Statistics.Magic,      2},
+                {Statistics.Endurance,  2}, 
+                {Statistics.Agility,    3}, 
+                {Statistics.Luck,       1}
             };       
         }
 
@@ -33,6 +37,8 @@ namespace Assets.Personas.Fool {
         protected override List<SpellBase> GetBaseSpellbook()
         {
             return new List<SpellBase> {
+                SpellLexicon.Elec.Zio, 
+                SpellLexicon.Physical.Cleave, 
 
             };
         }
