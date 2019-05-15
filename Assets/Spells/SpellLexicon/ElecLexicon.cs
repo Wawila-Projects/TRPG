@@ -1,15 +1,14 @@
-using System;
 using Assets.Spells.ElecSpells;
 
 namespace Assets.Spells.SpellLexicon
 {
     public class ElecLexicon {
-        public Lazy<Zio> Zio = new Lazy<Zio>();
-        public Lazy<Mazio> Mazio = new Lazy<Mazio>();
-        public Lazy<Zionga> Zionga = new Lazy<Zionga>();
-        public Lazy<Mazionga> Mazionga	= new Lazy<Mazionga>();
-        public Lazy<Ziodyne> Ziodyne = new Lazy<Ziodyne>();
-        public Lazy<Maziodyne> Maziodyne = new Lazy<Maziodyne>();
-        public Lazy<ThunderReign> ThunderReign = new Lazy<ThunderReign>();
+        public Zio Zio => new Zio();
+        public Mazio Mazio => new Mazio();
+        public Zionga Zionga => new Zionga();
+        public Mazionga Mazionga => new Mazionga();
+        public Ziodyne Ziodyne => new Ziodyne();
+        public Maziodyne Maziodyne => new Maziodyne();
+        public ThunderReign ThunderReign => new ThunderReign();
     }
 }

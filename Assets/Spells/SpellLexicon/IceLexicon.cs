@@ -1,15 +1,14 @@
-using System;
 using Assets.Spells.IceSpells;
 
 namespace Assets.Spells.SpellLexicon
 {
     public class IceLexicon {
-        public Lazy<Bufu> Bufu = new Lazy<Bufu>();
-        public Lazy<Mabufu> Mabufu = new Lazy<Mabufu>();
-        public Lazy<Bufula> Bufula = new Lazy<Bufula>();
-        public Lazy<Mabufula> Mabufula = new Lazy<Mabufula>();
-        public Lazy<Bufudyne> Bufudyne = new Lazy<Bufudyne>();
-        public Lazy<Mabufudyne> Mabufudyne = new Lazy<Mabufudyne>();
-        public Lazy<Niflheim> Niflheim = new Lazy<Niflheim>();
+        public Bufu Bufu => new Bufu();
+        public Mabufu Mabufu => new Mabufu();
+        public Bufula Bufula => new Bufula();
+        public Mabufula Mabufula => new Mabufula();
+        public Bufudyne Bufudyne => new Bufudyne();
+        public Mabufudyne Mabufudyne => new Mabufudyne();
+        public Niflheim Niflheim => new Niflheim();
     }
 }
