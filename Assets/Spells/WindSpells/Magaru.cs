@@ -5,7 +5,7 @@ namespace Assets.Spells.WindSpells
     public class Magaru : OffensiveSpell
     {
         public override int AttackPower => 80;
-        public override int Accuracy => 95;
+        public override float Accuracy => 0.95f;
         public override Elements Element => Elements.Wind;
         protected override string Id => "Wind1";
         public override string Name => "Mabufu";

@@ -5,7 +5,7 @@ namespace Assets.Spells.ElecSpells
     public class Ziodyne : OffensiveSpell
     {
         public override int AttackPower => 320;
-        public override int Accuracy => 98;
+        public override float Accuracy => 0.98f;
         public override Elements Element => Elements.Elec;
         protected override string Id => "Elec4";
         public override string Name => "Ziodyne";

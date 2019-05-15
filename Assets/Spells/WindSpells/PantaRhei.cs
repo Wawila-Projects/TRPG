@@ -7,7 +7,7 @@ namespace Assets.Spells.WindSpells
     public class PantaRhei : OffensiveSpell, IExclusiveSpell
     {
         public override int AttackPower => 400;
-        public override int Accuracy => 98;
+        public override float Accuracy => 0.98f;
         public override Elements Element => Elements.Wind;
         protected override string Id => "Wind4";
         public override string Name => "Garudyne";

@@ -6,7 +6,7 @@ namespace Assets.Spells.IceSpells
     public class Niflheim : OffensiveSpell, IExclusiveSpell
     {
         public override int AttackPower => 400;
-        public override int Accuracy => 98;
+        public override float Accuracy => 0.98f;
         public override Elements Element => Elements.Ice;
         public override string Name => "Niflheim";
         public override string Description => "Deals severe Ice damage to 1 foe.";

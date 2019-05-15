@@ -5,7 +5,7 @@ namespace Assets.Spells.ElecSpells
     public class Zio : OffensiveSpell
     {
         public override int AttackPower => 80;
-        public override int Accuracy => 98;
+        public override float Accuracy => 0.98f;
         public override Elements Element => Elements.Elec;
         protected override string Id => "Elec0";
         public override string Name => "Zio";

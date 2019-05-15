@@ -6,7 +6,7 @@ namespace Assets.Spells.FireSpells
     public class Ragnarok : OffensiveSpell, IExclusiveSpell
     {
         public override int AttackPower => 400;
-        public override int Accuracy => 98;
+        public override float Accuracy => 0.98f;
         public override Elements Element => Elements.Fire;
         protected override string Id => "Fire6";
         public override string Name => "Ragnarok";

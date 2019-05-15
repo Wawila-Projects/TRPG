@@ -5,7 +5,7 @@ namespace Assets.Spells.IceSpells
     public class Bufudyne : OffensiveSpell
     {
         public override int AttackPower => 320;
-        public override int Accuracy => 98;
+        public override float Accuracy => 0.98f;
         public override Elements Element => Elements.Ice;
         public override string Name => "Bufudyne";
         public override string Description => "Deals heavy Ice damage to 1 foe.";

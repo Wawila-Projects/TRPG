@@ -5,7 +5,7 @@ namespace Assets.Spells.WindSpells
     public class Garu : OffensiveSpell
     {
         public override int AttackPower => 80;
-        public override int Accuracy => 98;
+        public override float Accuracy => 0.98f;
         public override Elements Element => Elements.Wind;
         protected override string Id => "Wind0";
         public override string Name => "Garu";

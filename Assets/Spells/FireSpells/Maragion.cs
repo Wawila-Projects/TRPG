@@ -5,7 +5,7 @@ namespace Assets.Spells.FireSpells
     public class Maragion : OffensiveSpell
     {
         public override int AttackPower => 200;
-        public override int Accuracy => 95;
+        public override float Accuracy => 0.95f;
         public override Elements Element => Elements.Fire;
         protected override string Id => "Fire3";
         public override string Name => "Maragi";

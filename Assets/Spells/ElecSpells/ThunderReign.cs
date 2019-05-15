@@ -6,7 +6,7 @@ namespace Assets.Spells.ElecSpells
     public class ThunderReign : OffensiveSpell, IExclusiveSpell
     {
         public override int AttackPower => 400;
-        public override int Accuracy => 98;
+        public override float Accuracy => 0.98f;
         public override Elements Element => Elements.Elec;
         protected override string Id => "Elec6";
         public override string Name => "Thunder Reign";

@@ -5,7 +5,7 @@ namespace Assets.Spells.IceSpells
     public class Bufu : OffensiveSpell
     {
         public override int AttackPower => 80;
-        public override int Accuracy => 98;
+        public override float Accuracy => 0.98f;
         public override Elements Element => Elements.Ice;
         protected override string Id => "Ice0";
         public override string Name => "Bufu";

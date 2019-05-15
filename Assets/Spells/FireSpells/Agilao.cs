@@ -5,7 +5,7 @@ namespace Assets.Spells.FireSpells
     public class Agilao : OffensiveSpell
     {
         public override int AttackPower => 200;
-        public override int Accuracy => 98;
+        public override float Accuracy => 0.98f;
         public override Elements Element => Elements.Fire;
         protected override string Id => "Fire2";
         public override string Name => "Agilao";
