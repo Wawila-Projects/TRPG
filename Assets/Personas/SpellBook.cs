@@ -17,7 +17,7 @@ namespace Assets.Personas {
             BaseElement = baseElement;
             Spells = spells;
             LockedSpells = lockedSpells;
-            Restrictions = GetRestrictions();
+            Restrictions = ElementalRestrinctions[baseElement];
         }
 
         public SpellBook(PersonaBase owner, Elements baseElement, List<SpellBase> spells):
@@ -26,15 +26,15 @@ namespace Assets.Personas {
         public SpellBook(PersonaBase owner, Elements baseElement): 
             this(owner, baseElement, new List<SpellBase>(), new Dictionary<int, SpellBase>()) {
         }
-        public bool LevelUp(out SpellBase spell) {
-            spell = LockedSpells[Owner.Level];
-            if (spell == null) return true;
+        public (bool, SpellBase) LevelUp() {
+            SpellBase spell = LockedSpells[Owner.Level];
+            if (spell == null) return (true, null);
 
             var resolved = AddSpell(spell);
-            if (!resolved)  return false;
+            if (!resolved)  return (false, null);
             
             LockedSpells.Remove(Owner.Level);
-            return true;
+            return (true, spell);
         }
         public bool AddSpell(SpellBase spell) {
             var isAtSpellLimit = Spells.Count == 8;
@@ -58,44 +58,35 @@ namespace Assets.Personas {
             return Spells.RemoveAll((s) => s == spell) > 0;
         }
 
-        private List<Elements> GetRestrictions() {
-            switch(BaseElement) {
-                case Elements.Elec:
-                    return new List<Elements> { Elements.Wind };
-                case Elements.Fire:
-                    return new List<Elements> { Elements.Ice };
-                case Elements.Ice:
-                    return new List<Elements> { Elements.Fire };
-                case Elements.Wind:
-                    return new List<Elements> { Elements.Elec };
-                case Elements.Psy:
-                    return new List<Elements> { Elements.Nuke };
-                case Elements.Nuke:
-                    return new List<Elements> { Elements.Psy };
-                case Elements.Ailment:
-                    return new List<Elements> {
-                        Elements.Bless, Elements.Recovery
-                    };
-                case Elements.Recovery:
-                    return new List<Elements> {
-                        Elements.Physical, Elements.Curse
-                    };
-                case Elements.Curse:
-                    return new List<Elements> {
-                        Elements.Physical, Elements.Bless, Elements.Recovery
-                    };
-                case Elements.Bless: 
-                    return new List<Elements> {
-                        Elements.Physical, Elements.Curse, Elements.Ailment
-                    };
-                case Elements.Physical:
-                    return new List<Elements> {
-                        Elements.Fire, Elements.Ice, Elements.Elec, Elements.Wind, 
-                        Elements.Psy, Elements.Nuke, Elements.Bless, Elements.Curse
-                    };
-                default: 
-                    return new List<Elements>();
-            }
-        }
+        public static Dictionary<Elements, List<Elements>> ElementalRestrinctions = new Dictionary<Elements, List<Elements>>{
+            {Elements.Elec, new List<Elements> { Elements.Wind }},
+            {Elements.Wind, new List<Elements> { Elements.Elec }},
+            {Elements.Fire, new List<Elements> { Elements.Ice }},
+            {Elements.Ice, new List<Elements> { Elements.Fire }},
+            {Elements.Psy, new List<Elements> { Elements.Nuke }},
+            {Elements.Nuke, new List<Elements> { Elements.Psy }},
+            {Elements.Ailment,  new List<Elements> {
+                Elements.Bless, Elements.Recovery
+            }},
+            {Elements.Recovery,  new List<Elements> {
+                Elements.Physical, Elements.Curse
+            }},
+            {Elements.Curse,  new List<Elements> {
+                Elements.Physical, Elements.Bless, Elements.Recovery
+            }},
+            {Elements.Bless,  new List<Elements> {
+                Elements.Physical, Elements.Curse, Elements.Ailment
+            }},
+            {Elements.Physical, new List<Elements> {
+                Elements.Fire, Elements.Ice, Elements.Elec, Elements.Wind, 
+                Elements.Psy, Elements.Nuke, Elements.Bless, Elements.Curse
+            }},
+            {Elements.Almighty, new List<Elements>()},
+            {Elements.None, new List<Elements> {
+                Elements.Fire, Elements.Ice, Elements.Elec, Elements.Wind, 
+                Elements.Psy, Elements.Nuke, Elements.Bless, Elements.Curse, 
+                Elements.Physical, Elements.Ailment, Elements.Recovery, Elements.Almighty,
+            }},
+        };
     }
 }
