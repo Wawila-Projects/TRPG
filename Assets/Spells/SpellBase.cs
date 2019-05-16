@@ -15,6 +15,8 @@ namespace Assets.Spells
         public bool IsPhysical => !IsMagical;
         public abstract Elements Element { get; }
 
+        public override string ToString() => $"{Id} | {Element.ToString()} | {Name}";
+
         public virtual int HandleCostReduction(Character character)
         {
             var cost = Cost;

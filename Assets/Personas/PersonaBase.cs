@@ -39,6 +39,7 @@ namespace Assets.Personas
         public SpellBook _spellBook;
          //** End */
 
+        public override string ToString() => $"{Level}| {Name} | {Arcana.ToString()}";
 
          protected virtual void Awake() {
             SpellBook = new SpellBook(this, InheritanceElement, GetBaseSpellbook());

@@ -19,9 +19,7 @@ public class Hex : HexBase<int>
 
     public Hex(int q, int r,bool forTile = false): this(q, r, -q-r, forTile) { }
 
-    public override string ToString() {
-        return $"Hex {Q}, {R}, {S}";
-    }
+    public override string ToString() => $"Hex {Q}, {R}, {S}";
 
     public int GetDistance(Hex other) 
     {
