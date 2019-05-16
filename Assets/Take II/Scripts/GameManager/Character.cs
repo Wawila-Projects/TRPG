@@ -47,7 +47,6 @@ namespace Assets.Take_II.Scripts.GameManager
                 _currentSpiritPoints = 0;
             }
         }
-
         public bool IsDead;
         public bool IsRange;
         public int WeaponRange;
@@ -58,7 +57,7 @@ namespace Assets.Take_II.Scripts.GameManager
         protected virtual void OnUpdate() { }
         
         void Awake() {
-            Level = 1;
+            Level = Persona.Level;
             Name = gameObject.name;
             Hp = 100;
             Sp = 75;
@@ -77,14 +76,11 @@ namespace Assets.Take_II.Scripts.GameManager
             OnUpdate();
         }
         
-        public bool IsEqualTo(Character other)
-        {
-            if (other == null)
-                return false;
-
-            var sameName = name == other.name;
-            var sameLocation = Location == other.Location;
-            return sameName && sameLocation;
+       public void LevelUp() {
+            var changes = Persona.LevelUp();
+            Level = changes.newLevel;
+            Hp = Mathf.RoundToInt(Hp * 1.1f);
+            Sp = Mathf.RoundToInt(Sp * 1.1f);
         }
 
         public Character ClonePlayer()

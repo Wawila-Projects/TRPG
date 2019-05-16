@@ -34,6 +34,7 @@ namespace Assets.Personas
         protected Dictionary<Statistics, int> StatBuffs;
     
         //** For Serializing */
+        public double BST = 0;
         public List<string> StatsKeys;
         public List<int> StatsValues;
         public SpellBook _spellBook;
@@ -42,7 +43,7 @@ namespace Assets.Personas
         public override string ToString() => $"{Level}| {Name} | {Arcana.ToString()}";
 
          protected virtual void Awake() {
-            SpellBook = new SpellBook(this, InheritanceElement, GetBaseSpellbook());
+            SpellBook = new SpellBook(this, InheritanceElement, GetBaseSpellbook(), GetLockedSpells());
             
             Resistances = new Dictionary<Elements, ResistanceModifiers>
             {
@@ -73,10 +74,19 @@ namespace Assets.Personas
             var statsToLevel = new List<Statistics>();
             for(var i = 0; i < statsUps; ++i) {
                 var stat = statistics[random.Next(statistics.Length)];
+                if (Stats[stat] == 99) {
+                    --i;
+                    continue;
+                }
                 statsToLevel.Add(stat);
                 ++Stats[stat];
             } 
+
+            SpellBook.LevelUp();
+
             StatsValues = Stats.Values.ToList();
+            BST = StatsValues.Average();
+            
             return (Level, statsToLevel);
         }
 
@@ -102,9 +112,5 @@ namespace Assets.Personas
         protected abstract void SetResistances();
         protected abstract List<SpellBase> GetBaseSpellbook(); 
         protected abstract Dictionary<int, SpellBase> GetLockedSpells();
-
-        public override string ToString() {
-            return $"{Level}| {Name} | {Arcana.ToString()}";
-        }
     }     
 }

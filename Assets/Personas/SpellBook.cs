@@ -45,13 +45,18 @@ namespace Assets.Personas {
             this(owner, baseElement, new List<SpellBase>(), new Dictionary<int, SpellBase>()) {
         }
         public (bool, SpellBase) LevelUp() {
+            var willAddSpell = LockedSpells.ContainsKey(Owner.Level);
+            if(!willAddSpell) return (false, null);
+
             SpellBase spell = LockedSpells[Owner.Level];
-            if (spell == null) return (true, null);
 
             var resolved = AddSpell(spell);
             if (!resolved)  return (false, null);
             
             LockedSpells.Remove(Owner.Level);
+
+            this.spells = Spells.Select((s) => s.Name).ToList();
+            this.lockedSpells = LockedSpells.Select((s) => $"{s.Key}: {s.Value.Name}").ToList();
             return (true, spell);
         }
         public bool AddSpell(SpellBase spell) {
