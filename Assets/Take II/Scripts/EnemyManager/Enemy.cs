@@ -77,13 +77,7 @@ namespace Assets.Take_II.Scripts.EnemyManager
         }
         private void Move()
         {
-            var dest = new Vector3
-            {
-                x = Destiny.WorldX,
-                y = Destiny.WorldY,
-                z = transform.position.z
-            };
-
+            var dest = Destiny.transform.position;
             if (transform.position == dest)
             {
                 Location.Occupant = null;
@@ -99,7 +93,7 @@ namespace Assets.Take_II.Scripts.EnemyManager
                 return;
             }
 
-            var destination = Vector3.MoveTowards(transform.position, dest, 3 * Time.deltaTime);
+            var destination = Vector3.MoveTowards(transform.position, dest, 5 * Time.deltaTime);
             transform.position = destination;
         }
     }

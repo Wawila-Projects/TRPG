@@ -8,7 +8,7 @@ namespace Assets.Take_II.Scripts.GameManager
     {
         public string Name;
         public Tile Location;
-        public int Movement { get; protected set; }        
+        public int Movement { get; protected set; }
         public int CurrentMovement;
         public int Level;
         public int Hp;
@@ -127,7 +127,7 @@ namespace Assets.Take_II.Scripts.GameManager
             foreach (var tile in possibleTiles) 
             {
                 if (tile.Occupant != null) continue;
-                Movement -= 1;
+                CurrentMovement -= 1;
                 return tile;
             }
             return null;
@@ -135,7 +135,7 @@ namespace Assets.Take_II.Scripts.GameManager
 
         public Tile MoveTowards(Character other, int steps) 
         {
-            var totalSteps = steps > Movement ? Movement : steps;
+            var totalSteps = steps > CurrentMovement ? CurrentMovement : steps;
             var path = AStar.FindPath(Location, other.Location);
             path.Remove(Location);
             if (path.Count > steps) 
@@ -146,7 +146,7 @@ namespace Assets.Take_II.Scripts.GameManager
             var tile = path.Last();
             if (tile.Occupant == null)
             {
-                Movement -= totalSteps;
+                CurrentMovement -= totalSteps;
                 return tile;
             }
             tile = MoveTowardsIfOccupied(tile, other);
@@ -165,7 +165,7 @@ namespace Assets.Take_II.Scripts.GameManager
                 var isNotOccupied = !neighbor.IsOccupied;
 
                 if (!isReachable || !isInRange || !isNotOccupied) continue;
-                Movement -= optPath.Count;
+                CurrentMovement -= optPath.Count;
                 return neighbor;
             }
             return null;

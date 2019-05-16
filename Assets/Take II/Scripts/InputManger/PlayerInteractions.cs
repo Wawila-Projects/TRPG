@@ -150,7 +150,7 @@ namespace Assets.Take_II.Scripts.InputManger {
                 return;
             }
 
-            var destination = Vector3.MoveTowards (Selected.transform.position, dest, 3 * Time.deltaTime);
+            var destination = Vector3.MoveTowards (Selected.transform.position, dest, 5 * Time.deltaTime);
             Selected.transform.position = destination;
         }
 
