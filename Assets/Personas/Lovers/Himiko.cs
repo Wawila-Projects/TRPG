@@ -10,7 +10,7 @@ namespace Assets.Personas.Lovers {
         public override string Name => "Himiko";
         public override bool IsPlayerPersona => true;
         public override Arcana Arcana => Arcana.Lovers;
-        public override Elements InheritanceElement => Elements.None;
+        public override Elements InheritanceElement => Elements.Almighty;
 
         protected override void Awake() {
             Level = 34;

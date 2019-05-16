@@ -9,7 +9,7 @@ namespace Assets.Personas.Magician {
         public override string Name => "Jiraiya";
         public override bool IsPlayerPersona => true;
         public override Arcana Arcana => Arcana.Magician;
-        public override Elements InheritanceElement => Elements.None;
+        public override Elements InheritanceElement => Elements.Almighty;
 
         protected override void Awake() {
             Level = 4;

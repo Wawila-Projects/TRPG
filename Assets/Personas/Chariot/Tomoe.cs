@@ -10,7 +10,7 @@ namespace Assets.Personas.Chariot {
         public override bool IsPlayerPersona => true;
 
         public override Arcana Arcana => Arcana.Chariot;
-        public override Elements InheritanceElement => Elements.None;
+        public override Elements InheritanceElement => Elements.Almighty;
 
         protected override void Awake() {
             Level = 4;
