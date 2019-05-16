@@ -31,7 +31,7 @@ namespace Assets.Take_II.Scripts.GameManager
             TurnCounter = 1;
         }
 
-        public uint NextTurn()
+        public void NextTurn()
         {
             ++TurnCounter;
 
@@ -43,7 +43,7 @@ namespace Assets.Take_II.Scripts.GameManager
                     player.TurnFinished = false;
                     player.CurrentMovement = player.Movement;
                 }
-                return TurnCounter;
+                return;
             }
             
             ++EnemyTurnCounter;
@@ -52,7 +52,9 @@ namespace Assets.Take_II.Scripts.GameManager
                 enemy.TurnFinished = false;
                 enemy.CurrentMovement = enemy.Movement;
             }
-            return TurnCounter;
+
+            Debug.Log($"Turn: {TurnCounter}");
+            return;
         }
     }
 }
