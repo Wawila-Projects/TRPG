@@ -6,7 +6,7 @@ namespace Assets.Spells.PhysicalSpells
         public override string Description => "Deals light Phys damage to 1 foe.";
         public override int Cost => 6;
         public override bool IsMultitarget => false;
-        protected override string Id => "physical0";
+        protected override string Id => "Physical0";
         public override int HitCount => 1;
         public override float CriticalChance => 0.2f;
         public override int AttackPower => 120;

@@ -18,6 +18,6 @@ namespace Assets.Spells.PhysicalSpells
 
         public override bool IsMultitarget => false;
 
-        protected override string Id => "physical2";
+        protected override string Id => "Physical2";
     }
 }
