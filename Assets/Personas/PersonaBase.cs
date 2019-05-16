@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Collections.Generic;
 using Assets.Spells;
 using Assets.Take_II.Scripts.Enums;
@@ -6,6 +7,8 @@ using Assets.Utils;
 
 namespace Assets.Personas
 {
+    
+    [Serializable]
     public abstract class PersonaBase: UnityEngine.MonoBehaviour {
         public abstract string Name { get; }
         public int Level { get; protected set; }
@@ -27,10 +30,16 @@ namespace Assets.Personas
         // TODO: Add buffs for Elemental Attacks; Amp, Boost and accesories
         public SpellBook SpellBook { get; protected set; }
         public Dictionary<Elements, ResistanceModifiers> Resistances { get; protected set; }
-
         protected Dictionary<Statistics, int> Stats;
         protected Dictionary<Statistics, int> StatBuffs;
     
+        //** For Serializing */
+        public List<string> StatsKeys;
+        public List<int> StatsValues;
+        public SpellBook _spellBook;
+         //** End */
+
+
          protected virtual void Awake() {
             SpellBook = new SpellBook(this, InheritanceElement, GetBaseSpellbook());
             
@@ -50,6 +59,10 @@ namespace Assets.Personas
 
             SetResistances();
             SetBaseStats();
+
+            StatsKeys = Stats.Keys.Select((k) => k.ToString()).ToList();
+            StatsValues = Stats.Values.ToList();
+            _spellBook = SpellBook;
         }
 
         public (int newLevel, List<Statistics> statUps) LevelUp(int statsUps = 3) {
@@ -62,7 +75,7 @@ namespace Assets.Personas
                 statsToLevel.Add(stat);
                 ++Stats[stat];
             } 
-            
+            StatsValues = Stats.Values.ToList();
             return (Level, statsToLevel);
         }
 
@@ -88,5 +101,9 @@ namespace Assets.Personas
         protected abstract void SetResistances();
         protected abstract List<SpellBase> GetBaseSpellbook(); 
         protected abstract Dictionary<int, SpellBase> GetLockedSpells();
+
+        public override string ToString() {
+            return $"{Level}| {Name} | {Arcana.ToString()}";
+        }
     }     
 }

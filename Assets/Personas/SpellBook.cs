@@ -1,15 +1,26 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Linq;
+using System.Collections.Generic;
 using Assets.Spells;
 using Assets.Take_II.Scripts.Enums;
 using Assets.Take_II.Scripts.GameManager;
 
 namespace Assets.Personas {
+    [Serializable]
     public class SpellBook {
         public Elements BaseElement { get; }
         public PersonaBase Owner { get; }
         public List<SpellBase> Spells { get; }
         public Dictionary<int, SpellBase> LockedSpells { get; }
         public List<Elements> Restrictions { get; private set; }
+
+        //** For Serializing */
+        public Elements baseElement;
+        public PersonaBase owner;
+        public List<string> spells;
+        public List<string> lockedSpells; 
+        public List<Elements> restrictions;
+         //** End */
 
         public SpellBook(PersonaBase owner, Elements baseElement, 
                          List<SpellBase> spells, Dictionary<int, SpellBase> lockedSpells) {
@@ -18,6 +29,13 @@ namespace Assets.Personas {
             Spells = spells;
             LockedSpells = lockedSpells;
             Restrictions = ElementalRestrinctions[baseElement];
+            
+            
+            this.owner = owner;
+            this.baseElement = baseElement;
+            this.spells = spells.Select((s) => s.Name).ToList();
+            this.lockedSpells = lockedSpells.Select((s) => $"{s.Key}: {s.Value.Name}").ToList();
+            this.restrictions = ElementalRestrinctions[baseElement];
         }
 
         public SpellBook(PersonaBase owner, Elements baseElement, List<SpellBase> spells):
