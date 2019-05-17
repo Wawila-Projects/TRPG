@@ -21,10 +21,16 @@ namespace Assets.Scenes {
             for (var i = 0; i < Characters.Count; i++) {
                 var go = Map.Map.Find ((T) => T.Hex == Positions[i]);
                 var tile = go.GetComponent<Tile> ();
-                Characters[i].Location = tile;
-                tile.Occupant = Characters[i];
-                Characters[i].Location = tile;
-                Characters[i].transform.position = tile.transform.position;
+                var character = Characters[i];
+                character.Location = tile;
+                tile.Occupant = character;
+                character.Location = tile;
+                character.transform.position = tile.transform.position;
+
+                var levelDifference = 60 - character.Level;
+                for(var j = 0; j < levelDifference; j++) {
+                    character.LevelUp();
+                }
             }
         }
     }
