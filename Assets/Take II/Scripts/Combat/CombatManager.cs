@@ -16,7 +16,8 @@ namespace Assets.Take_II.Scripts.Combat {
         public void BasicAttack(Character attacker, Character defender) {
             if (attacker == null || defender == null) return;
             if (!attacker.IsInCombatRange(defender)) return;
-            
+            // TODO Check for miss attacks
+
             var attackPower = 0;
             switch(attacker) {
                 case Player playerAttacker: 
@@ -27,11 +28,7 @@ namespace Assets.Take_II.Scripts.Combat {
                     break;
             }   
 
-            var player = defender as Player;
-            var damage = player != null ? Attack(attacker, player, attackPower, true) : 
-                Attack(attacker, defender, attackPower, true);
-            ResolveResistances(attacker, defender, Elements.Physical, damage);
-
+            var damage = BasicAttackDamageCalculation(attacker, defender, attackPower);
             attacker.TurnFinished = true;
             Debug.Log($"Basic Attack: {attacker.Name} vs {defender.Name} - Damage: {damage}");
         }
@@ -111,6 +108,13 @@ namespace Assets.Take_II.Scripts.Combat {
             return Mathf.RoundToInt(damage);
         }
 
+        private static int BasicAttackDamageCalculation(Character attacker, Character defender, int attackPower) {
+            var modifier = CalculateDamageModifier(attacker, defender);
+            var netdamage = Mathf.Sqrt(attackPower * attacker.Persona.Strength) * modifier;
+            var damage = netdamage * AttackVariance(attacker.Persona.Luck);
+            return Mathf.RoundToInt(damage);
+        }
+
         private static int Attack(Character attacker, Player defender, int attackPower, bool isPhysical) {
             var attackStat = isPhysical ? attacker.Persona.Strength : attacker.Persona.Magic;
             var defenceStat = defender.Equipment.Armor + defender.Persona.Endurance * 8;
@@ -137,7 +141,7 @@ namespace Assets.Take_II.Scripts.Combat {
             return firstChanceToHit || secondChanceToHit;
         }
 
-        private static float CalculateDamageModifier(Character attacker, Character defender, bool isPhysical) {
+        private static float CalculateDamageModifier(Character attacker, Character defender, bool? isPhysical = null) {
             var modifier = 1f;
             if (attacker.Persona.AttackBuff == StatsModifiers.Buff) {
                  modifier *= 1.3f;
@@ -153,7 +157,11 @@ namespace Assets.Take_II.Scripts.Combat {
                 modifier *= 1.3f;
             }
 
-            if (isPhysical) {
+            if (isPhysical == null) {
+                return modifier;
+            }
+
+            if (isPhysical == true) {
                 if (attacker.Persona.PowerCharged) {
                     modifier *= 2.5f;
                 }
