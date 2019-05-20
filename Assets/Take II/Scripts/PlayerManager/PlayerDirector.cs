@@ -12,7 +12,7 @@ namespace Assets.Take_II.Scripts.PlayerManager
 
         void Update()
         {
-           Players = GameController.Manager.Players;
+           Players = GameController.Manager?.Players ?? new List<Player>();
 
             if (!TurnManager.Manager.PlayerPhase)
                 return;

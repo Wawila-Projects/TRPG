@@ -12,7 +12,7 @@ namespace Assets.Take_II.Scripts.EnemyManager
 
         void Update()
         {
-           Enemies = GameController.Manager.Enemies;
+           Enemies = GameController.Manager?.Enemies ?? new List<Enemy>();
 
             if (!TurnManager.Manager.EnemyPhase)
                 return;
