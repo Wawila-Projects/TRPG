@@ -94,29 +94,22 @@ namespace Assets.Take_II.Scripts.InputManger {
             if (_playerInteractions.Selected is null) return;
             if (!Input.GetMouseButtonDown (0)) return;
 
-            // TODO: Remove ability to target other Characters
-            // TODO: Character targeting should depend on Spell
-            // ? Possibility: Allow Character targetting for basic attacks
+            // Zoom on when reselecting self
 
+            var target = obj.GetComponent<Tile> ()?.Occupant?.gameObject ?? obj;
 
-            var occupant = obj.GetComponent<Tile> ()?.Occupant;
-
-            
+            if (target == _playerInteractions.Selected.gameObject) {
+                var cameraControl = Camera.main.gameObject.GetComponent<MainCameraController> ();
+                cameraControl?.TargetCharacter (_playerInteractions.Selected);
+            }
             // No Target
             if (_playerInteractions.Target == null) {
-                if (occupant is null) {
-                    _playerInteractions.Target = obj;
-                    return;
-                }
-
-                var cameraControl = Camera.main.gameObject.GetComponent<MainCameraController> ();
-                _playerInteractions.Target = obj;
-                cameraControl?.TargetCharacter (occupant);
+                _playerInteractions.Target = target;
                 return;
             }
 
             // Confirm Action
-            if (_playerInteractions.Target == (occupant?.gameObject ?? obj)) {
+            if (_playerInteractions.Target == target) {
                 // TODO: Move this to End of Action 
                 var clearLocation = _playerInteractions.Selected.Location;
                 var clearAmount = _playerInteractions.Selected.CurrentMovement;
@@ -127,7 +120,7 @@ namespace Assets.Take_II.Scripts.InputManger {
                 return;
             }
 
-            _playerInteractions.Target = occupant?.gameObject ?? obj;
+            _playerInteractions.Target = target;
         }
 
         private void PlayerRaycasting (GameObject obj) {
