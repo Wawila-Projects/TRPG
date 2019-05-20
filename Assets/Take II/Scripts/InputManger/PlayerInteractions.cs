@@ -36,16 +36,18 @@ namespace Assets.Take_II.Scripts.InputManger {
             }
         }
 
-        public void Act (out bool clearMap) {
+        public (bool clearMap, bool isRange) Act () {
+            var isRange =  Selected.IsRange;
             if (Selected.TurnFinished) {
                 ClearSelected ();
-                clearMap = true;
-                return;
+                return (true, isRange);
             }
 
-            clearMap = false;
-            if (ActOnTile (ref clearMap)) return;
-            ActOnPlayer (ref clearMap);
+            var clearMap = false;
+            if (!ActOnTile (ref clearMap)) {
+                ActOnPlayer (ref clearMap);
+            }
+            return (clearMap, isRange);
         }
 
         private bool ActOnPlayer (ref bool clearMap) {

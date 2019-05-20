@@ -91,42 +91,43 @@ namespace Assets.Take_II.Scripts.InputManger {
         private void TargetRayCasting (GameObject obj) {
 
             if (_playerInteractions.IsMoving) return;
-
+            if (_playerInteractions.Selected is null) return;
             if (!Input.GetMouseButtonDown (0)) return;
 
             // TODO: Remove ability to target other Characters
             // TODO: Character targeting should depend on Spell
             // ? Possibility: Allow Character targetting for basic attacks
-            if (_playerInteractions.Selected != null && _playerInteractions.Target == null) {
-                if (_playerInteractions.Selected.gameObject != obj) {
-                    if (obj.GetComponent<Tile> () != null) {
-                        _playerInteractions.Target = obj;
-                    }
+
+
+            var occupant = obj.GetComponent<Tile> ()?.Occupant;
+
+            
+            // No Target
+            if (_playerInteractions.Target == null) {
+                if (occupant is null) {
+                    _playerInteractions.Target = obj;
                     return;
                 }
 
-                var character = obj.GetComponent<Character> ();
                 var cameraControl = Camera.main.gameObject.GetComponent<MainCameraController> ();
-                if (character != null) {
-                    _playerInteractions.Target = obj;
-                    cameraControl?.TargetCharacter (character);
-                }
+                _playerInteractions.Target = obj;
+                cameraControl?.TargetCharacter (occupant);
                 return;
             }
 
-            if (_playerInteractions.Target == obj) {
+            // Confirm Action
+            if (_playerInteractions.Target == (occupant?.gameObject ?? obj)) {
                 // TODO: Move this to End of Action 
                 var clearLocation = _playerInteractions.Selected.Location;
                 var clearAmount = _playerInteractions.Selected.CurrentMovement;
-                _playerInteractions.Act (out bool clearMap);
+                var (clearMap, isRange) = _playerInteractions.Act ();
                 if (clearMap) {
-                    var clearRange = _playerInteractions.Selected.IsRange;
-                    _mapInteractions.ClearReachableArea (clearAmount, clearLocation, clearRange);
+                    _mapInteractions.ClearReachableArea (clearAmount, clearLocation, isRange);
                 }
                 return;
             }
 
-            _playerInteractions.Target = obj;
+            _playerInteractions.Target = occupant?.gameObject ?? obj;
         }
 
         private void PlayerRaycasting (GameObject obj) {
