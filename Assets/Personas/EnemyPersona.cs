@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using Assets.Spells;
 using Assets.Spells.SpellLexicon;
-using Assets.Take_II.Scripts.Enums;
+using Assets.Scripts.Enums;
 
 namespace Assets.Personas {
     public class EnemyPersona : PersonaBase

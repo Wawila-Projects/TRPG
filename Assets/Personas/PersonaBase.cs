@@ -2,7 +2,7 @@ using System;
 using System.Linq;
 using System.Collections.Generic;
 using Assets.Spells;
-using Assets.Take_II.Scripts.Enums;
+using Assets.Scripts.Enums;
 using Assets.Utils;
 
 namespace Assets.Personas

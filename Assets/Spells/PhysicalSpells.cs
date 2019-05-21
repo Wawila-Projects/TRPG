@@ -1,5 +1,5 @@
 
-using Assets.Take_II.Scripts.Enums;
+using Assets.Scripts.Enums;
 
 namespace Assets.Spells
 {

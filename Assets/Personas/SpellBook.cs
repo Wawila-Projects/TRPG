@@ -2,8 +2,8 @@
 using System.Linq;
 using System.Collections.Generic;
 using Assets.Spells;
-using Assets.Take_II.Scripts.Enums;
-using Assets.Take_II.Scripts.GameManager;
+using Assets.Scripts.Enums;
+using Assets.Scripts.GameManager;
 
 namespace Assets.Personas {
     [Serializable]

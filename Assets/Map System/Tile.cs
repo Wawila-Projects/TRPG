@@ -1,6 +1,6 @@
 using System;
 using System.Collections.Generic;
-using Assets.Take_II.Scripts.GameManager;
+using Assets.Scripts.GameManager;
 using UnityEditor;
 using UnityEngine;
 
