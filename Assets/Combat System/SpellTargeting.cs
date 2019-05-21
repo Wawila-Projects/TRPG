@@ -1,10 +1,10 @@
-using Assets.Scripts.PlayerManager;
-using Assets.Scripts.EnemyManager;
-using Assets.Scripts.GameManager;
+using Assets.PlayerManager;
+using Assets.EnemyManager;
+using Assets.GameManager;
 using Assets.Spells;
 using System.Collections.Generic;
 
-namespace Assets.Scripts.Combat {
+namespace Assets.Combat {
     public sealed class SpellManager {
         public static SpellManager Manager { get; } = new SpellManager(); 
         private SpellManager() { }

@@ -2,8 +2,8 @@
 using System.Linq;
 using System.Collections.Generic;
 using Assets.Spells;
-using Assets.Scripts.Enums;
-using Assets.Scripts.GameManager;
+using Assets.Enums;
+using Assets.GameManager;
 
 namespace Assets.Personas {
     [Serializable]

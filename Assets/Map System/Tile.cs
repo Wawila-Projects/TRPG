@@ -1,6 +1,6 @@
 using System;
 using System.Collections.Generic;
-using Assets.Scripts.GameManager;
+using Assets.GameManager;
 using UnityEditor;
 using UnityEngine;
 

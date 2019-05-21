@@ -1,6 +1,6 @@
 
 using System.Collections.Generic;
-using Assets.Scripts.Enums;
+using Assets.Enums;
 
 namespace Assets.Spells.DarknessSpells
 {

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using Assets.Spells;
 using Assets.Spells.SpellLexicon;
-using Assets.Scripts.Enums;
+using Assets.Enums;
 
 namespace Assets.Personas.Lovers {
     public class Himiko : PersonaBase

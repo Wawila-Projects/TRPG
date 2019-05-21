@@ -1,10 +1,10 @@
 using System.Linq;
 using System.Collections;
 using System.Collections.Generic;
-using Assets.Scripts.GameManager;
+using Assets.GameManager;
 using UnityEngine;
 
-namespace Assets.Scripts.PlayerManager
+namespace Assets.PlayerManager
 {
     public class PlayerDirector: MonoBehaviour
     {

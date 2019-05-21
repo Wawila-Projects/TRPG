@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace Assets.Scripts.PlayerManager
+namespace Assets.PlayerManager
 {
     public class ActionHandler {
         public int ActionPoints;

@@ -1,9 +1,9 @@
-﻿// using Assets.Scripts.GameManager;
-// using Assets.Scripts.InputManger;
+﻿// using Assets.GameManager;
+// using Assets.InputManger;
 // using UnityEngine;
 //  using UnityEngine.UI;
 
-//  namespace Assets.Scripts.UI
+//  namespace Assets.UI
 //  {
 //      public class UiManager : MonoBehaviour
 //      {

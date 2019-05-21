@@ -1,10 +1,10 @@
 ﻿using System;
-using Assets.Scripts.EnemyManager;
-using Assets.Scripts.GameManager;
-using Assets.Scripts.PlayerManager;
+using Assets.EnemyManager;
+using Assets.GameManager;
+using Assets.PlayerManager;
 using UnityEngine;
 
-namespace Assets.Scripts.InputManger {
+namespace Assets.InputManger {
     public class InputManager : MonoBehaviour {
         public RaycastHit Raycast;
         public GameObject Object;

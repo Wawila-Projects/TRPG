@@ -1,13 +1,13 @@
-using Assets.Scripts.EnemyManager;
-using Assets.Scripts.Enums;
-using Assets.Scripts.GameManager;
-using Assets.Scripts.PlayerManager;
+using Assets.EnemyManager;
+using Assets.Enums;
+using Assets.GameManager;
+using Assets.PlayerManager;
 using UnityEngine;
 using Random = UnityEngine.Random;
 using System.Linq;
 using Assets.Spells;
 
-namespace Assets.Scripts.Combat {
+namespace Assets.Combat {
     public sealed class CombatManager {
         public static CombatManager Manager { get; } = new CombatManager(); 
 

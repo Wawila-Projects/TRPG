@@ -1,9 +1,10 @@
 using System.Collections.Generic;
+using Assets.Enums;
 using Assets.Spells;
 using Assets.Spells.SpellLexicon;
-using Assets.Scripts.Enums;
 
-namespace Assets.Personas.Chariot {
+namespace Assets.Personas.Chariot
+{
     public class Tomoe : PersonaBase
     {
         public override string Name => "Tomoe";

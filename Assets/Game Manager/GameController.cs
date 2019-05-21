@@ -1,10 +1,10 @@
 using System.Collections.Generic;
 using System.Linq;
-using Assets.Scripts.EnemyManager;
-using Assets.Scripts.PlayerManager;
+using Assets.EnemyManager;
+using Assets.PlayerManager;
 using UnityEngine;
 
-namespace Assets.Scripts.GameManager
+namespace Assets.GameManager
 {
     public class GameController : MonoBehaviour
     {

@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace Assets.Scripts.GameManager
+namespace Assets.GameManager
 {
     public sealed class TurnManager: MonoBehaviour {
 

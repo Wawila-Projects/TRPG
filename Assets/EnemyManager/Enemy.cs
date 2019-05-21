@@ -1,10 +1,10 @@
 ﻿using System.Linq;
-using Assets.Scripts.Combat;
-using Assets.Scripts.GameManager;
-using Assets.Scripts.PlayerManager;
+using Assets.Combat;
+using Assets.GameManager;
+using Assets.PlayerManager;
 using UnityEngine;
 
-namespace Assets.Scripts.EnemyManager
+namespace Assets.EnemyManager
 {
     public class Enemy : Character
     {
