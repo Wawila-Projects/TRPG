@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Collections.Generic;
 using Priority_Queue;
 
@@ -10,8 +11,26 @@ using Priority_Queue;
 
 public static class AStar
 {
-    public static List<Tile> FindPath(Tile start, Tile goal)
+
+    public static List<List<Tile>> FindPaths(Tile start, Tile goal) {
+        var paths = new List<List<Tile>>();
+        var banned = new List<Tile>();
+
+        var path = FindPath(start, goal);
+        while (path.Count != 0) {
+            paths.Add(path);
+            var tile = path.ElementAtOrDefault(path.Count-2);
+            if (!tile.IsOccupied) break;
+            banned.Add(tile);
+            path = FindPath(start, goal, banned);
+        }
+
+        paths.OrderBy((p) => p.Count);
+        return paths;
+    }
+    public static List<Tile> FindPath(Tile start, Tile goal, List<Tile> _banned = null)
     {
+        var banned = _banned ?? new List<Tile>();
         var cameFrom = new Dictionary<Tile, Tile>();
         var costSoFar = new Dictionary<Tile, int>();
         cameFrom[start] = null;
@@ -24,7 +43,8 @@ public static class AStar
         {
             var current = frontier.Dequeue();
 
-            if(current == null || current.isObstacle) continue;
+            if (current == null || current.isObstacle) continue;
+            if (banned.Contains(current)) continue;
 
             if (current == goal)
                 break;
@@ -34,7 +54,8 @@ public static class AStar
                 var next = tile.GetComponent<Tile>();
 
                 if(next == null || next.isObstacle) continue;
-
+                if (banned.Contains(next)) continue;
+                
                 var newCost = costSoFar[current] + 1;
 
                 if (costSoFar.ContainsKey(next) && newCost >= costSoFar[next]) continue;
@@ -44,7 +65,6 @@ public static class AStar
                 frontier.Enqueue(next, priority);
                 cameFrom[next] = current;
             }
-
         }
 
         return GetPath(cameFrom, goal);
