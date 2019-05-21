@@ -61,8 +61,9 @@ namespace Assets.Take_II.Scripts.InputManger {
             }
 
             Object = Raycast.collider.transform.gameObject;
+            var selected = _playerInteractions.Selected;
 
-            if (_playerInteractions.Selected != null) {
+            if (!selected?.TurnFinished ?? false) {
                 TargetRayCasting (Object);
                 return;
             }
@@ -77,12 +78,13 @@ namespace Assets.Take_II.Scripts.InputManger {
             }
 
             var enemy = Object.GetComponent<Enemy> ();
-            if (enemy != null && _playerInteractions.Selected == null) {
+            if (enemy != null && selected == null) {
                 EnemyRayCasting (enemy);
                 return;
             }
 
-            if (Object.GetComponent<Character> () != null || _playerInteractions.Selected != null) {
+            if (Object.GetComponent<Character> () != null || 
+                (selected?.TurnFinished ?? false)) {
                 PlayerRaycasting (Object);
                 return;
             }
@@ -129,16 +131,13 @@ namespace Assets.Take_II.Scripts.InputManger {
 
             if (!Input.GetMouseButtonDown (0)) return;
 
-            if (_playerInteractions.Selected == null) {
-                _playerInteractions.Selected = obj.GetComponent<Player> ();
-                _mapInteractions.Selected = null;
-                if (!_playerInteractions.Selected.TurnFinished && !_playerInteractions.Selected.IsDead) {
-                    var drawAmount = _playerInteractions.Selected.CurrentMovement;
-                    var drawLocation = _playerInteractions.Selected.Location;
-                    var drawRange = _playerInteractions.Selected.IsRange;
-                    _mapInteractions.DrawReachableArea (drawAmount, drawLocation, drawRange);
-                }
-                return;
+            _playerInteractions.Selected = obj.GetComponent<Player> ();
+            _mapInteractions.Selected = null;
+            if (!_playerInteractions.Selected.TurnFinished && !_playerInteractions.Selected.IsDead) {
+                var drawAmount = _playerInteractions.Selected.CurrentMovement;
+                var drawLocation = _playerInteractions.Selected.Location;
+                var drawRange = _playerInteractions.Selected.IsRange;
+                _mapInteractions.DrawReachableArea (drawAmount, drawLocation, drawRange);
             }
         }
 
