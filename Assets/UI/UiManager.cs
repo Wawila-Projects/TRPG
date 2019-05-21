@@ -1,5 +1,5 @@
-﻿// using Assets.GameManager;
-// using Assets.InputManger;
+﻿// using Assets.GameSystem;
+// using Assets.InputSystem;
 // using UnityEngine;
 //  using UnityEngine.UI;
 

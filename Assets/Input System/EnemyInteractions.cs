@@ -1,7 +1,7 @@
-﻿using Assets.EnemyManager;
+﻿using Assets.EnemySystem;
 using UnityEngine;
 
-namespace Assets.InputManger
+namespace Assets.InputSystem
 {
     public class EnemyInteractions: MonoBehaviour
     {

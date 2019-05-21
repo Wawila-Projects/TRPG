@@ -1,11 +1,11 @@
 ﻿using System.Linq;
-using Assets.Combat;
-using Assets.EnemyManager;
-using Assets.PlayerManager;
+using Assets.CombatSystem;
+using Assets.EnemySystem;
+using Assets.PlayerSystem;
 using UnityEngine;
-using Character = Assets.GameManager.Character;
+using Character = Assets.GameSystem.Character;
 
-namespace Assets.InputManger {
+namespace Assets.InputSystem {
     public class PlayerInteractions : MonoBehaviour {
         public Player Selected;
         public GameObject Target;

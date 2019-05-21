@@ -2,7 +2,7 @@ using System.Collections;
 using Assets.Utils;
 using UnityEngine;
 
-namespace Assets.GameManager {
+namespace Assets.GameSystem {
     public class MainCameraController: MonoBehaviour {
         public Camera MainCamera;
         

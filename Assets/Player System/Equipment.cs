@@ -1,4 +1,4 @@
-﻿namespace Assets.PlayerManager
+﻿namespace Assets.PlayerSystem
 {
     [System.Serializable]
     public class Equipment

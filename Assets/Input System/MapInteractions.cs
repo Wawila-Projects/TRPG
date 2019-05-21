@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace Assets.InputManger {
+namespace Assets.InputSystem {
     public class MapInteractions : MonoBehaviour {
         public Tile Selected;
 

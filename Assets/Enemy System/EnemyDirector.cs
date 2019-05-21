@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using Assets.GameManager;
+using Assets.GameSystem;
 using UnityEngine;
 
-namespace Assets.EnemyManager
+namespace Assets.EnemySystem
 {
     public class EnemyDirector: MonoBehaviour
     {

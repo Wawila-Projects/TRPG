@@ -1,6 +1,6 @@
 using System;
 using Assets.Enums;
-using Assets.GameManager;
+using Assets.GameSystem;
 
 namespace Assets.Spells
 {

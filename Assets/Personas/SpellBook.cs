@@ -3,7 +3,7 @@ using System.Linq;
 using System.Collections.Generic;
 using Assets.Spells;
 using Assets.Enums;
-using Assets.GameManager;
+using Assets.GameSystem;
 
 namespace Assets.Personas {
     [Serializable]

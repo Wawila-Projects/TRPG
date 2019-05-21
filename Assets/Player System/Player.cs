@@ -1,6 +1,6 @@
-﻿using Assets.GameManager;
+﻿using Assets.GameSystem;
 
-namespace Assets.PlayerManager
+namespace Assets.PlayerSystem
 {
     public class Player: Character
     {
