@@ -129,47 +129,31 @@ namespace Assets.Take_II.Scripts.GameManager
             return null;
         }
 
+
+
+        // TODO: Solve case when all Tiles at totalSteps is occupied 
         public Tile MoveTowards(Character other, int steps) 
         {
             var totalSteps = steps > CurrentMovement ? CurrentMovement : steps;
-            var path = AStar.FindPath(Location, other.Location);
-            path.Remove(Location);
-            if (path.Count > steps) 
+            var paths = AStar.FindPaths(Location, other.Location);
+
+            foreach (var path in paths) 
             {
-                while (path.Count != totalSteps) 
-                    path.Remove(path.Last());
-            }
-            var tile = path.Last();
-            if (tile.Occupant == null)
-            {
+                 path.Remove(Location);
+                if (path.Count > steps) 
+                {
+                    while (path.Count != totalSteps) 
+                        path.Remove(path.Last());
+                }
+                var tile = path.Last();
+                if (tile.Occupant != null)
+                    continue;
+                
                 CurrentMovement -= totalSteps;
                 return tile;
             }
-            tile = MoveTowardsIfOccupied(tile, other);
-            return tile ?? Location;
-        }
 
-        private Tile MoveTowardsIfOccupied(Tile tile, Character other) 
-        {
-            foreach (var neighbor in tile.Neighbors) 
-            {
-                var optPath = AStar.FindPath(Location, neighbor);
-                optPath.Remove(Location);
-                
-                var isReachable = optPath.Count <= Movement; 
-                var isInRange = TileDistanceFromCombat() == 0;
-                var isNotOccupied = !neighbor.IsOccupied;
-
-                if (!isReachable || !isInRange || !isNotOccupied) continue;
-                CurrentMovement -= optPath.Count;
-                return neighbor;
-            }
             return null;
-
-            int TileDistanceFromCombat() {
-                var distance = tile.GetDistance(other.Location);
-                return (int)(distance - WeaponRange);
-            }
         }
 
         public Tile MoveToRange(Character other) {
