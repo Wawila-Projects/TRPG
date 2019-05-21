@@ -23,7 +23,7 @@ namespace Assets.Spells
             if (IsPhysical) {
                 cost = character.Hp * (Cost/100);
             }
-            character.CurrentSpiritPoints -= cost;
+            character.CurrentSP -= cost;
             return cost;
         }
 
@@ -31,9 +31,9 @@ namespace Assets.Spells
         {
             if (IsPhysical) {
                 var cost = character.Hp * (Cost/100);
-                return character.CurrentHealth > cost;
+                return character.CurrentHP > cost;
             }
-            return character.CurrentSpiritPoints >= Cost;
+            return character.CurrentSP >= Cost;
         }
 
         public bool Equals(SpellBase other)

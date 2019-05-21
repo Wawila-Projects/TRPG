@@ -10,7 +10,8 @@ namespace Assets.Take_II.Scripts.PlayerManager
             Equipment = new Equipment
             {
                 Armor = 10,
-                AttackPower = 100
+                AttackPower = 100,
+                Accuracy = 10
             };
         }
         

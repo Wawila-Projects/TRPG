@@ -16,35 +16,35 @@ namespace Assets.Take_II.Scripts.GameManager
         public PersonaBase Persona;
 
         [SerializeField]
-        protected int _currentHealth;
-        public int CurrentHealth
+        protected int _currentHP;
+        public int CurrentHP
         {
-            get { return _currentHealth; }
+            get { return _currentHP; }
             set
             {
                 if (value > 0)
                 {
-                    _currentHealth = value;
+                    _currentHP = value;
                     return;
                 }
-                _currentHealth = 0;
+                _currentHP = 0;
                 IsDead = true;
             }
         }
 
         [SerializeField]
-        protected int _currentSpiritPoints;
-        public int CurrentSpiritPoints
+        protected int _currentSP;
+        public int CurrentSP
         {
-            get { return _currentSpiritPoints; }
+            get { return _currentSP; }
             set
             {
                 if (value > 0)
                 {
-                    _currentSpiritPoints = value >= Sp ? Sp: value;
+                    _currentSP = value >= Sp ? Sp: value;
                     return;
                 }
-                _currentSpiritPoints = 0;
+                _currentSP = 0;
             }
         }
         public bool IsDead;
@@ -63,9 +63,8 @@ namespace Assets.Take_II.Scripts.GameManager
             Sp = 75;
             Movement = 3;
             CurrentMovement = Movement;
-            // Persona = new TestPersona();
 
-            CurrentHealth = Hp;
+            CurrentHP = Hp;
             
             IsRange = false;
             WeaponRange = IsRange ? 2 : 1;
@@ -79,8 +78,15 @@ namespace Assets.Take_II.Scripts.GameManager
        public void LevelUp() {
             var changes = Persona.LevelUp();
             Level = changes.newLevel;
+            
+            var lostHp = Hp - CurrentHP;
+            var lostSp = Sp - CurrentSP;
+
             Hp = Mathf.RoundToInt(Hp * 1.1f);
             Sp = Mathf.RoundToInt(Sp * 1.1f);
+
+            CurrentHP = Hp - lostHp;
+            CurrentSP = Sp - lostSp;
         }
 
         public Character ClonePlayer()

@@ -85,7 +85,7 @@ namespace Assets.Take_II.Scripts.Combat {
             
             Debug.Log($"All Out Attack {defender.Name} - Damage: {damage}");
             defender.IsSurrounded = true;
-            defender.CurrentHealth -= damage;
+            defender.CurrentHP -= damage;
         }
 
         public int PhysicalAttack(Character attacker, Character defender, PhysicalSpell spell) {
@@ -186,19 +186,19 @@ namespace Assets.Take_II.Scripts.Combat {
             switch (defender.Persona.Resistances[element])
             {
                 case ResistanceModifiers.Resist:
-                    defender.CurrentHealth -= Mathf.RoundToInt(damage * 0.5f);
+                    defender.CurrentHP -= Mathf.RoundToInt(damage * 0.5f);
                     break;
                 case ResistanceModifiers.Weak:
-                    defender.CurrentHealth -= Mathf.RoundToInt(damage * 1.5f);
+                    defender.CurrentHP -= Mathf.RoundToInt(damage * 1.5f);
                     break;
                 case ResistanceModifiers.Reflect:
-                    attacker.CurrentHealth -= damage;
+                    attacker.CurrentHP -= damage;
                     break;
                 case ResistanceModifiers.Absorb:
-                    defender.CurrentHealth += damage;
+                    defender.CurrentHP += damage;
                     break;
                 case ResistanceModifiers.None:
-                    defender.CurrentHealth -= damage;
+                    defender.CurrentHP -= damage;
                     break;
                 case ResistanceModifiers.Block:
                     break;
