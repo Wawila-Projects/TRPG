@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Collections.Generic;
 using Assets.GameSystem;
 using UnityEditor;
@@ -14,6 +15,21 @@ public class Tile : MonoBehaviour, IEquatable<Tile> {
     public int WorldY => _coordinates.Row;
     public bool IsOccupied => Occupant != null;
     private OffsetCoordinates _coordinates;
+
+    public static List<Vector3> CubeDirections = new List<Vector3>  {
+        new Vector3(1, -1, 0), new Vector3(1, 0, -1), new Vector3(0, 1, -1),
+        new Vector3(-1, 1, 0), new Vector3(-1, 0, 1), new Vector3(0, -1, 1),
+    };
+
+    public void ChangeColor(Color color) {
+        var renderer = GetComponent<Renderer> ();
+        renderer.material.color = color;
+    }
+
+    public Color GetColor() {
+        var renderer = GetComponent<Renderer> ();
+        return renderer.material.color;
+    }
 
     public void Init (Hex hex) {
         isObstacle = tag == "Obstacle";
@@ -57,6 +73,17 @@ public class Tile : MonoBehaviour, IEquatable<Tile> {
             if (go != null)
                 Neighbors.Add (go.GetComponent<Tile> ());
         }
+    }
+
+    public Tile GetNeighborAt (int i) {
+        var location = Hex + CubeDirections[i];
+        var neighbor = Neighbors.Where( t => t.Hex == location ).FirstOrDefault();
+        return neighbor;
+    }
+
+    public int GetDirection(Tile other) {
+        Vector3 direction = other.Hex - Hex;
+        return CubeDirections.IndexOf(direction);
     }
 
     public int GetDistance (Tile other) {
@@ -148,6 +175,21 @@ public class Tile : MonoBehaviour, IEquatable<Tile> {
 
     public static bool operator != (Tile lhs, Tile rhs) {
         return !(lhs == rhs);
+    }
+
+    public static Tile operator +(Tile lhs, Tile rhs) {
+        lhs.Hex += rhs.Hex;
+        return lhs;
+    }
+
+    public static Tile operator -(Tile lhs, Tile rhs) {
+        lhs.Hex -= rhs.Hex;
+        return lhs;
+    }
+
+    public static Tile operator *(Tile lhs, int k) {
+        lhs.Hex *= k;
+        return lhs;
     }
 
     // public void OnDrawGizmos() {

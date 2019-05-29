@@ -84,6 +84,10 @@ public class Hex : HexBase<int>
         return new UnityEngine.Vector3(hex.Q, hex.R, hex.S);
     } 
 
+    public UnityEngine.Vector3 ToVector3() {
+        return new UnityEngine.Vector3(Q, R, S);
+    }
+
     public override bool Equals(Object other)
     {   
         if (other is null) {
@@ -113,6 +117,13 @@ public class Hex : HexBase<int>
 
     public static Hex operator -(Hex lhs, Hex rhs) {
         return new Hex(lhs.Q - rhs.Q, lhs.R - rhs.R, lhs.S - rhs.S);
+    }
+
+    public static Hex operator +(Hex lhs, UnityEngine.Vector3Int rhs) {
+        return new Hex(lhs.X + rhs.x, lhs.Y + rhs.y, lhs.Z + rhs.z);
+    }
+    public static Hex operator -(Hex lhs, UnityEngine.Vector3Int rhs) {
+        return new Hex(lhs.X - rhs.x, lhs.Y - rhs.y, lhs.Z - rhs.z);
     }
 
     public static Hex operator *(Hex lhs, int k) {
