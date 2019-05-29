@@ -29,8 +29,8 @@ namespace Assets.Personas.Fortune {
 
         protected override void SetResistances()
         {
-            Resistances[Elements.Light] = ResistanceModifiers.Resist;
-            Resistances[Elements.Dark] = ResistanceModifiers.Resist;
+            Resistances[Elements.Bless] = ResistanceModifiers.Resist;
+            Resistances[Elements.Curse] = ResistanceModifiers.Resist;
         }
 
         protected override List<SpellBase> GetBaseSpellbook()

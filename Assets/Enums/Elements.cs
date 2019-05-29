@@ -7,8 +7,8 @@
         Psy, Nuke, Curse, Bless, 
         Ailment, Recovery,
 
-        Gun = Physical,
-        Light = Bless, 
-        Dark = Curse,
+        // Gun = Physical,
+        // Light = Bless, 
+        // Dark = Curse,
     }
 }

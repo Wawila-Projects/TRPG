@@ -8,7 +8,7 @@ namespace Assets.Spells.WindSpells
         public override float Accuracy => 0.95f;
         public override Elements Element => Elements.Wind;
         protected override string Id => "Wind1";
-        public override string Name => "Mabufu";
+        public override string Name => "Magaru";
         public override string Description => "Deals light Wind damage to all foes.";
         public override int Cost => 10;
         public override bool IsMagical => true;
