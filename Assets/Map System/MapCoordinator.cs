@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections.Generic;
+using System.Linq;
 public enum MapShapes 
 {
     Triangle, ReverseTrianlge, Hexagonal, Rectangular
@@ -47,6 +48,10 @@ public class MapCoordinator: MonoBehaviour
         };
 
         foreach(var hex in map) {
+            // if (hex == Vector3.zero) {
+            //     continue;
+            // }
+
             var prefab = GameObject.Instantiate(Prefab, hex, Quaternion.identity);
             prefab.name = hex.ToString();
             var tile = prefab.GetComponent<Tile>();
@@ -73,6 +78,13 @@ public class MapCoordinator: MonoBehaviour
         Map.ForEach((T) => T.GetNeighbors());
         transform.rotation = Quaternion.Euler(90,0,0);
         DoneShowing = true;
+    }
+
+
+    public Tile TileAt(Hex hex) {
+        return Map.Where(
+            (t) => t.Hex == hex
+        ).FirstOrDefault();
     }
 
     void Start()
