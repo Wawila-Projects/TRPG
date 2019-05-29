@@ -100,11 +100,23 @@ namespace Assets.GameSystem
                 return false;
 
             var distance = Location.GetDistance(other.Location);
-            var isInRange = distance <= Movement + WeaponRange;
+            var isInRange = distance <= CurrentMovement + WeaponRange;
             
              return isInRange;
         }
 
+        public bool IsInRange(Tile tile)
+        {
+            if (tile == null)
+                return false;
+
+            var distance = Location.GetDistance(tile);
+            var isInRange = distance <= CurrentMovement + WeaponRange;
+            
+             return isInRange;
+        }
+
+        //TODO: Check this. It might be the wrong implementation of IsInRange;
         public bool IsInCombatRange(Character other) {
             var isNeighbor = Location.Neighbors.Contains(other.Location); 
             if (IsRange) {
