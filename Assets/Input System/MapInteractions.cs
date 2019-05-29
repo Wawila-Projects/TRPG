@@ -1,4 +1,8 @@
 using UnityEngine;
+using System.Collections.Generic;
+using Assets.SpellCastingSystem;
+using Assets.GameSystem;
+using Assets.PlayerSystem;
 
 namespace Assets.InputSystem {
     public class MapInteractions : MonoBehaviour {
@@ -15,17 +19,11 @@ namespace Assets.InputSystem {
             if (selected == null) return;
 
             var tiles = selected.GetTilesInsideRange (total);
-            foreach (var tile in tiles) {
-                var renderer = tile.GetComponent<Renderer> ();
-                renderer.material.color = color;
-            }
-
+            tiles.ForEach( t => t.ChangeColor(color));
+            
             var attackRange = isRange ? 2 : 1;
             tiles = selected.GetTilesAtDistance (total + attackRange);
-            foreach (var tile in tiles) {
-                var renderer = tile.GetComponent<Renderer> ();
-                renderer.material.color = color == Color.white ? Color.white : Color.red;
-            }
+            tiles.ForEach( t => t.ChangeColor(color == Color.white ? Color.white : Color.red));
         }
     }
 }

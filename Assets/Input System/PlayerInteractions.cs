@@ -2,6 +2,8 @@
 using Assets.CombatSystem;
 using Assets.EnemySystem;
 using Assets.PlayerSystem;
+using Assets.SpellCastingSystem;
+using Assets.Spells;
 using UnityEngine;
 using Character = Assets.GameSystem.Character;
 
@@ -18,7 +20,16 @@ namespace Assets.InputSystem {
         public bool IsInCombat;
         public bool IsHealing;
 
+        public bool isTargeting => spellTargeting.isTargeting;
+
+        private SpellTargeting spellTargeting;
+
+        void Awake() => spellTargeting = GetComponent<SpellTargeting> ();
+
         void Update () {
+            if (isTargeting) return;
+            if (SpellCastingDetection ()) return;
+
             if (IsMoving) {
                 Move ();
                 return;
@@ -37,7 +48,7 @@ namespace Assets.InputSystem {
         }
 
         public (bool clearMap, bool isRange) Act () {
-            var isRange =  Selected.IsRange;
+            var isRange = Selected.IsRange;
             if (Selected.TurnFinished) {
                 ClearSelected ();
                 return (true, isRange);
@@ -99,7 +110,7 @@ namespace Assets.InputSystem {
                 return true;
             }
 
-            if (!IsReachable()) {
+            if (!IsReachable ()) {
                 if (moveTowardsUnreachable) {
                     var path = AStar.FindPath (Selected.Location, tile);
                     if (path.Count == 0) return false;
@@ -125,7 +136,20 @@ namespace Assets.InputSystem {
             }
         }
 
-        public void Move () {
+        private bool SpellCastingDetection () {
+            if (Selected == null) return false;
+            var spellbook = Selected.Persona.SpellBook;
+            for (int i = 0; i < 10; ++i) {
+                if (Input.GetKeyDown ($"{i}")) {
+                    var spell = spellbook.Spells.ElementAtOrDefault (i);
+                    spellTargeting.SelectSpell (spell);
+                    return spell != null;
+                }
+            }
+            return false;
+        }
+
+        private void Move () {
             var tile = Target.GetComponent<Tile> ();
             if (tile == null)
                 return;

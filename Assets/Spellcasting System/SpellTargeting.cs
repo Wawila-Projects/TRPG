@@ -1,33 +1,194 @@
 using System.Collections.Generic;
+using System.Linq;
 using Assets.EnemySystem;
 using Assets.GameSystem;
+using Assets.InputSystem;
 using Assets.PlayerSystem;
 using Assets.Spells;
+using Assets.Utils;
+using UnityEngine;
 
 namespace Assets.SpellCastingSystem {
-    public class SpellTargeting  {
-        public List<Character> GetPossibleTargets(Character attacker, SpellBase spell) {
-                var targets = new List<Character>();
-                var neighbors = attacker.Location.Neighbors;
-                
-                foreach(var neighbor in neighbors) {
-                    var target = neighbor.Occupant;
-                    if (target == null) {
-                        continue;
-                    }    
+    public class SpellTargeting : MonoBehaviour {
+        public MapCoordinator Map;
+        public Player Caster => GetComponent<PlayerInteractions> ().Selected;
+        public Tile SelectedTile;
+        public SpellBase Spell;
+        public bool isTargeting;
+        public List<Tile> spellTiles;
+        public List<Color> originalColors;
+    
+        public string SpellSerialized;
 
-                    if (spell is OffensiveSpell && target is Enemy) {
-                        targets.Add(target);
-                        continue;
-                    }
+        void Update () {
+            if (!isTargeting ||
+                Caster == null || 
+                Spell == null) return;
+            
+            if (EscapeInput ()) {
+                return;
+            }
 
-                    if (spell is SupportSpell && target is Player) {
-                        targets.Add(target);
-                    }
+            var target = Raycasting ();
+
+            var inRange = false;
+            if (SelectedTile != target) {
+                SelectedTile = target;
+                inRange = Caster.IsInRange (SelectedTile);
+            }
+
+            if (SelectedTile == null || !inRange) return;
+
+            spellTiles.ForEach ((t, i) => {
+                t.ChangeColor (originalColors[i]);
+            });
+            spellTiles.Clear ();
+            originalColors.Clear ();
+
+            if (Spell.IsMultitarget) {
+                spellTiles = new List<Tile> (SelectedTile.Neighbors);
+                spellTiles.Add (SelectedTile);
+                spellTiles.RemoveAll (t => !Caster.IsInRange (t));
+            } else {
+                spellTiles = new List<Tile> () {
+                    SelectedTile
+                };
+            }
+
+            spellTiles.ForEach (t => {
+                originalColors.Add (t.GetColor ());
+                t.ChangeColor (Color.blue);
+            });
+        }
+
+        public void SelectSpell(SpellBase  spell) {
+            if (spell is null)
+                return;
+
+            Spell = spell;
+            SpellSerialized = spell.ToString();
+            isTargeting = true;
+        }
+
+        private bool EscapeInput () {
+            if (!Input.GetKey (KeyCode.Escape))
+                return false;
+
+            SelectedTile = null;
+            Spell = null;
+            SpellSerialized = null;
+
+            spellTiles.ForEach ((t, i) => {
+                t.ChangeColor (originalColors[i]);
+            });
+            spellTiles.Clear ();
+            originalColors.Clear ();
+
+            isTargeting = false;
+            return true;
+        }
+
+        private Tile Raycasting () {
+            var ray = Camera.main.ScreenPointToRay (Input.mousePosition);
+
+            if (!Physics.Raycast (ray, out var raycast)) {
+                return null;
+            }
+
+            var Object = raycast.collider.transform.gameObject;
+
+            var tile = Object.GetComponent<Tile> ();
+            if (tile != null) {
+                return tile;
+            }
+
+            var character = Object.GetComponent<Character> ();
+            if (character != null) {
+                return tile;
+            }
+            return null;
+        }
+
+        public List<Character> GetPossibleTargets (Character attacker, SpellBase spell, List<Tile> tiles) {
+            var targets = new List<Character> ();
+
+            foreach (var tile in tiles) {
+                if (!tile.IsOccupied) {
+                    continue;
                 }
 
-                return targets;
+                var target = tile.Occupant;
+                if (spell is OffensiveSpell && target is Enemy) {
+                    targets.Add (target);
+                    continue;
+                }
+
+                if (spell is SupportSpell && target is Player) {
+                    targets.Add (target);
+                }
             }
+
+            return targets;
+        }
+
+        // public List<Tile> GetFullTiles (Tile origin, bool isRange) {
+        //     if (!isRange) return origin.Neighbors;
+        //     return origin.GetTilesAtDistance (2);
+        // }
+        // public List<Tile> GetFrontAndBack (Tile selected, bool isRange) {
+        //     var back = Map.TileAt (selected.Hex * -1);
+        //     return new List<Tile> {
+        //         selected,
+        //         back
+        //     };
+        // }
+
+        // public List<Tile> GetSpaceBetween (Tile selected, bool isRange) {
+        //     var tiles = Caster.Location.GetTilesAtDistance (isRange ? 2 : 1);
+
+        //     // var radius = isRange ? 2 : 1;
+        //     // var needsReverse = false;
+
+        //     // var index = Caster.Location.GetDirection(selected);
+        //     // var startingIndex = (index + 2) % 6;
+        //     // var tile = selected;
+        //     // for (var i = 0; i < 6; i++) {
+        //     //     index = (startingIndex + i) % 6;
+        //     //     for (var j = 0; j < radius; j++) {
+        //     //         tile = tile.GetNeighborAt(index);
+        //     //         if (tile is null) {
+        //     //             needsReverse = true;
+        //     //             goto reverse;
+        //     //         }
+        //     //     }
+        //     // }
+
+        //     // reverse:
+        //     // if (needsReverse) {
+
+        //     // }
+
+        //     tiles.RemoveNull ();
+        //     return tiles;
+        // }
+
+        // public List<Tile> GetThree (Tile origin, Tile selected, bool isRange) {
+        //     if (!isRange && origin != null) {
+        //         return origin.Neighbors.Intersect (selected.Neighbors).ToList ();
+        //     }
+
+        //     var left = Map.TileAt (selected.Hex.RotateLeft ());
+        //     var right = Map.TileAt (selected.Hex.RotateRight ());
+        //     var tiles = new List<Tile> () { selected, left, right };
+        //     tiles.Add (
+        //         left.Neighbors.Intersect (selected.Neighbors).Except (origin.Neighbors).FirstOrDefault ()
+        //     );
+        //     tiles.Add (
+        //         right.Neighbors.Intersect (selected.Neighbors).Except (origin.Neighbors).FirstOrDefault ()
+        //     );
+
+        //     tiles.RemoveNull ();
+        //     return tiles;
+        // }
     }
 }
-

@@ -2,6 +2,7 @@
 using Assets.EnemySystem;
 using Assets.GameSystem;
 using Assets.PlayerSystem;
+using Assets.SpellCastingSystem;
 using UnityEngine;
 
 namespace Assets.InputSystem {
@@ -9,47 +10,48 @@ namespace Assets.InputSystem {
         public RaycastHit Raycast;
         public GameObject Object;
 
-        public MapInteractions _mapInteractions;
-        public PlayerInteractions _playerInteractions;
-        public EnemyInteractions _enemyInteractions;
-
-        [SerializeField]
-        public bool escpressed;
+        public MapInteractions MapInteractions;
+        public PlayerInteractions PlayerInteractions;
+        public EnemyInteractions EnemyInteractions;
+        public SpellTargeting SpellTargeter;
 
         void Awake () {
-            _playerInteractions = GetComponent<PlayerInteractions> ();
-            _mapInteractions = GetComponent<MapInteractions> ();
-            _enemyInteractions = GetComponent<EnemyInteractions> ();
+            PlayerInteractions = GetComponent<PlayerInteractions> ();
+            MapInteractions = GetComponent<MapInteractions> ();
+            EnemyInteractions = GetComponent<EnemyInteractions> ();
+            SpellTargeter = GetComponent<SpellTargeting> ();
         }
 
         void Update () {
+            if (SpellTargeter.isTargeting) return;
+
             Raycasting ();
             EscapeInput ();
         }
 
         private void EscapeInput () {
-            if (!Input.GetKeyDown (KeyCode.Escape) || _playerInteractions?.IsMoving == true) return;
+            if (!Input.GetKeyDown (KeyCode.Escape) || PlayerInteractions?.IsMoving == true) return;
 
             var cameraControl = Camera.main.gameObject.GetComponent<MainCameraController> ();
             if (cameraControl != null) {
                 cameraControl.ToTarget = null;
             }
 
-            if (_playerInteractions.Selected != null) {
-                _mapInteractions.Selected = null;
-                _enemyInteractions.Selected = null;
+            if (PlayerInteractions.Selected != null) {
+                MapInteractions.Selected = null;
+                EnemyInteractions.Selected = null;
             }
 
-            if (_playerInteractions.Target != null) {
-                _playerInteractions.Target = null;
+            if (PlayerInteractions.Target != null) {
+                PlayerInteractions.Target = null;
                 return;
             }
 
-            var clearAmount = _playerInteractions.Selected?.Movement ?? 0;
-            var clearLocation = _playerInteractions.Selected?.Location;
-            var clearRange = _playerInteractions.Selected?.IsRange ?? true;
-            _mapInteractions.ClearReachableArea (clearAmount, clearLocation, clearRange);
-            _playerInteractions.Selected = null;
+            var clearAmount = PlayerInteractions.Selected?.Movement ?? 0;
+            var clearLocation = PlayerInteractions.Selected?.Location;
+            var clearRange = PlayerInteractions.Selected?.IsRange ?? true;
+            MapInteractions.ClearReachableArea (clearAmount, clearLocation, clearRange);
+            PlayerInteractions.Selected = null;
         }
 
         private void Raycasting () {
@@ -61,7 +63,7 @@ namespace Assets.InputSystem {
             }
 
             Object = Raycast.collider.transform.gameObject;
-            var selected = _playerInteractions.Selected;
+            var selected = PlayerInteractions.Selected;
 
             if (!selected?.TurnFinished ?? false) {
                 TargetRayCasting (Object);
@@ -90,70 +92,71 @@ namespace Assets.InputSystem {
             }
         }
 
-        private void TargetRayCasting (GameObject obj) {
+        private bool TargetRayCasting (GameObject obj) {
 
-            if (_playerInteractions.IsMoving) return;
-            if (_playerInteractions.Selected is null) return;
-            if (!Input.GetMouseButtonDown (0)) return;
+            if (PlayerInteractions.IsMoving) return false;
+            if (PlayerInteractions.Selected is null) return false;
+            if (!Input.GetMouseButtonDown (0)) return false;
 
             // Zoom on when reselecting self
 
             var target = obj.GetComponent<Tile> ()?.Occupant?.gameObject ?? obj;
 
-            if (target == _playerInteractions.Selected.gameObject) {
+            if (target == PlayerInteractions.Selected.gameObject) {
                 var cameraControl = Camera.main.gameObject.GetComponent<MainCameraController> ();
-                cameraControl?.TargetCharacter (_playerInteractions.Selected);
+                cameraControl?.TargetCharacter (PlayerInteractions.Selected);
             }
             // No Target
-            if (_playerInteractions.Target == null) {
-                _playerInteractions.Target = target;
-                return;
+            if (PlayerInteractions.Target == null) {
+                PlayerInteractions.Target = target;
+                return true;
             }
 
             // Confirm Action
-            if (_playerInteractions.Target == target) {
+            if (PlayerInteractions.Target == target) {
                 // TODO: Move this to End of Action 
-                var clearLocation = _playerInteractions.Selected.Location;
-                var clearAmount = _playerInteractions.Selected.CurrentMovement;
-                var (clearMap, isRange) = _playerInteractions.Act ();
+                var clearLocation = PlayerInteractions.Selected.Location;
+                var clearAmount = PlayerInteractions.Selected.CurrentMovement;
+                var (clearMap, isRange) = PlayerInteractions.Act ();
                 if (clearMap) {
-                    _mapInteractions.ClearReachableArea (clearAmount, clearLocation, isRange);
+                    MapInteractions.ClearReachableArea (clearAmount, clearLocation, isRange);
                 }
-                return;
+                return true;
             }
 
-            _playerInteractions.Target = target;
+            PlayerInteractions.Target = target;
+            return true;
         }
 
         private void PlayerRaycasting (GameObject obj) {
 
-            if (_playerInteractions.IsMoving) return;
+            if (PlayerInteractions.IsMoving) return;
 
             if (!Input.GetMouseButtonDown (0)) return;
 
-            _playerInteractions.Selected = obj.GetComponent<Player> ();
-            _mapInteractions.Selected = null;
-            if (!_playerInteractions.Selected.TurnFinished && !_playerInteractions.Selected.IsDead) {
-                var drawAmount = _playerInteractions.Selected.CurrentMovement;
-                var drawLocation = _playerInteractions.Selected.Location;
-                var drawRange = _playerInteractions.Selected.IsRange;
-                _mapInteractions.DrawReachableArea (drawAmount, drawLocation, drawRange);
+            PlayerInteractions.Selected = obj.GetComponent<Player> ();
+            MapInteractions.Selected = null;
+            if (!PlayerInteractions.Selected.TurnFinished && !PlayerInteractions.Selected.IsDead) {
+                var drawAmount = PlayerInteractions.Selected.CurrentMovement;
+                var drawLocation = PlayerInteractions.Selected.Location;
+                var drawRange = PlayerInteractions.Selected.IsRange;
+                MapInteractions.DrawReachableArea (drawAmount, drawLocation, drawRange);
             }
         }
 
         public void MapRayCasting (Tile tile) {
-            if (_playerInteractions.IsMoving) return;
+            if (PlayerInteractions.IsMoving) return;
 
             if (Input.GetMouseButtonDown (0)) {
-                _mapInteractions.Selected = tile;
+                MapInteractions.Selected = tile;
             }
         }
 
         public void EnemyRayCasting (Enemy enemy) {
-            if (_playerInteractions.IsMoving) return;
+            if (PlayerInteractions.IsMoving) return;
 
             if (Input.GetMouseButtonDown (0)) {
-                _enemyInteractions.Selected = enemy;
+                EnemyInteractions.Selected = enemy;
             }
         }
     }
