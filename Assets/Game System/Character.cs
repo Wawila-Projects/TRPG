@@ -116,15 +116,6 @@ namespace Assets.GameSystem
              return isInRange;
         }
 
-        //TODO: Check this. It might be the wrong implementation of IsInRange;
-        public bool IsInCombatRange(Character other) {
-            var isNeighbor = Location.Neighbors.Contains(other.Location); 
-            if (IsRange) {
-                return !isNeighbor;
-            }
-            return isNeighbor;
-        }   
-
         public int DistanceFromCombatRange(Character other)
         {
             var distance = Location.GetDistance(other.Location);
