@@ -3,6 +3,9 @@ using System.Collections.Generic;
 
 namespace Assets.Utils {
     public static partial class Extensions {
+
+        public static bool IsEmpty<T>(this ICollection<T> sequence) => sequence.Count == 0;
+        
         public static TValue GetValueOrDefault<TKey, TValue> (this IDictionary<TKey, TValue> dictionary,
             TKey key, TValue defaultValue = default (TValue)) {
             TValue value = defaultValue;
