@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using Assets.CombatSystem;
 using Assets.EnemySystem;
 using Assets.GameSystem;
 using Assets.InputSystem;
@@ -8,6 +9,8 @@ using Assets.Spells;
 using Assets.Utils;
 using UnityEngine;
 
+//TODO: Finish turn after casting spell
+
 namespace Assets.SpellCastingSystem {
     public class SpellTargeting : MonoBehaviour {
         public MapCoordinator Map;
@@ -15,17 +18,23 @@ namespace Assets.SpellCastingSystem {
         public Tile SelectedTile;
         public SpellBase Spell;
         public bool isTargeting;
-        public List<Tile> spellTiles;
+        public List<Tile> SpellTiles;
         public List<Color> originalColors;
-    
+
         public string SpellSerialized;
 
         void Update () {
-            if (!isTargeting ||
-                Caster == null || 
-                Spell == null) return;
-            
+            if (!isTargeting || Spell == null ||
+                Caster == null || Caster.TurnFinished) {
+                isTargeting = false;
+                return;
+            }
+
             if (EscapeInput ()) {
+                return;
+            }
+
+            if (CastSpell ()) {
                 return;
             }
 
@@ -39,35 +48,57 @@ namespace Assets.SpellCastingSystem {
 
             if (SelectedTile == null || !inRange) return;
 
-            spellTiles.ForEach ((t, i) => {
-                t.ChangeColor (originalColors[i]);
-            });
-            spellTiles.Clear ();
-            originalColors.Clear ();
+            ClearSelection ();
 
             if (Spell.IsMultitarget) {
-                spellTiles = new List<Tile> (SelectedTile.Neighbors);
-                spellTiles.Add (SelectedTile);
-                spellTiles.RemoveAll (t => !Caster.IsInRange (t));
+                SpellTiles = new List<Tile> (SelectedTile.Neighbors);
+                SpellTiles.Add (SelectedTile);
+                SpellTiles.RemoveAll (t => !Caster.IsInRange (t));
             } else {
-                spellTiles = new List<Tile> () {
+                SpellTiles = new List<Tile> () {
                     SelectedTile
                 };
             }
 
-            spellTiles.ForEach (t => {
+            SpellTiles.ForEach (t => {
                 originalColors.Add (t.GetColor ());
                 t.ChangeColor (Color.blue);
             });
         }
 
-        public void SelectSpell(SpellBase  spell) {
+        public void SelectSpell (SpellBase spell) {
             if (spell is null)
                 return;
 
             Spell = spell;
-            SpellSerialized = spell.ToString();
+            SpellSerialized = spell.ToString ();
             isTargeting = true;
+        }
+
+        private bool CastSpell () {
+            if (!Input.GetMouseButtonDown (0)) return false;
+
+            var caster = Caster;
+            var shouldReturn = caster is null || Spell is null ||
+                SpellTiles.IsEmpty () || CombatManager.Manager is null;
+
+            if (shouldReturn) return false;
+
+            var targets = GetTargets (SpellTiles);
+
+            if (targets.IsEmpty ()) return false;
+
+            foreach (var target in targets) {
+                CombatManager.Manager.SpellAttack (caster, target, Spell as OffensiveSpell);
+            }
+
+            ClearSelection ();
+            
+            GetComponent<MapInteractions> ()?.ClearReachableArea (caster);
+            caster.TurnFinished = true;
+
+            isTargeting = false;
+            return true;
         }
 
         private bool EscapeInput () {
@@ -78,11 +109,7 @@ namespace Assets.SpellCastingSystem {
             Spell = null;
             SpellSerialized = null;
 
-            spellTiles.ForEach ((t, i) => {
-                t.ChangeColor (originalColors[i]);
-            });
-            spellTiles.Clear ();
-            originalColors.Clear ();
+            ClearSelection ();
 
             isTargeting = false;
             return true;
@@ -109,7 +136,17 @@ namespace Assets.SpellCastingSystem {
             return null;
         }
 
-        public List<Character> GetPossibleTargets (Character attacker, SpellBase spell, List<Tile> tiles) {
+        private void ClearSelection () {
+            SpellTiles.ForEach ((t, i) => {
+                t.ChangeColor (originalColors[i]);
+            });
+            SpellTiles.Clear ();
+            originalColors.Clear ();
+        }
+
+        private List<Character> GetTargets (List<Tile> tiles) {
+            if (Spell is null) return new List<Character> ();
+
             var targets = new List<Character> ();
 
             foreach (var tile in tiles) {
@@ -118,12 +155,12 @@ namespace Assets.SpellCastingSystem {
                 }
 
                 var target = tile.Occupant;
-                if (spell is OffensiveSpell && target is Enemy) {
+                if (Spell is OffensiveSpell && target is Enemy) {
                     targets.Add (target);
                     continue;
                 }
 
-                if (spell is SupportSpell && target is Player) {
+                if (Spell is SupportSpell && target is Player) {
                     targets.Add (target);
                 }
             }
