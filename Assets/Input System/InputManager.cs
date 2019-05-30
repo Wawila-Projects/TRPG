@@ -15,13 +15,6 @@ namespace Assets.InputSystem {
         public EnemyInteractions EnemyInteractions;
         public SpellTargeting SpellTargeter;
 
-        void Awake () {
-            PlayerInteractions = GetComponent<PlayerInteractions> ();
-            MapInteractions = GetComponent<MapInteractions> ();
-            EnemyInteractions = GetComponent<EnemyInteractions> ();
-            SpellTargeter = GetComponent<SpellTargeting> ();
-        }
-
         void Update () {
             if (SpellTargeter.isTargeting) return;
 
