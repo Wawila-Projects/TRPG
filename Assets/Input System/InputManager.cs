@@ -40,10 +40,9 @@ namespace Assets.InputSystem {
                 return;
             }
 
-            var clearAmount = PlayerInteractions.Selected?.Movement ?? 0;
-            var clearLocation = PlayerInteractions.Selected?.Location;
-            var clearRange = PlayerInteractions.Selected?.IsRange ?? true;
-            MapInteractions.ClearReachableArea (clearAmount, clearLocation, clearRange);
+            if (PlayerInteractions.Selected != null) {
+                MapInteractions.ClearReachableArea (PlayerInteractions.Selected);
+            }
             PlayerInteractions.Selected = null;
         }
 
@@ -78,9 +77,10 @@ namespace Assets.InputSystem {
                 return;
             }
 
-            if (Object.GetComponent<Character> () != null || 
-                (selected?.TurnFinished ?? false)) {
-                PlayerRaycasting (Object);
+            var player = Object.GetComponent<Player> () ;
+            if (player != null && 
+                (selected?.TurnFinished ?? true)) {
+                PlayerRaycasting (player);
                 return;
             }
         }
@@ -108,11 +108,8 @@ namespace Assets.InputSystem {
             // Confirm Action
             if (PlayerInteractions.Target == target) {
                 // TODO: Move this to End of Action 
-                var clearLocation = PlayerInteractions.Selected.Location;
-                var clearAmount = PlayerInteractions.Selected.CurrentMovement;
-                var (clearMap, isRange) = PlayerInteractions.Act ();
-                if (clearMap) {
-                    MapInteractions.ClearReachableArea (clearAmount, clearLocation, isRange);
+                if (PlayerInteractions.Act ()) {
+                    MapInteractions.ClearReachableArea (PlayerInteractions.Selected);
                 }
                 return true;
             }
@@ -121,19 +118,16 @@ namespace Assets.InputSystem {
             return true;
         }
 
-        private void PlayerRaycasting (GameObject obj) {
+        private void PlayerRaycasting (Player obj) {
 
             if (PlayerInteractions.IsMoving) return;
 
             if (!Input.GetMouseButtonDown (0)) return;
 
-            PlayerInteractions.Selected = obj.GetComponent<Player> ();
+            PlayerInteractions.Selected = obj;
             MapInteractions.Selected = null;
             if (!PlayerInteractions.Selected.TurnFinished && !PlayerInteractions.Selected.IsDead) {
-                var drawAmount = PlayerInteractions.Selected.CurrentMovement;
-                var drawLocation = PlayerInteractions.Selected.Location;
-                var drawRange = PlayerInteractions.Selected.IsRange;
-                MapInteractions.DrawReachableArea (drawAmount, drawLocation, drawRange);
+                MapInteractions.DrawReachableArea (PlayerInteractions.Selected);
             }
         }
 

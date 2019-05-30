@@ -8,6 +8,14 @@ namespace Assets.InputSystem {
     public class MapInteractions : MonoBehaviour {
         public Tile Selected;
 
+        public void DrawReachableArea (Character character) {
+            DrawReachableArea (character.CurrentMovement, character.Location, character.IsRange);
+        }
+        
+        public void ClearReachableArea (Character character) {
+            ClearReachableArea (character.Movement, character.Location, character.IsRange);
+        }
+
         public void DrawReachableArea (int total, Tile selected, bool isRange = false) {
             ColorReachableArea (total, selected, Color.green, isRange);
         }

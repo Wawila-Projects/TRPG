@@ -22,9 +22,7 @@ namespace Assets.InputSystem {
 
         public bool isTargeting => spellTargeting.isTargeting;
 
-        private SpellTargeting spellTargeting;
-
-        void Awake() => spellTargeting = GetComponent<SpellTargeting> ();
+        public SpellTargeting spellTargeting;
 
         void Update () {
             if (isTargeting) return;
@@ -47,18 +45,18 @@ namespace Assets.InputSystem {
             }
         }
 
-        public (bool clearMap, bool isRange) Act () {
+        public bool Act () {
             var isRange = Selected.IsRange;
             if (Selected.TurnFinished) {
                 ClearSelected ();
-                return (true, isRange);
+                return true;
             }
 
             var clearMap = false;
             if (!ActOnTile (ref clearMap)) {
                 ActOnPlayer (ref clearMap);
             }
-            return (clearMap, isRange);
+            return clearMap;
         }
 
         private bool ActOnPlayer (ref bool clearMap) {
