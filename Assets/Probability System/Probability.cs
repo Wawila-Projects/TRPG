@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 
 namespace Assets.ProbabilitySystem {
-    class Probability<T> {
+    public class Probability<T> {
 
         private IDictionary<T, int> Table;
 
