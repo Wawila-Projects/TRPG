@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using Assets.Spells;
 using Assets.Enums;
 using Assets.Utils;
+using Assets.ProbabilitySystem;
 
 namespace Assets.Personas
 {
@@ -32,6 +33,8 @@ namespace Assets.Personas
         public Dictionary<Elements, ResistanceModifiers> Resistances { get; protected set; }
         protected Dictionary<Statistics, int> Stats;
         protected Dictionary<Statistics, int> StatBuffs;
+
+        protected Probability<Statistics> Probability;
     
         //** For Serializing */
         public double BST = 0;
@@ -61,6 +64,7 @@ namespace Assets.Personas
 
             SetResistances();
             SetBaseStats();
+            Probability = new Probability<Statistics> (Stats);
 
             StatsKeys = Stats.Keys.Select((k) => k.ToString()).ToList();
             StatsValues = Stats.Values.ToList();
@@ -72,8 +76,9 @@ namespace Assets.Personas
             var random = new Random(DateTime.Now.Millisecond);
             var statistics = (Statistics[]) Enum.GetValues(typeof(Statistics));
             var statsToLevel = new List<Statistics>();
+
             for(var i = 0; i < statsUps; ++i) {
-                var stat = statistics[random.Next(statistics.Length)];
+                var stat = Probability.GetResult();
                 if (Stats[stat] == 99) {
                     --i;
                     continue;
