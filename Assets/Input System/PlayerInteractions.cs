@@ -7,6 +7,9 @@ using Assets.Spells;
 using UnityEngine;
 using Character = Assets.GameSystem.Character;
 
+//TODO: Selecting tile out of range bug
+//TODO: Undos selection
+
 namespace Assets.InputSystem {
     public class PlayerInteractions : MonoBehaviour {
         public Player Selected;
