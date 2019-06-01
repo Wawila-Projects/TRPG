@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Assets.Utils;
 
 namespace Assets.ProbabilitySystem {
     public class Probability<T> {

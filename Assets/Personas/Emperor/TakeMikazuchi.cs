@@ -16,9 +16,9 @@ namespace Assets.Personas.Emperor {
             Level = 25;
             base.Awake();
         }
-        protected override void SetBaseStats()
+        protected override IDictionary<Statistics, int> GetBaseStats()
         {   
-            Stats = new Dictionary<Statistics, int> {
+            return new Dictionary<Statistics, int> {
                 {Statistics.Strength,   20}, 
                 {Statistics.Magic,      11},
                 {Statistics.Endurance,  17}, 

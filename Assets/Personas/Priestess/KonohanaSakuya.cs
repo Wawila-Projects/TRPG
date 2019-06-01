@@ -16,9 +16,9 @@ namespace Assets.Personas.Priestess {
             Level = 15;
             base.Awake();
         }
-        protected override void SetBaseStats()
+        protected override IDictionary<Statistics, int> GetBaseStats()
         {   
-            Stats = new Dictionary<Statistics, int> {
+            return new Dictionary<Statistics, int> {
                 {Statistics.Strength,   8}, 
                 {Statistics.Magic,      15},
                 {Statistics.Endurance,  11}, 

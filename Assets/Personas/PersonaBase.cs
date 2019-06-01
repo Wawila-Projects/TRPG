@@ -30,11 +30,11 @@ namespace Assets.Personas
 
         // TODO: Add buffs for Elemental Attacks; Amp, Boost and accesories
         public SpellBook SpellBook { get; protected set; }
-        public Dictionary<Elements, ResistanceModifiers> Resistances { get; protected set; }
-        protected Dictionary<Statistics, int> Stats;
-        protected Dictionary<Statistics, int> StatBuffs;
+        public IDictionary<Elements, ResistanceModifiers> Resistances { get; protected set; }
+        protected IDictionary<Statistics, int> Stats;
+        protected IDictionary<Statistics, int> StatBuffs;
 
-        protected Probability<Statistics> Probability;
+        // protected Probability<Statistics> Probability;
     
         //** For Serializing */
         public double BST = 0;
@@ -62,9 +62,9 @@ namespace Assets.Personas
                 {Elements.Psy, ResistanceModifiers.None}
             };
 
-            SetResistances();
-            SetBaseStats();
-            Probability = new Probability<Statistics> (Stats);
+            SetResistances ();
+            Stats = GetBaseStats ();
+            // Probability = new Probability<Statistics> (Stats);
 
             StatsKeys = Stats.Keys.Select((k) => k.ToString()).ToList();
             StatsValues = Stats.Values.ToList();
@@ -74,13 +74,15 @@ namespace Assets.Personas
         public (int newLevel, List<Statistics> statUps) LevelUp(int statsUps = 3) {
             ++Level;
             var random = new Random(DateTime.Now.Millisecond);
-            var statistics = (Statistics[]) Enum.GetValues(typeof(Statistics));
+            // var statistics = (Statistics[]) Enum.GetValues(typeof(Statistics));
+            var statistics = GetBaseStats ();
             var statsToLevel = new List<Statistics>();
 
             for(var i = 0; i < statsUps; ++i) {
-                var stat = Probability.GetResult();
+                var stat = Probability<Statistics>.GetResult(statistics, random);
                 if (Stats[stat] == 99) {
                     --i;
+                    statistics.Remove(stat);
                     continue;
                 }
                 statsToLevel.Add(stat);
@@ -98,6 +100,8 @@ namespace Assets.Personas
         public int LevelUp(List<Statistics> stats) {
             ++Level;
             foreach(var stat in stats) {
+                if (Stats[stat] == 99)
+                    continue;
                 ++Stats[stat];
             }
             return Level;
@@ -113,7 +117,7 @@ namespace Assets.Personas
             }
         }
 
-        protected abstract void SetBaseStats();
+        protected abstract IDictionary<Statistics, int> GetBaseStats();
         protected abstract void SetResistances();
         protected abstract List<SpellBase> GetBaseSpellbook(); 
         protected abstract Dictionary<int, SpellBase> GetLockedSpells();

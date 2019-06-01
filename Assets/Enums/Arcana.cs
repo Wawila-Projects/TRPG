@@ -3,9 +3,9 @@ namespace Assets.Enums
     public enum Arcana
     {
         Fool, Magician, Priestess, Empress, 
-        Emperor, Heirophant, Lovers, Chariot, 
+        Emperor, Hierophant, Lovers, Chariot, 
         Justice, Hermit, Fortune, Strength, 
-        HangMan, Death, Temperance, Devil,
+        HangedMan, Death, Temperance, Devil,
         Tower, Star, Moon, Sun, Judgement  
     }
 

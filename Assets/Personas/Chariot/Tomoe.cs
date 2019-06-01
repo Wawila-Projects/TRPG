@@ -17,9 +17,9 @@ namespace Assets.Personas.Chariot
             Level = 4;
             base.Awake();
         }
-        protected override void SetBaseStats()
+        protected override IDictionary<Statistics, int> GetBaseStats()
         {   
-            Stats = new Dictionary<Statistics, int> {
+            return new Dictionary<Statistics, int> {
                 {Statistics.Strength,  4}, 
                 {Statistics.Magic,     4},
                 {Statistics.Endurance, 4}, 

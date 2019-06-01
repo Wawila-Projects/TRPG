@@ -16,9 +16,9 @@ namespace Assets.Personas.Fortune {
             Level = 55;
             base.Awake();
         }
-        protected override void SetBaseStats()
+        protected override IDictionary<Statistics, int> GetBaseStats()
         {   
-            Stats = new Dictionary<Statistics, int> {
+            return new Dictionary<Statistics, int> {
                 {Statistics.Strength,   32}, 
                 {Statistics.Magic,      38},
                 {Statistics.Endurance,  32}, 

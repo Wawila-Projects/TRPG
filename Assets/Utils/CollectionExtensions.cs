@@ -6,6 +6,12 @@ namespace Assets.Utils {
 
         public static bool IsEmpty<T>(this ICollection<T> sequence) => sequence.Count == 0;
         
+        public static void Deconstruct<T1, T2>(this KeyValuePair<T1, T2> tuple, out T1 key, out T2 value)
+        {
+            key = tuple.Key;
+            value = tuple.Value;
+        }
+
         public static TValue GetValueOrDefault<TKey, TValue> (this IDictionary<TKey, TValue> dictionary,
             TKey key, TValue defaultValue = default (TValue)) {
             TValue value = defaultValue;
