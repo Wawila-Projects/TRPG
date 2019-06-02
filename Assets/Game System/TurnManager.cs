@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using Assets.ChracterSystem;
 
 namespace Assets.GameSystem
 {

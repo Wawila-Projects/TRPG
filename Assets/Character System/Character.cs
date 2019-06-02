@@ -2,7 +2,7 @@
 using UnityEngine;
 using Assets.Personas;
 
-namespace Assets.GameSystem
+namespace Assets.ChracterSystem
 {
     public abstract class Character : MonoBehaviour
     {

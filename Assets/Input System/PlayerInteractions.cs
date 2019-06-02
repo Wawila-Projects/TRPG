@@ -5,7 +5,7 @@ using Assets.PlayerSystem;
 using Assets.SpellCastingSystem;
 using Assets.Spells;
 using UnityEngine;
-using Character = Assets.GameSystem.Character;
+using Character = Assets.ChracterSystem.Character;
 
 //TODO: Selecting tile out of range bug
 //TODO: Undos selection

@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Assets.CombatSystem;
 using Assets.EnemySystem;
-using Assets.GameSystem;
+using Assets.ChracterSystem;
 using Assets.InputSystem;
 using Assets.PlayerSystem;
 using Assets.Spells;

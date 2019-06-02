@@ -1,6 +1,7 @@
 ﻿using System;
 using Assets.EnemySystem;
 using Assets.GameSystem;
+using Assets.ChracterSystem;
 using Assets.PlayerSystem;
 using Assets.SpellCastingSystem;
 using UnityEngine;

@@ -1,4 +1,4 @@
-﻿using Assets.GameSystem;
+﻿using Assets.ChracterSystem;
 
 namespace Assets.PlayerSystem
 {

@@ -2,6 +2,7 @@ using System.Linq;
 using System.Collections;
 using System.Collections.Generic;
 using Assets.GameSystem;
+using Assets.ChracterSystem;
 using UnityEngine;
 
 namespace Assets.PlayerSystem
