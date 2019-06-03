@@ -1,6 +1,7 @@
 ﻿using System.Linq;
 using UnityEngine;
 using Assets.Personas;
+using Asstes.ChracterSystem;
 
 namespace Assets.ChracterSystem
 {
@@ -14,6 +15,8 @@ namespace Assets.ChracterSystem
         public int Hp;
         public int Sp;
         public PersonaBase Persona;
+
+        public StatusEffectController StatusEffect;
 
         [SerializeField]
         protected int _currentHP;

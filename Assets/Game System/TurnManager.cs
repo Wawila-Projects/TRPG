@@ -35,7 +35,8 @@ namespace Assets.GameSystem
         public void NextTurn()
         {
             ++TurnCounter;
-
+            Debug.Log($"Turn: {TurnCounter}");
+            
             if (PlayerPhase)
             {
                 ++PlayerTurnCounter;
@@ -53,8 +54,6 @@ namespace Assets.GameSystem
                 enemy.TurnFinished = false;
                 enemy.CurrentMovement = enemy.Movement;
             }
-
-            Debug.Log($"Turn: {TurnCounter}");
             return;
         }
     }
