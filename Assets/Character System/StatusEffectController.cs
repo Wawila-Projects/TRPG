@@ -11,7 +11,7 @@ namespace Asstes.ChracterSystem {
     public class StatusEffectController : MonoBehaviour {
         public StatusConditions CurrentEffect = StatusConditions.None;
         public StatusConditions DebugEffect = StatusConditions.None;
-        public TurnManager TurnManager;
+        // public TurnManager TurnManager;
         public Character Character;
         private uint LastTurnTick;
         private int FinalTurnTick = -1;
@@ -51,7 +51,7 @@ namespace Asstes.ChracterSystem {
             }
 
             if (statusEffect == StatusConditions.Dispair) 
-                FinalTurnTick = (int)TurnManager.TurnCounter + 7;
+                FinalTurnTick = (int)TurnManager.Manager.TurnCounter + 7;
 
             CurrentEffect = statusEffect;
             var action = StatusEffectActions[statusEffect];
@@ -92,14 +92,14 @@ namespace Asstes.ChracterSystem {
         }
 
         private (bool validTurn, uint currentTurn) checkTurn () {
-            var currentTurn = TurnManager.TurnCounter;
+            var currentTurn = TurnManager.Manager.TurnCounter;
             if (LastTurnTick == currentTurn) {
                 return (false, currentTurn);
             }
-            if (IsPlayer && TurnManager.PlayerPhase) {
+            if (IsPlayer && TurnManager.Manager.PlayerPhase) {
                 return (true, currentTurn);
             }
-            if (!IsPlayer && TurnManager.EnemyPhase) {
+            if (!IsPlayer && TurnManager.Manager.EnemyPhase) {
                 return (true, currentTurn);
             }
             return (false, currentTurn);
@@ -140,7 +140,7 @@ namespace Asstes.ChracterSystem {
                 {
                     StatusConditions.Dispair,
                     () => {
-                        if (TurnManager.TurnCounter < FinalTurnTick)
+                        if (TurnManager.Manager.TurnCounter < FinalTurnTick)
                             return;
                         Character.CurrentHP = 0;
                     }

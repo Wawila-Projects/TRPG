@@ -2,12 +2,12 @@
 namespace Asstes.ChracterSystem {
     public enum StatusConditions {
         None,
-        Down,
         Dizzy,
-        Silence,
+        Down,
         Dispair,
-        Confusion,
+        Silence,
         Rage,
+        Confusion,
         Fear,
         Enervate,
         Exhaustion,
