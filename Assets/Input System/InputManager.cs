@@ -41,8 +41,9 @@ namespace Assets.InputSystem {
                 return;
             }
 
+            var selected = PlayerInteractions.Selected;
             if (PlayerInteractions.Selected != null) {
-                MapInteractions.ClearReachableArea (PlayerInteractions.Selected);
+                MapInteractions.ClearReachableArea (selected);
             }
             PlayerInteractions.Selected = null;
         }
@@ -108,8 +109,9 @@ namespace Assets.InputSystem {
             // Confirm Action
             if (PlayerInteractions.Target == target) {
                 // TODO: Move this to End of Action 
+                var selected = PlayerInteractions.Selected;
                 if (PlayerInteractions.Act ()) {
-                    MapInteractions.ClearReachableArea (PlayerInteractions.Selected);
+                    MapInteractions.ClearReachableArea (selected);
                 }
                 return true;
             }

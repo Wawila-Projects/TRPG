@@ -9,8 +9,6 @@ using Assets.Spells;
 using Assets.Utils;
 using UnityEngine;
 
-//TODO: Finish turn after casting spell
-
 namespace Assets.SpellCastingSystem {
     public class SpellTargeting : MonoBehaviour {
         public MapCoordinator Map;

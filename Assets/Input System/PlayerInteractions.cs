@@ -7,9 +7,6 @@ using Assets.Spells;
 using UnityEngine;
 using Character = Assets.ChracterSystem.Character;
 
-//TODO: Selecting tile out of range bug
-//TODO: Undos selection
-
 namespace Assets.InputSystem {
     public class PlayerInteractions : MonoBehaviour {
         public Player Selected;
@@ -108,6 +105,7 @@ namespace Assets.InputSystem {
 
             if (!IsReachable ()) {
                 if (moveTowardsUnreachable) {
+                    //TODO Fix this case. I can land on an occupied tile
                     var path = AStar.FindPath (Selected.Location, tile);
                     if (path.Count == 0) return false;
                     Target = path.ElementAt (Selected.CurrentMovement).gameObject;
