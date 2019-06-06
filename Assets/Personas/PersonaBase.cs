@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using Assets.Spells;
 using Assets.Enums;
 using Assets.Utils;
-using Assets.ProbabilitySystem;
 
 namespace Assets.Personas
 {
@@ -64,7 +63,6 @@ namespace Assets.Personas
 
             SetResistances ();
             Stats = GetBaseStats ();
-            // Probability = new Probability<Statistics> (Stats);
 
             StatsKeys = Stats.Keys.Select((k) => k.ToString()).ToList();
             StatsValues = Stats.Values.ToList();
@@ -74,15 +72,13 @@ namespace Assets.Personas
         public (int newLevel, List<Statistics> statUps) LevelUp(int statsUps = 3) {
             ++Level;
             var random = new Random(DateTime.Now.Millisecond);
-            // var statistics = (Statistics[]) Enum.GetValues(typeof(Statistics));
-            var statistics = GetBaseStats ();
+            var statistics = (Statistics[]) Enum.GetValues(typeof(Statistics));
             var statsToLevel = new List<Statistics>();
 
             for(var i = 0; i < statsUps; ++i) {
-                var stat = Probability<Statistics>.GetResult(statistics, random);
+                var stat = statistics[random.Next(statistics.Length)];
                 if (Stats[stat] == 99) {
                     --i;
-                    statistics.Remove(stat);
                     continue;
                 }
                 statsToLevel.Add(stat);

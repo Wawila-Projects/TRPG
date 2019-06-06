@@ -141,8 +141,6 @@ namespace Assets.ChracterSystem
             return null;
         }
 
-
-
         // TODO: Solve case when all Tiles at totalSteps is occupied 
         public Tile MoveTowards(Character other, int steps) 
         {
