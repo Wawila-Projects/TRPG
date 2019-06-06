@@ -31,11 +31,6 @@ namespace Assets.InputSystem {
             if (isTargeting) return;
             if (SpellCastingDetection ()) return;
 
-            if (IsMoving) {
-                Move ();
-                return;
-            }
-
             if (_target != null) {
                 OnPlayerAction ();
             } else if (IsInCombat) {
@@ -78,7 +73,7 @@ namespace Assets.InputSystem {
             }
 
             Target = tileInRange.gameObject;
-            IsMoving = true;
+            Move();
             clearMap = true;
             return true;
         }
@@ -116,7 +111,7 @@ namespace Assets.InputSystem {
                     var path = AStar.FindPath (Selected.Location, tile);
                     if (path.Count == 0) return false;
                     Target = path.ElementAt (Selected.CurrentMovement).gameObject;
-                    IsMoving = true;
+                    Move();
                     Selected.CurrentMovement = 0;
                 } else {
                     ClearSelected ();
@@ -126,7 +121,7 @@ namespace Assets.InputSystem {
                 return true;
             }
 
-            IsMoving = true;
+            Move();
             Selected.CurrentMovement -= Selected.Location.GetDistance (tile);
             clearMap = true;
             return true;
@@ -151,51 +146,21 @@ namespace Assets.InputSystem {
         }
 
         private void Move () {
+            if (Selected.IsMoving) return;
+
             var tile = Target.GetComponent<Tile> ();
             if (tile == null)
                 return;
-
-            var dest = Target.transform.position;
-
-            if (Selected.transform.position == dest) {
-                Selected.Location.Occupant = null;
-                tile.Occupant = Selected;
-                Selected.Location = tile;
-                IsMoving = false;
-
-                var enemy = CheckForAllOutAttack ();
-                if (enemy != null) {
+            
+            Selected.Move(tile, (a) => {
+                ClearSelected ();
+                if (!a) {
+                    return;
+                }
                     IsInCombat = false;
-                    enemy.IsSurrounded = true;
-                    Selected.TurnFinished = true;
-                    CombatManager.Manager.AllOutAttack (enemy);
                     _selected = null;
                     _target = null;
-                }
-
-                ClearSelected ();
-                return;
-            }
-
-            var destination = Vector3.MoveTowards (Selected.transform.position, dest, 5 * Time.deltaTime);
-            Selected.transform.position = destination;
-        }
-
-        private Enemy CheckForAllOutAttack (bool needsSixCount = false) {
-            if (IsInCombat || _target is Character) return null;
-
-            foreach (var neighhbor in Selected.Location.Neighbors) {
-                if (neighhbor.Occupant == null) continue;
-                var enemy = neighhbor.Occupant as Enemy;
-                if (enemy == null) continue;
-                if (enemy.IsSurrounded) continue;
-
-                if (needsSixCount || enemy.Location.Neighbors.Count == 6 &&
-                    enemy.Location.Neighbors.TrueForAll (tile => tile.Occupant is Player))
-                    return enemy;
-            }
-
-            return null;
+            });
         }
 
         private void ClearSelected () {

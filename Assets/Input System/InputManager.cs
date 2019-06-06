@@ -24,7 +24,7 @@ namespace Assets.InputSystem {
         }
 
         private void EscapeInput () {
-            if (!Input.GetKeyDown (KeyCode.Escape) || PlayerInteractions?.IsMoving == true) return;
+            if (!Input.GetKeyDown (KeyCode.Escape)) return;
 
             var cameraControl = Camera.main.gameObject.GetComponent<MainCameraController> ();
             if (cameraControl != null) {
@@ -88,7 +88,6 @@ namespace Assets.InputSystem {
 
         private bool TargetRayCasting (GameObject obj) {
 
-            if (PlayerInteractions.IsMoving) return false;
             if (PlayerInteractions.Selected is null) return false;
             if (!Input.GetMouseButtonDown (0)) return false;
 
@@ -121,7 +120,6 @@ namespace Assets.InputSystem {
 
         private void PlayerRaycasting (Player obj) {
 
-            if (PlayerInteractions.IsMoving) return;
 
             if (!Input.GetMouseButtonDown (0)) return;
 
@@ -133,7 +131,6 @@ namespace Assets.InputSystem {
         }
 
         public void MapRayCasting (Tile tile) {
-            if (PlayerInteractions.IsMoving) return;
 
             if (Input.GetMouseButtonDown (0)) {
                 MapInteractions.Selected = tile;
@@ -141,7 +138,6 @@ namespace Assets.InputSystem {
         }
 
         public void EnemyRayCasting (Enemy enemy) {
-            if (PlayerInteractions.IsMoving) return;
 
             if (Input.GetMouseButtonDown (0)) {
                 EnemyInteractions.Selected = enemy;
