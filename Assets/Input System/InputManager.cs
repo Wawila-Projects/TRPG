@@ -24,7 +24,7 @@ namespace Assets.InputSystem {
         }
 
         private void EscapeInput () {
-            if (!Input.GetKeyDown (KeyCode.Escape) || PlayerInteractions?.IsMoving == true) return;
+            if (!Input.GetKeyDown (KeyCode.Escape)) return;
 
             var cameraControl = Camera.main.gameObject.GetComponent<MainCameraController> ();
             if (cameraControl != null) {
@@ -41,8 +41,9 @@ namespace Assets.InputSystem {
                 return;
             }
 
+            var selected = PlayerInteractions.Selected;
             if (PlayerInteractions.Selected != null) {
-                MapInteractions.ClearReachableArea (PlayerInteractions.Selected);
+                MapInteractions.ClearReachableArea (selected);
             }
             PlayerInteractions.Selected = null;
         }
@@ -88,7 +89,6 @@ namespace Assets.InputSystem {
 
         private bool TargetRayCasting (GameObject obj) {
 
-            if (PlayerInteractions.IsMoving) return false;
             if (PlayerInteractions.Selected is null) return false;
             if (!Input.GetMouseButtonDown (0)) return false;
 
@@ -109,8 +109,9 @@ namespace Assets.InputSystem {
             // Confirm Action
             if (PlayerInteractions.Target == target) {
                 // TODO: Move this to End of Action 
+                var selected = PlayerInteractions.Selected;
                 if (PlayerInteractions.Act ()) {
-                    MapInteractions.ClearReachableArea (PlayerInteractions.Selected);
+                    MapInteractions.ClearReachableArea (selected);
                 }
                 return true;
             }
@@ -121,7 +122,6 @@ namespace Assets.InputSystem {
 
         private void PlayerRaycasting (Player obj) {
 
-            if (PlayerInteractions.IsMoving) return;
 
             if (!Input.GetMouseButtonDown (0)) return;
 
@@ -133,7 +133,6 @@ namespace Assets.InputSystem {
         }
 
         public void MapRayCasting (Tile tile) {
-            if (PlayerInteractions.IsMoving) return;
 
             if (Input.GetMouseButtonDown (0)) {
                 MapInteractions.Selected = tile;
@@ -141,7 +140,6 @@ namespace Assets.InputSystem {
         }
 
         public void EnemyRayCasting (Enemy enemy) {
-            if (PlayerInteractions.IsMoving) return;
 
             if (Input.GetMouseButtonDown (0)) {
                 EnemyInteractions.Selected = enemy;

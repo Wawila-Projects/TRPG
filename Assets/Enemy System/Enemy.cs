@@ -79,23 +79,23 @@ namespace Assets.EnemySystem
         private void Move()
         {
             var dest = Destiny.transform.position;
-            if (transform.position == dest)
+            
+            if (transform.position != dest)
             {
-                Location.Occupant = null;
-                Destiny.Occupant = this;
-                Location = Destiny;
-                Destiny = null;
-
-                if (Target == null || DistanceFromCombatRange(Target) != 0)
-                {
-                    TurnFinished = true;
-                }
-
+                var destination = Vector3.MoveTowards(transform.position, dest, 5 * Time.deltaTime);
+                transform.position = destination;
                 return;
             }
 
-            var destination = Vector3.MoveTowards(transform.position, dest, 5 * Time.deltaTime);
-            transform.position = destination;
+            Location.Occupant = null;
+            Destiny.Occupant = this;
+            Location = Destiny;
+            Destiny = null;
+
+            if (Target == null || DistanceFromCombatRange(Target) != 0)
+            {
+                TurnFinished = true;
+            }
         }
     }
 }
