@@ -1,13 +1,13 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using Assets.ChracterSystem;
+using Assets.CharacterSystem;
 using Assets.GameSystem;
 using Assets.PlayerSystem;
 using Assets.Spells;
 using UnityEngine;
 
-namespace Asstes.ChracterSystem {
+namespace Asstes.CharacterSystem {
     public class StatusEffectController : MonoBehaviour {
         public StatusConditions CurrentEffect = StatusConditions.None;
         public StatusConditions DebugEffect = StatusConditions.None;
@@ -58,7 +58,7 @@ namespace Asstes.ChracterSystem {
             ActiveCoroutine = StartCoroutine (ActiveStatusEffect (action));
         }
 
-        bool RemoveStatusEffect (SupportSpell spell) {
+        bool RemoveStatusEffect (RecoverySpell spell) {
             if (ActiveCoroutine == null) return false;
             StopCoroutine (ActiveCoroutine);
             CurrentEffect = StatusConditions.None;
@@ -108,10 +108,10 @@ namespace Asstes.ChracterSystem {
         private void SetStatusEffectActions()
         {
             StatusEffectActions = new Dictionary<StatusConditions, Action> {
-                {
-                    StatusConditions.Exhaustion,
-                        () => Character.CurrentSP -= Mathf.RoundToInt (Character.Sp * 0.1f)
-                },
+                // {
+                //     StatusConditions.Exhaustion,
+                //         () => Character.CurrentSP -= Mathf.RoundToInt (Character.Sp * 0.1f)
+                // },
                 {
                     StatusConditions.Burn,
                         () => Character.CurrentHP -= Mathf.RoundToInt (Character.Hp * 0.1f)

@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Assets.CombatSystem;
 using Assets.EnemySystem;
-using Assets.ChracterSystem;
+using Assets.CharacterSystem;
 using Assets.InputSystem;
 using Assets.PlayerSystem;
 using Assets.Spells;
@@ -158,7 +158,7 @@ namespace Assets.SpellCastingSystem {
                     continue;
                 }
 
-                if (Spell is SupportSpell && target is Player) {
+                if (Spell is RecoverySpell && target is Player) {
                     targets.Add (target);
                 }
             }

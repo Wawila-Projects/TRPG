@@ -1,7 +1,7 @@
 ﻿using System.Linq;
 using Assets.CombatSystem;
 using Assets.GameSystem;
-using Assets.ChracterSystem;
+using Assets.CharacterSystem;
 using Assets.PlayerSystem;
 using UnityEngine;
 

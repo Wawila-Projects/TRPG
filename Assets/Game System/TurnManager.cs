@@ -1,5 +1,5 @@
 ﻿using UnityEngine;
-using Assets.ChracterSystem;
+using Assets.CharacterSystem;
 
 namespace Assets.GameSystem
 {

@@ -1,9 +1,9 @@
 ﻿using System.Linq;
 using UnityEngine;
 using Assets.Personas;
-using Asstes.ChracterSystem;
+using Asstes.CharacterSystem;
 
-namespace Assets.ChracterSystem
+namespace Assets.CharacterSystem
 {
     public abstract class Character : MonoBehaviour
     {

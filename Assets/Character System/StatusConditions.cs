@@ -1,19 +1,20 @@
 
-namespace Asstes.ChracterSystem {
+namespace Asstes.CharacterSystem {
     public enum StatusConditions {
-        None,
         Dizzy,
         Down,
         Dispair,
+        Distress, 
+        Enervation,
         Silence,
+        //Exhaustion,
         Rage,
         Confusion,
         Fear,
-        Enervate,
-        Exhaustion,
         Sleep,
+        Shock,
         Burn,
         Freeze,
-        Shock
+        None,
     }
 }

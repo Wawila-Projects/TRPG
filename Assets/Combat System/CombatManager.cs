@@ -1,6 +1,6 @@
 using Assets.EnemySystem;
 using Assets.Enums;
-using Assets.ChracterSystem;
+using Assets.CharacterSystem;
 using Assets.PlayerSystem;
 using UnityEngine;
 using Random = UnityEngine.Random;

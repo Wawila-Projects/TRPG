@@ -72,7 +72,7 @@ namespace Assets.Personas
         public (int newLevel, List<Statistics> statUps) LevelUp(int statsUps = 3) {
             ++Level;
             var random = new Random(DateTime.Now.Millisecond);
-            var statistics = (Statistics[]) Enum.GetValues(typeof(Statistics));
+            var statistics = EnumUtils<Statistics>.GetValues();
             var statsToLevel = new List<Statistics>();
 
             for(var i = 0; i < statsUps; ++i) {

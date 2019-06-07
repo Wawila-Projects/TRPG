@@ -1,4 +1,4 @@
-﻿using Assets.ChracterSystem;
+﻿using Assets.CharacterSystem;
 using Assets.CombatSystem;
 using Assets.EnemySystem;
 using System;

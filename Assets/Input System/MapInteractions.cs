@@ -1,7 +1,7 @@
 using UnityEngine;
 using System.Collections.Generic;
 using Assets.SpellCastingSystem;
-using Assets.ChracterSystem;
+using Assets.CharacterSystem;
 using Assets.PlayerSystem;
 
 namespace Assets.InputSystem {

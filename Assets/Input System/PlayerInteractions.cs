@@ -5,7 +5,7 @@ using Assets.PlayerSystem;
 using Assets.SpellCastingSystem;
 using Assets.Spells;
 using UnityEngine;
-using Character = Assets.ChracterSystem.Character;
+using Character = Assets.CharacterSystem.Character;
 
 namespace Assets.InputSystem {
     public class PlayerInteractions : MonoBehaviour {

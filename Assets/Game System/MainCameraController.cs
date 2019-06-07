@@ -1,7 +1,7 @@
 using System.Collections;
 using Assets.Utils;
 using UnityEngine;
-using Assets.ChracterSystem;
+using Assets.CharacterSystem;
 
 namespace Assets.GameSystem {
     public class MainCameraController: MonoBehaviour {

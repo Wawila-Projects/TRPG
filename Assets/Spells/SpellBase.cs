@@ -1,9 +1,11 @@
 using System;
 using Assets.Enums;
-using Assets.ChracterSystem;
+using Assets.CharacterSystem;
 
 namespace Assets.Spells
 {
+
+    // TODO Check descriptions.. "of Party" to ~MultiTarget
     public abstract class SpellBase: IEquatable<SpellBase>
     {
         protected abstract string Id { get; }

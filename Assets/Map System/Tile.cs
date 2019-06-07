@@ -1,7 +1,7 @@
 using System;
 using System.Linq;
 using System.Collections.Generic;
-using Assets.ChracterSystem;
+using Assets.CharacterSystem;
 using UnityEditor;
 using UnityEngine;
 

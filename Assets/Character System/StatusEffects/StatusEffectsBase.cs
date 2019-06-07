@@ -1,7 +1,7 @@
 using System;
-using Assets.ChracterSystem;
+using Assets.CharacterSystem;
 
-namespace Asstes.ChracterSystem.StatusEffects {
+namespace Asstes.CharacterSystem.StatusEffects {
     class StatusEffectBase {
         int MaxTurnAmount;
         Character Character;
