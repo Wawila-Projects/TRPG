@@ -8,7 +8,7 @@ namespace Assets.Spells.SpellLexicon {
         public static DarknessLexicon Darkness => new DarknessLexicon();
         public static PhysicalLexicon Physical => new PhysicalLexicon();
         public static AlmightyLexicon Almighty => new AlmightyLexicon();
-    
+        public static RecoveryLexicon Recovery => new RecoveryLexicon();
         public static DarknessLexicon Curse => Darkness;
         public static LightLexicon Bless => Light;
     }
