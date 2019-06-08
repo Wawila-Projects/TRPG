@@ -58,6 +58,8 @@ namespace Asstes.CharacterSystem {
             CurrentEffect = statusEffect;
             var action = StatusEffectActions[statusEffect];
             ActiveCoroutine = StartCoroutine (ActiveStatusEffect (action));
+
+            Debug.Log($"{Character.Name} inflicted with {statusEffect.ToString()}");
         }
 
         public bool RemoveStatusEffect (StatusConditions statusEffect) {
@@ -66,6 +68,7 @@ namespace Asstes.CharacterSystem {
             if (ActiveCoroutine == null) return false;
             StopCoroutine (ActiveCoroutine);
             CurrentEffect = StatusConditions.None;
+            Debug.Log($"{Character.Name} cured of {statusEffect.ToString()}");
             return true;
         }
 

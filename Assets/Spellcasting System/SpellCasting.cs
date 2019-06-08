@@ -39,12 +39,12 @@ namespace Assets.SpellCastingSystem {
 
         private void CastAilementSpell (AilementSpell spell, Player caster, List<Character> targets) {
             foreach (var target in targets) {
-                if (!CombatManager.SpellDidHit(caster, target, spell.HitChange))
+                if (!CombatManager.SpellDidHit (caster, target, spell.HitChange))
                     continue;
 
                 target.StatusEffect.SetStatusEffect (spell.StatusConditionInflicted);
             }
-        }   
+        }
 
         private void CastAssistSpell (IAssitSpell spell, List<Character> targets) {
             foreach (var target in targets) {
@@ -58,17 +58,24 @@ namespace Assets.SpellCastingSystem {
 
             target.CurrentHP = (int) MathF.Ceiling (target.Hp * spell.PercentageLifeRecovered);
             target.IsDead = false;
+
+            UnityEngine.Debug.Log ($"{target.Name} revived!");
         }
 
         private void CastHealingSpell (IHealingSpell spell, Player caster, List<Character> targets) {
             if (spell.FullHeal) {
-                targets.ForEach (t => t.CurrentHP = t.Hp);
+                targets.ForEach (t => {
+                    t.CurrentHP = t.Hp;
+                    UnityEngine.Debug.Log ($"{t.Name} fully healed!");
+                    });
                 return;
             }
 
             foreach (var target in targets) {
                 var amount = spell.HealingPower * CombatManager.PowerVariance (caster.Persona.Luck);
                 target.CurrentHP += (int) MathF.Ceiling (amount);
+
+                UnityEngine.Debug.Log ($"{target.Name} healed for {amount}!");
             }
         }
 
