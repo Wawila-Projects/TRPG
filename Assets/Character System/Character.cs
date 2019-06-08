@@ -5,6 +5,9 @@ using Asstes.CharacterSystem;
 
 namespace Assets.CharacterSystem
 {
+
+    [RequireComponent(typeof(PersonaBase))]
+    [RequireComponent(typeof(StatusEffectController))]
     public abstract class Character : MonoBehaviour
     {
         public string Name;
@@ -60,6 +63,10 @@ namespace Assets.CharacterSystem
         protected virtual void OnUpdate() { }
         
         void Awake() {
+            if (StatusEffect == null) {
+                StatusEffect = GetComponent<StatusEffectController> ();
+            }
+
             Level = Persona.Level;
             Name = gameObject.name;
             Hp = 100;
