@@ -18,6 +18,8 @@ namespace Assets.SpellCastingSystem {
         public bool isTargeting;
         public List<Tile> SpellTiles;
         public List<Color> originalColors;
+        private SpellCasting SpellCaster = new SpellCasting();
+
 
         public string SpellSerialized;
 
@@ -86,9 +88,7 @@ namespace Assets.SpellCastingSystem {
 
             if (targets.IsEmpty ()) return false;
 
-            foreach (var target in targets) {
-                CombatManager.Manager.SpellAttack (caster, target, Spell as OffensiveSpell);
-            }
+            SpellCaster.CastSpell (Spell, caster, targets);
 
             ClearSelection ();
             
@@ -153,7 +153,8 @@ namespace Assets.SpellCastingSystem {
                 }
 
                 var target = tile.Occupant;
-                if (Spell is OffensiveSpell && target is Enemy) {
+                if ((Spell is OffensiveSpell || Spell is AilementSpell) 
+                    && target is Enemy) {
                     targets.Add (target);
                     continue;
                 }

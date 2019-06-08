@@ -32,14 +32,16 @@ namespace Asstes.CharacterSystem {
 
         void Update () {
             if (DebugEffect == StatusConditions.None) {
-                RemoveStatusEffect(null);
+                CurrentEffect = StatusConditions.None;
+                if (ActiveCoroutine != null)
+                    StopCoroutine (ActiveCoroutine);
                 return;
             } 
 
             SetStatusEffect(DebugEffect);
         }
 
-        void SetStatusEffect (StatusConditions statusEffect) {
+        public void SetStatusEffect (StatusConditions statusEffect) {
             if (statusEffect == StatusConditions.None ||
                 CurrentEffect != StatusConditions.None ||
                 CurrentEffect == statusEffect) {
@@ -58,7 +60,9 @@ namespace Asstes.CharacterSystem {
             ActiveCoroutine = StartCoroutine (ActiveStatusEffect (action));
         }
 
-        bool RemoveStatusEffect (RecoverySpell spell) {
+        public bool RemoveStatusEffect (StatusConditions statusEffect) {
+            if (statusEffect != CurrentEffect) return false;
+            if (CurrentEffect == StatusConditions.None) return false;
             if (ActiveCoroutine == null) return false;
             StopCoroutine (ActiveCoroutine);
             CurrentEffect = StatusConditions.None;
