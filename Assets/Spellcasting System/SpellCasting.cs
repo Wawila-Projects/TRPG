@@ -56,7 +56,7 @@ namespace Assets.SpellCastingSystem {
         private void CastReviveSpell (IReviveSpell spell, Player target) {
             if (!target.IsDead) return;
 
-            target.CurrentHP = (int) MathF.Ceiling (target.Hp * spell.PercentageLifeRecovered);
+            target.CurrentHP = (int) Math.Ceiling (target.Hp * spell.PercentageLifeRecovered);
             target.IsDead = false;
 
             UnityEngine.Debug.Log ($"{target.Name} revived!");
@@ -73,7 +73,7 @@ namespace Assets.SpellCastingSystem {
 
             foreach (var target in targets) {
                 var amount = spell.HealingPower * CombatManager.PowerVariance (caster.Persona.Luck);
-                target.CurrentHP += (int) MathF.Ceiling (amount);
+                target.CurrentHP += (int) Math.Ceiling (amount);
 
                 UnityEngine.Debug.Log ($"{target.Name} healed for {amount}!");
             }

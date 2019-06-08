@@ -23,7 +23,7 @@ namespace Assets.Spells
         {
             var cost = Cost;
             if (IsPhysical) {
-                cost = (int) MathF.Ceiling(character.Hp * (Cost/100f));
+                cost = (int) Math.Ceiling(character.Hp * (Cost/100f));
             }
             character.CurrentSP -= cost;
             return cost;
@@ -32,7 +32,7 @@ namespace Assets.Spells
         public virtual bool CanBeCasted(Character character)
         {
             if (IsPhysical) {
-                var cost = (int) MathF.Ceiling(character.Hp * (Cost/100f));
+                var cost = (int) Math.Ceiling(character.Hp * (Cost/100f));
                 return character.CurrentHP > cost;
             }
             return character.CurrentSP >= Cost;
