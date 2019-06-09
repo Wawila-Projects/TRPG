@@ -1,6 +1,6 @@
+using Assets.CharacterSystem;
 using Assets.EnemySystem;
 using Assets.Enums;
-using Assets.CharacterSystem;
 using Assets.PlayerSystem;
 using UnityEngine;
 using Random = UnityEngine.Random;
@@ -31,24 +31,36 @@ namespace Assets.CombatSystem {
 
             var damage = BasicAttackDamageCalculation (attacker, defender, attackPower);
 
-            if (defender.StatusEffect == StatusConditions.Down || 
+            var critChance = Mathf.Sqrt (attacker.Persona.Luck / defender.Persona.Luck) * 5f;
+
+            var didCritical = Random.Range (1, 100) <= critChance;
+
+            if (defender is Enemy enemy && enemy.isBoss) {
+                didCritical = false;
+            }
+
+            if (didCritical) {
+                damage = Mathf.CeilToInt (damage * 1.6f);
+            }
+
+            if (defender.StatusEffect == StatusConditions.Down ||
                 defender.StatusEffect == StatusConditions.Dizzy) {
-                damage = Mathf.CeilToInt(damage * 1.3f);
+                damage = Mathf.CeilToInt (damage * 1.3f);
             }
 
             var (resolvedDamage, result) = ResolveResistances (attacker, defender, Elements.Physical, damage);
 
             var resistance = defender.Persona.Resistances[Elements.Physical];
 
-            attacker.DeactivateOneMore();
+            attacker.DeactivateOneMore ();
             attacker.TurnFinished = true;
 
-            if (resistance == ResistanceModifiers.Weak) {
+            if (resistance == ResistanceModifiers.Weak || didCritical) {
                 if (defender.StatusEffect == StatusConditions.Down) {
-                    defender.StatusEffect.SetStatusEffect(StatusConditions.Dizzy);
+                    defender.StatusEffect.SetStatusEffect (StatusConditions.Dizzy);
                 } else {
-                    defender.StatusEffect.SetStatusEffect(StatusConditions.Down);
-                    attacker.AddOneMore();
+                    defender.StatusEffect.SetStatusEffect (StatusConditions.Down);
+                    attacker.AddOneMore ();
                 }
             }
 
@@ -56,39 +68,53 @@ namespace Assets.CombatSystem {
         }
 
         // TODO: Fix spell damage. Defensse vs Attack
-        public void SpellAttack (Character attacker, Character defender, OffensiveSpell spell) {
-            if (attacker == null || defender == null) return;
-            if (!attacker.IsInRange (defender)) return;
-            if (!spell.CanBeCasted (attacker)) return;
+        public bool SpellAttack (Character attacker, Character defender, OffensiveSpell spell) {
+            if (attacker == null || defender == null) return false;
+            if (!attacker.IsInRange (defender)) return false;
+            if (!spell.CanBeCasted (attacker)) return false;
             if (!SpellDidHit (attacker, defender, spell.Accuracy)) {
                 Debug.Log ($"{spell.Name}: {attacker.Name} vs {defender.Name} - Missed!");
-                return;
+                return false;
             }
 
-            int damage = 0;
+            var didCritical = false;
+            var damage = 0;
             switch (spell) {
                 // TODO: Add Critical Chance and Critical on weak
                 case PhysicalSpell physicalSpell:
                     for (var i = 0; i < physicalSpell.HitCount; i++) {
                         damage += PhysicalAttack (attacker, defender, physicalSpell);
                     }
+
+                    didCritical = Random.value <= physicalSpell.CriticalChance;
+
+                    if (defender is Enemy enemy && enemy.isBoss) {
+                        didCritical = false;
+                    }
+
+                    if (didCritical) {
+                        damage = Mathf.CeilToInt (damage * 1.6f);
+                    }
+
                     break;
                 case var almightySpell when almightySpell.Element == Elements.Almighty:
                     damage = AlmightyAttack (attacker, defender, almightySpell.AttackPower);
                 break;
                 default:
                     damage = MagicalAttack (attacker, defender, spell);
+                    didCritical = defender.Persona.Resistances[spell.Element] == ResistanceModifiers.Weak;
                     break;
             }
 
-            if (defender.StatusEffect == StatusConditions.Down || 
+            if (defender.StatusEffect == StatusConditions.Down ||
                 defender.StatusEffect == StatusConditions.Dizzy) {
-                damage = Mathf.CeilToInt(damage * 1.3f);
+                damage = Mathf.CeilToInt (damage * 1.3f);
             }
 
             var (resolvedDamage, result) = ResolveResistances (attacker, defender, spell.Element, damage);
-            
             Debug.Log ($"{spell.Name}: {attacker.Name} vs {defender.Name} - {result}: {resolvedDamage}");
+
+            return didCritical;
         }
 
         public void AllOutAttack (Character defender) {
@@ -103,9 +129,9 @@ namespace Assets.CombatSystem {
                 AlmightyAttack (a, defender, a.Equipment.AttackPower)
             );
 
-            if (defender.StatusEffect == StatusConditions.Down || 
+            if (defender.StatusEffect == StatusConditions.Down ||
                 defender.StatusEffect == StatusConditions.Dizzy) {
-                damage = Mathf.CeilToInt(damage * 1.3f);
+                damage = Mathf.CeilToInt (damage * 1.3f);
             }
 
             Debug.Log ($"All Out Attack {defender.Name} - Damage: {damage}");
@@ -113,7 +139,7 @@ namespace Assets.CombatSystem {
             defender.CurrentHP -= damage;
         }
 
-          public static float PowerVariance (int luck) {
+        public static float PowerVariance (int luck) {
             var random = Random.Range (0.95f, 1.06f);
             if (Random.value * 100 > luck) return random;
 
@@ -126,8 +152,8 @@ namespace Assets.CombatSystem {
         public static bool SpellDidHit (Character attacker, Character defender, float accuracy) {
             var firstChanceToHit = Random.value <= accuracy;
             if (firstChanceToHit) return true;
-            var tryAgain = Random.value * 100 > attacker.Persona.Agility;
-            if (tryAgain) return false;
+            var tryAgain = Random.value * 100 <= attacker.Persona.Agility;
+            if (!tryAgain) return false;
             var secondChanceToHit = Random.value <= accuracy;
             return secondChanceToHit;
         }
@@ -209,14 +235,14 @@ namespace Assets.CombatSystem {
             return modifier;
         }
 
-        private  (int damage, string result) ResolveResistances (Character attacker, Character defender, Elements element, int damage) {
+        private (int damage, string result) ResolveResistances (Character attacker, Character defender, Elements element, int damage) {
             switch (defender.Persona.Resistances[element]) {
                 case ResistanceModifiers.Resist:
-                    var resisted = Mathf.CeilToInt (damage * 0.8f);
+                    var resisted = Mathf.CeilToInt (damage * 0.6f);
                     defender.CurrentHP -= resisted;
-                   return (resisted, "Damage");
+                    return (resisted, "Damage");
                 case ResistanceModifiers.Weak:
-                    var aumented = Mathf.CeilToInt (damage * 1.8f);
+                    var aumented = Mathf.CeilToInt (damage * 1.6f);
                     defender.CurrentHP -= aumented;
                     return (aumented, "Damage");
                 case ResistanceModifiers.Reflect:

@@ -98,17 +98,20 @@ namespace Assets.SpellCastingSystem {
             var oneMore = false;
 
             foreach (var target in targets) {
-                var resistance = target.Persona.Resistances[spell.Element];
-                if (blockModifiers.Contains (resistance)) continue;
+                oneMore = CombatManager.Manager.SpellAttack(caster, target, spell);
 
-                if (resistance == ResistanceModifiers.Weak) {
+                 if (oneMore) {
                     if (target.StatusEffect == StatusConditions.Down) {
                         target.StatusEffect.SetStatusEffect(StatusConditions.Dizzy);
+                        oneMore = false;
                     } else {
-                        oneMore = true;
                         target.StatusEffect.SetStatusEffect(StatusConditions.Down);
+                        oneMore = true;
                     }
                 }
+
+                var resistance = target.Persona.Resistances[spell.Element];
+                if (blockModifiers.Contains (resistance)) continue;
 
                 var modifier = GetAilmentResistanceModifier (target);
                 if (modifier == 0) continue;

@@ -12,7 +12,8 @@ namespace Assets.EnemySystem
         public int BasicAttack;
         public Tile Destiny;
         public Player Target;
-
+        public bool isBoss;
+        
         protected override void OnAwake()
         {
             BasicAttack = 100;
