@@ -98,8 +98,8 @@ namespace Assets.SpellCastingSystem {
             var oneMore = false;
 
             foreach (var target in targets) {
-                var resistance = CombatManager.Manager.SpellAttack (caster, target, spell);
-                if (resistance == null || blockModifiers.Contains (resistance.Value)) continue;
+                var resistance = target.Persona.Resistances[spell.Element];
+                if (blockModifiers.Contains (resistance)) continue;
 
                 if (resistance == ResistanceModifiers.Weak) {
                     if (target.StatusEffect == StatusConditions.Down) {

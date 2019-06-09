@@ -38,19 +38,31 @@ namespace Assets.CombatSystem {
 
             var (resolvedDamage, result) = ResolveResistances (attacker, defender, Elements.Physical, damage);
 
+            var resistance = defender.Persona.Resistances[Elements.Physical];
+
             attacker.DeactivateOneMore();
             attacker.TurnFinished = true;
+
+            if (resistance == ResistanceModifiers.Weak) {
+                if (defender.StatusEffect == StatusConditions.Down) {
+                    defender.StatusEffect.SetStatusEffect(StatusConditions.Dizzy);
+                } else {
+                    defender.StatusEffect.SetStatusEffect(StatusConditions.Down);
+                    attacker.AddOneMore();
+                }
+            }
+
             Debug.Log ($"Basic Attack: {attacker.Name} vs {defender.Name} - {result}: {resolvedDamage}");
         }
 
         // TODO: Fix spell damage. Defensse vs Attack
-        public ResistanceModifiers? SpellAttack (Character attacker, Character defender, OffensiveSpell spell) {
-            if (attacker == null || defender == null) return null;
-            if (!attacker.IsInRange (defender)) return null;
-            if (!spell.CanBeCasted (attacker)) return null;
+        public void SpellAttack (Character attacker, Character defender, OffensiveSpell spell) {
+            if (attacker == null || defender == null) return;
+            if (!attacker.IsInRange (defender)) return;
+            if (!spell.CanBeCasted (attacker)) return;
             if (!SpellDidHit (attacker, defender, spell.Accuracy)) {
                 Debug.Log ($"{spell.Name}: {attacker.Name} vs {defender.Name} - Missed!");
-                return null;
+                return;
             }
 
             int damage = 0;
@@ -77,7 +89,6 @@ namespace Assets.CombatSystem {
             var (resolvedDamage, result) = ResolveResistances (attacker, defender, spell.Element, damage);
             
             Debug.Log ($"{spell.Name}: {attacker.Name} vs {defender.Name} - {result}: {resolvedDamage}");
-            return defender.Persona.Resistances[spell.Element];
         }
 
         public void AllOutAttack (Character defender) {
