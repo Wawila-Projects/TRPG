@@ -58,7 +58,8 @@ namespace Assets.Personas
                 {Elements.Ice, ResistanceModifiers.None },
                 {Elements.Wind, ResistanceModifiers.None },
                 {Elements.Nuke, ResistanceModifiers.None}, 
-                {Elements.Psy, ResistanceModifiers.None}
+                {Elements.Psy, ResistanceModifiers.None}, 
+                {Elements.Ailment, ResistanceModifiers.None}
             };
 
             SetResistances ();

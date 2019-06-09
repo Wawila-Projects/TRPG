@@ -133,9 +133,9 @@ namespace Assets.InputSystem {
         private bool SpellCastingDetection () {
             if (Selected == null) return false;
             var spellbook = Selected.Persona.SpellBook;
-            for (int i = 0; i < 10; ++i) {
+            for (int i = 1; i < 10; ++i) {
                 if (Input.GetKeyDown ($"{i}")) {
-                    var spell = spellbook.Spells.ElementAtOrDefault (i);
+                    var spell = spellbook.Spells.ElementAtOrDefault (i-1);
                     spellTargeting.SelectSpell (spell);
                     return spell != null;
                 }

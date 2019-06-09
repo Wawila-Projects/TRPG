@@ -10,7 +10,6 @@ using UnityEngine;
 namespace Asstes.CharacterSystem {
     public class StatusEffectController : MonoBehaviour {
         public StatusConditions CurrentEffect = StatusConditions.None;
-        public StatusConditions DebugEffect = StatusConditions.None;
         // public TurnManager TurnManager;
         public Character Character;
         private uint LastTurnTick;
@@ -30,17 +29,6 @@ namespace Asstes.CharacterSystem {
             SetStatusEffectActions();
         }
 
-        void Update () {
-            if (DebugEffect == StatusConditions.None) {
-                CurrentEffect = StatusConditions.None;
-                if (ActiveCoroutine != null)
-                    StopCoroutine (ActiveCoroutine);
-                return;
-            } 
-
-            SetStatusEffect(DebugEffect);
-        }
-
         public void SetStatusEffect (StatusConditions statusEffect) {
             if (statusEffect == StatusConditions.None ||
                 CurrentEffect != StatusConditions.None ||
@@ -48,16 +36,16 @@ namespace Asstes.CharacterSystem {
                 return;
             }
 
-            if (!StatusEffectActions.ContainsKey(statusEffect)) {
-                return;
-            }
+            // if (!StatusEffectActions.ContainsKey(statusEffect)) {
+            //     return;
+            // }
 
             if (statusEffect == StatusConditions.Dispair) 
                 FinalTurnTick = (int)TurnManager.Manager.TurnCounter + 7;
 
             CurrentEffect = statusEffect;
-            var action = StatusEffectActions[statusEffect];
-            ActiveCoroutine = StartCoroutine (ActiveStatusEffect (action));
+            // var action = StatusEffectActions[statusEffect];
+            // ActiveCoroutine = StartCoroutine (ActiveStatusEffect (action));
 
             Debug.Log($"{Character.Name} inflicted with {statusEffect.ToString()}");
         }

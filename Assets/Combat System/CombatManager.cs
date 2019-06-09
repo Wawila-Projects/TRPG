@@ -33,13 +33,13 @@ namespace Assets.CombatSystem {
             Debug.Log ($"Basic Attack: {attacker.Name} vs {defender.Name} - Damage: {damage}");
         }
 
-        public void SpellAttack (Character attacker, Character defender, OffensiveSpell spell) {
-            if (attacker == null || defender == null) return;
-            if (!attacker.IsInRange (defender)) return;
-            if (!spell.CanBeCasted (attacker)) return;
+        public ResistanceModifiers? SpellAttack (Character attacker, Character defender, OffensiveSpell spell) {
+            if (attacker == null || defender == null) return null;
+            if (!attacker.IsInRange (defender)) return null;
+            if (!spell.CanBeCasted (attacker)) return null;
             if (!SpellDidHit (attacker, defender, spell.Accuracy)) {
                 Debug.Log ($"{spell.Name}: {attacker.Name} vs {defender.Name} - Missed!");
-                return;
+                return null;
             }
 
             int damage = 0;
@@ -59,6 +59,7 @@ namespace Assets.CombatSystem {
 
             var (resolvedDamage, result) = ResolveResistances (attacker, defender, spell.Element, damage);
             Debug.Log ($"{spell.Name}: {attacker.Name} vs {defender.Name} - {result}: {resolvedDamage}");
+            return defender.Persona.Resistances[spell.Element];
         }
 
         public void AllOutAttack (Character defender) {

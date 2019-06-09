@@ -39,9 +39,11 @@ namespace Assets.SpellCastingSystem {
 
         private void CastAilementSpell (AilementSpell spell, Player caster, List<Character> targets) {
             foreach (var target in targets) {
-                if (!CombatManager.SpellDidHit (caster, target, spell.HitChange))
-                    continue;
+                var modifier = GetAilmentResistanceModifier (target);
+                if (modifier == 0) continue;
 
+                if (!CombatManager.SpellDidHit (caster, target, spell.HitChange * modifier))
+                    continue;
                 target.StatusEffect.SetStatusEffect (spell.StatusConditionInflicted);
             }
         }
@@ -67,7 +69,7 @@ namespace Assets.SpellCastingSystem {
                 targets.ForEach (t => {
                     t.CurrentHP = t.Hp;
                     UnityEngine.Debug.Log ($"{t.Name} fully healed!");
-                    });
+                });
                 return;
             }
 
@@ -80,10 +82,17 @@ namespace Assets.SpellCastingSystem {
         }
 
         private void CastOffensiveSpell (OffensiveSpell spell, Player caster, List<Character> targets) {
-            foreach (var target in targets) {
-                CombatManager.Manager.SpellAttack (caster, target, spell);
+            var blockModifiers = new List<ResistanceModifiers> () {
+                ResistanceModifiers.Block, ResistanceModifiers.Absorb, ResistanceModifiers.Reflect
+            };
 
-                if (random.NextDouble () > ElementalAilmentChance) continue;
+            foreach (var target in targets) {
+                var resistance = CombatManager.Manager.SpellAttack (caster, target, spell);
+                if (resistance == null || blockModifiers.Contains (resistance.Value)) continue;
+
+                var modifier = GetAilmentResistanceModifier (target);
+                if (modifier == 0) continue;
+                if (random.NextDouble () > (ElementalAilmentChance * modifier)) continue;
 
                 switch (spell.Element) {
                     case Elements.Fire:
@@ -98,7 +107,19 @@ namespace Assets.SpellCastingSystem {
                     default:
                         continue;
                 }
+            }
+        }
 
+        private float GetAilmentResistanceModifier (Character target) {
+            switch (target.Persona.Resistances[Elements.Ailment]) {
+                case ResistanceModifiers.Weak:
+                    return 2f;
+                case ResistanceModifiers.Resist:
+                    return 0.5f;
+                case ResistanceModifiers.None:
+                    return 1f;
+                default:
+                    return 0f;
             }
         }
 
