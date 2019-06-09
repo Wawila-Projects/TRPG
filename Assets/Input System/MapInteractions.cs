@@ -13,7 +13,7 @@ namespace Assets.InputSystem {
         }
         
         public void ClearReachableArea (Character character) {
-            ClearReachableArea (character.Movement, character.Location, character.IsRange);
+            ClearReachableArea (character.Movement + character.OneMore.count, character.Location, character.IsRange);
         }
 
         public void DrawReachableArea (int total, Tile selected, bool isRange = false) {

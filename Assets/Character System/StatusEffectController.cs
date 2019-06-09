@@ -22,6 +22,10 @@ namespace Asstes.CharacterSystem {
 
         private IDictionary<StatusConditions, Action> StatusEffectActions;
 
+        public static implicit operator StatusConditions (StatusEffectController statusEffect) {
+            return statusEffect.CurrentEffect;
+        }
+
         void Awake ()
         {
             Character = GetComponent<Character>();
@@ -30,9 +34,7 @@ namespace Asstes.CharacterSystem {
         }
 
         public void SetStatusEffect (StatusConditions statusEffect) {
-            if (statusEffect == StatusConditions.None ||
-                CurrentEffect != StatusConditions.None ||
-                CurrentEffect == statusEffect) {
+            if (statusEffect <= CurrentEffect) {
                 return;
             }
 
@@ -80,10 +82,6 @@ namespace Asstes.CharacterSystem {
                 yield return null;
             }
             yield return null;
-        }
-
-        public static implicit operator StatusConditions (StatusEffectController statusEffect) {
-            return statusEffect.CurrentEffect;
         }
 
         private (bool validTurn, uint currentTurn) checkTurn () {

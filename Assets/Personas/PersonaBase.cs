@@ -29,6 +29,8 @@ namespace Assets.Personas
 
         // TODO: Add buffs for Elemental Attacks; Amp, Boost and accesories
         public SpellBook SpellBook { get; protected set; }
+
+        // TODO: Add ability to buff/debuff resistances
         public IDictionary<Elements, ResistanceModifiers> Resistances { get; protected set; }
         protected IDictionary<Statistics, int> Stats;
         protected IDictionary<Statistics, int> StatBuffs;

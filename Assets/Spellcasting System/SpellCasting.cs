@@ -13,9 +13,12 @@ namespace Assets.SpellCastingSystem {
         private const double ElementalAilmentChance = 0.1d;
 
         public void CastSpell (SpellBase spell, Player caster, List<Character> targets) {
+            var oneMore = false;
+            caster.DeactivateOneMore();
+
             switch (spell) {
                 case OffensiveSpell offensiveSpell:
-                    CastOffensiveSpell (offensiveSpell, caster, targets);
+                    oneMore = CastOffensiveSpell (offensiveSpell, caster, targets);
                     break;
                 case AilementSpell ailemenntSpell:
                     CastAilementSpell (ailemenntSpell, caster, targets);
@@ -34,6 +37,12 @@ namespace Assets.SpellCastingSystem {
             }
 
             spell.HandleCostReduction (caster);
+
+            if (oneMore) {
+                caster.AddOneMore();
+                return;
+            }
+
             caster.TurnFinished = true;
         }
 
@@ -81,14 +90,25 @@ namespace Assets.SpellCastingSystem {
             }
         }
 
-        private void CastOffensiveSpell (OffensiveSpell spell, Player caster, List<Character> targets) {
+        private bool CastOffensiveSpell (OffensiveSpell spell, Player caster, List<Character> targets) {
             var blockModifiers = new List<ResistanceModifiers> () {
                 ResistanceModifiers.Block, ResistanceModifiers.Absorb, ResistanceModifiers.Reflect
             };
 
+            var oneMore = false;
+
             foreach (var target in targets) {
                 var resistance = CombatManager.Manager.SpellAttack (caster, target, spell);
                 if (resistance == null || blockModifiers.Contains (resistance.Value)) continue;
+
+                if (resistance == ResistanceModifiers.Weak) {
+                    if (target.StatusEffect == StatusConditions.Down) {
+                        target.StatusEffect.SetStatusEffect(StatusConditions.Dizzy);
+                    } else {
+                        oneMore = true;
+                        target.StatusEffect.SetStatusEffect(StatusConditions.Down);
+                    }
+                }
 
                 var modifier = GetAilmentResistanceModifier (target);
                 if (modifier == 0) continue;
@@ -108,6 +128,8 @@ namespace Assets.SpellCastingSystem {
                         continue;
                 }
             }
+
+            return oneMore;
         }
 
         private float GetAilmentResistanceModifier (Character target) {

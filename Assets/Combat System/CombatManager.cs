@@ -6,6 +6,7 @@ using UnityEngine;
 using Random = UnityEngine.Random;
 using System.Linq;
 using Assets.Spells;
+using Asstes.CharacterSystem;
 
 namespace Assets.CombatSystem {
     public sealed class CombatManager {
@@ -29,10 +30,20 @@ namespace Assets.CombatSystem {
             }
 
             var damage = BasicAttackDamageCalculation (attacker, defender, attackPower);
+
+            if (defender.StatusEffect == StatusConditions.Down || 
+                defender.StatusEffect == StatusConditions.Dizzy) {
+                damage = Mathf.CeilToInt(damage * 1.3f);
+            }
+
+            var (resolvedDamage, result) = ResolveResistances (attacker, defender, Elements.Physical, damage);
+
+            attacker.DeactivateOneMore();
             attacker.TurnFinished = true;
-            Debug.Log ($"Basic Attack: {attacker.Name} vs {defender.Name} - Damage: {damage}");
+            Debug.Log ($"Basic Attack: {attacker.Name} vs {defender.Name} - {result}: {resolvedDamage}");
         }
 
+        // TODO: Fix spell damage. Defensse vs Attack
         public ResistanceModifiers? SpellAttack (Character attacker, Character defender, OffensiveSpell spell) {
             if (attacker == null || defender == null) return null;
             if (!attacker.IsInRange (defender)) return null;
@@ -44,6 +55,7 @@ namespace Assets.CombatSystem {
 
             int damage = 0;
             switch (spell) {
+                // TODO: Add Critical Chance and Critical on weak
                 case PhysicalSpell physicalSpell:
                     for (var i = 0; i < physicalSpell.HitCount; i++) {
                         damage += PhysicalAttack (attacker, defender, physicalSpell);
@@ -57,7 +69,13 @@ namespace Assets.CombatSystem {
                     break;
             }
 
+            if (defender.StatusEffect == StatusConditions.Down || 
+                defender.StatusEffect == StatusConditions.Dizzy) {
+                damage = Mathf.CeilToInt(damage * 1.3f);
+            }
+
             var (resolvedDamage, result) = ResolveResistances (attacker, defender, spell.Element, damage);
+            
             Debug.Log ($"{spell.Name}: {attacker.Name} vs {defender.Name} - {result}: {resolvedDamage}");
             return defender.Persona.Resistances[spell.Element];
         }
@@ -73,6 +91,11 @@ namespace Assets.CombatSystem {
             var damage = players.Sum (a =>
                 AlmightyAttack (a, defender, a.Equipment.AttackPower)
             );
+
+            if (defender.StatusEffect == StatusConditions.Down || 
+                defender.StatusEffect == StatusConditions.Dizzy) {
+                damage = Mathf.CeilToInt(damage * 1.3f);
+            }
 
             Debug.Log ($"All Out Attack {defender.Name} - Damage: {damage}");
             defender.IsSurrounded = true;
@@ -138,9 +161,9 @@ namespace Assets.CombatSystem {
 
         private static int Attack (Character attacker, Character defender, int attackPower, bool isPhysical) {
             float attackStat = isPhysical ? attacker.Persona.Strength : attacker.Persona.Magic;
-            var defenceStat = defender.Persona.Endurance * 8f;
+            var defenceStat = defender.Persona.Endurance;
             var modifier = CalculateDamageModifier (attacker, defender, isPhysical);
-            var netdamage = Mathf.Sqrt ((attackStat / defenceStat) * attackPower) * modifier;
+            var netdamage = 5 * Mathf.Sqrt ((attackStat / defenceStat) * attackPower) * modifier;
             var damage = netdamage * PowerVariance (attacker.Persona.Luck);
             return Mathf.CeilToInt (damage);
         }
@@ -178,11 +201,13 @@ namespace Assets.CombatSystem {
         private  (int damage, string result) ResolveResistances (Character attacker, Character defender, Elements element, int damage) {
             switch (defender.Persona.Resistances[element]) {
                 case ResistanceModifiers.Resist:
-                    defender.CurrentHP -= Mathf.CeilToInt (damage * 0.5f);
-                   return (Mathf.CeilToInt (damage * 0.5f), "Damage");
+                    var resisted = Mathf.CeilToInt (damage * 0.8f);
+                    defender.CurrentHP -= resisted;
+                   return (resisted, "Damage");
                 case ResistanceModifiers.Weak:
-                    defender.CurrentHP -= Mathf.CeilToInt (damage * 1.5f);
-                    return (Mathf.CeilToInt (damage * 0.5f), "Damage");
+                    var aumented = Mathf.CeilToInt (damage * 1.8f);
+                    defender.CurrentHP -= aumented;
+                    return (aumented, "Damage");
                 case ResistanceModifiers.Reflect:
                     attacker.CurrentHP -= damage;
                     return (0, "Reflected");

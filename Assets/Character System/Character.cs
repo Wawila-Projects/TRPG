@@ -23,14 +23,25 @@ namespace Assets.CharacterSystem
 
         [SerializeField]
         protected int _currentHP;
+
+        [SerializeField]
+        protected int _currentSP;
+
+        public bool IsDead;
+        public bool IsRange;
+        public int WeaponRange;
+        public bool TurnFinished;
+        public bool IsSurrounded;
+        public (bool isActive, int count) OneMore;
+
         public int CurrentHP
         {
-            get { return _currentHP; }
+            get => _currentHP;
             set
             {
                 if (value > 0)
                 {
-                    _currentHP = value;
+                    _currentHP = value >= Hp ? Hp: value;
                     return;
                 }
                 _currentHP = 0;
@@ -38,11 +49,9 @@ namespace Assets.CharacterSystem
             }
         }
 
-        [SerializeField]
-        protected int _currentSP;
-        public int CurrentSP
+         public int CurrentSP
         {
-            get { return _currentSP; }
+            get => _currentSP;
             set
             {
                 if (value > 0)
@@ -53,11 +62,6 @@ namespace Assets.CharacterSystem
                 _currentSP = 0;
             }
         }
-        public bool IsDead;
-        public bool IsRange;
-        public int WeaponRange;
-        public bool TurnFinished;
-        public bool IsSurrounded;
 
         protected virtual void OnAwake() { }
         protected virtual void OnUpdate() { }
@@ -97,6 +101,24 @@ namespace Assets.CharacterSystem
 
             CurrentHP = Hp - lostHp;
             CurrentSP = Sp - lostSp;
+        }
+
+        public void AddOneMore() {
+            OneMore.isActive = true;
+            OneMore.count++;
+
+            CurrentMovement++;
+            TurnFinished = false;
+
+            Debug.Log ($"{Name} One More!");
+        }
+
+        public void DeactivateOneMore() {
+            OneMore.isActive = false;
+        }
+
+        public void ResetOneMore() {
+            OneMore = (false, 0);
         }
 
         public Character ClonePlayer()

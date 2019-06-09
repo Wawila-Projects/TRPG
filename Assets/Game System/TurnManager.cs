@@ -43,15 +43,18 @@ namespace Assets.GameSystem
                 foreach (var player in GameController.Manager.Players)
                 {
                     player.TurnFinished = false;
+                    player.ResetOneMore();
                     player.CurrentMovement = player.Movement;
                 }
                 return;
             }
             
             ++EnemyTurnCounter;
+            // TODO: Add One More triggers to Enemy
             foreach (var enemy in GameController.Manager.Enemies)
             {
                 enemy.TurnFinished = false;
+                enemy.ResetOneMore();
                 enemy.CurrentMovement = enemy.Movement;
             }
             return;

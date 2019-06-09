@@ -28,12 +28,12 @@ namespace Assets.Personas {
 
         protected override void SetResistances()
         {
-            Resistances[Elements.Elec] = ResistanceModifiers.Reflect;
-            Resistances[Elements.Wind] = ResistanceModifiers.Absorb;
-            Resistances[Elements.Fire] = ResistanceModifiers.Block;
-            Resistances[Elements.Physical] = ResistanceModifiers.Resist;
+            Resistances[Elements.Elec] = ResistanceModifiers.Weak;
+            Resistances[Elements.Wind] = ResistanceModifiers.Weak;
+            Resistances[Elements.Fire] = ResistanceModifiers.Weak;
             Resistances[Elements.Ice] = ResistanceModifiers.Weak;
-            Resistances[Elements.Almighty] = ResistanceModifiers.Block;
+            Resistances[Elements.Physical] = ResistanceModifiers.Weak;
+            Resistances[Elements.Almighty] = ResistanceModifiers.Weak;
         }
 
         protected override List<SpellBase> GetBaseSpellbook()

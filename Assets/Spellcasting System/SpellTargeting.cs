@@ -92,9 +92,8 @@ namespace Assets.SpellCastingSystem {
 
             ClearSelection ();
             
+            GetComponent<PlayerInteractions> ()?.ClearSelected();
             GetComponent<MapInteractions> ()?.ClearReachableArea (caster);
-            caster.TurnFinished = true;
-
             isTargeting = false;
             return true;
         }

@@ -161,7 +161,7 @@ namespace Assets.InputSystem {
             });
         }
 
-        private void ClearSelected () {
+        public void ClearSelected () {
             Selected = null;
             Target = null;
         }

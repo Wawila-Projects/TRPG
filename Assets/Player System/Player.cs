@@ -41,6 +41,7 @@ namespace Assets.PlayerSystem
                 if (enemy != null) {
                     enemy.IsSurrounded = true;
                     TurnFinished = true;
+                    DeactivateOneMore();
                     CombatManager.Manager.AllOutAttack (enemy);
                     didAttack = true;
                 }
