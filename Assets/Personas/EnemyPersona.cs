@@ -6,10 +6,10 @@ using Assets.Enums;
 namespace Assets.Personas {
     public class EnemyPersona : PersonaBase
     {
-        public override string Name => "Shadow";
+        public override string Name => "Lying Hablerie";
         public override bool IsPlayerPersona => false;
-        public override Arcana Arcana => Arcana.Death;
-        public override Elements InheritanceElement => Elements.Almighty;
+        public override Arcana Arcana => Arcana.Magician;
+        public override Elements InheritanceElement => Elements.None;
 
         protected override void Awake() {
             Level = 2;
@@ -18,11 +18,11 @@ namespace Assets.Personas {
         protected override IDictionary<Statistics, int> GetBaseStats()
         {   
             return new Dictionary<Statistics, int> {
-                {Statistics.Strength,   8}, 
-                {Statistics.Magic,      10},
-                {Statistics.Endurance,  7}, 
-                {Statistics.Agility,    8}, 
-                {Statistics.Luck,       9}
+                {Statistics.Strength,   5}, 
+                {Statistics.Magic,      2},
+                {Statistics.Endurance,  8}, 
+                {Statistics.Agility,    7}, 
+                {Statistics.Luck,       5}
             };       
         }
 

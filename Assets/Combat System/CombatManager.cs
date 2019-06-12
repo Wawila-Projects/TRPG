@@ -77,7 +77,6 @@ namespace Assets.CombatSystem {
             Debug.Log ($"Basic Attack: {attacker.Name} vs {defender.Name} - {result}: {resolvedDamage}");
         }
 
-        // TODO: Fix spell damage. Defensse vs Attack
         public bool SpellAttack (Character attacker, Character defender, OffensiveSpell spell) {
             if (attacker == null || defender == null) return false;
             if (!attacker.IsInRange (defender)) return false;
@@ -90,7 +89,6 @@ namespace Assets.CombatSystem {
             var didCritical = false;
             var damage = 0;
             switch (spell) {
-                // TODO: Add Critical Chance and Critical on weak
                 case PhysicalSpell physicalSpell:
                     for (var i = 0; i < physicalSpell.HitCount; i++) {
                         damage += PhysicalAttack (attacker, defender, physicalSpell);
