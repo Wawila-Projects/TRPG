@@ -13,17 +13,17 @@ namespace Assets.Personas.Priestess {
         public override Elements InheritanceElement => Elements.Almighty;
 
         protected override void Awake() {
-            Level = 15;
+            Level = 1;
             base.Awake();
         }
         protected override IDictionary<Statistics, int> GetBaseStats()
         {   
             return new Dictionary<Statistics, int> {
-                {Statistics.Strength,   8}, 
-                {Statistics.Magic,      15},
-                {Statistics.Endurance,  11}, 
-                {Statistics.Agility,    8}, 
-                {Statistics.Luck,       10}
+                {Statistics.Strength,   5}, 
+                {Statistics.Magic,      10},
+                {Statistics.Endurance,  5}, 
+                {Statistics.Agility,    5}, 
+                {Statistics.Luck,       8}
             };       
         }
 
@@ -37,15 +37,15 @@ namespace Assets.Personas.Priestess {
         {
             return new List<SpellBase> {
                 SpellLexicon.Fire.Agi, 
-                SpellLexicon.Fire.Maragi, 
+                SpellLexicon.Recovery.Dia, 
             };
         }
 
         protected override Dictionary<int, SpellBase> GetLockedSpells()
         {
             return new Dictionary<int, SpellBase> {
-                {21, SpellLexicon.Fire.Agilao},
-                {39, SpellLexicon.Fire.Maragion}
+                {8, SpellLexicon.Recovery.Media},
+                {15, SpellLexicon.Fire.Maragi},
             };
         }
     }

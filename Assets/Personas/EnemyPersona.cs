@@ -12,28 +12,28 @@ namespace Assets.Personas {
         public override Elements InheritanceElement => Elements.Almighty;
 
         protected override void Awake() {
-            Level = 4;
+            Level = 2;
             base.Awake();
         }
         protected override IDictionary<Statistics, int> GetBaseStats()
         {   
             return new Dictionary<Statistics, int> {
-                {Statistics.Strength,   5}, 
-                {Statistics.Magic,      3},
-                {Statistics.Endurance,  3}, 
-                {Statistics.Agility,    4}, 
-                {Statistics.Luck,       4}
+                {Statistics.Strength,   8}, 
+                {Statistics.Magic,      10},
+                {Statistics.Endurance,  7}, 
+                {Statistics.Agility,    8}, 
+                {Statistics.Luck,       9}
             };       
         }
 
         protected override void SetResistances()
         {
-            Resistances[Elements.Elec] = ResistanceModifiers.Weak;
-            Resistances[Elements.Wind] = ResistanceModifiers.Weak;
-            Resistances[Elements.Fire] = ResistanceModifiers.Weak;
-            Resistances[Elements.Ice] = ResistanceModifiers.Weak;
-            Resistances[Elements.Physical] = ResistanceModifiers.Weak;
-            Resistances[Elements.Almighty] = ResistanceModifiers.Weak;
+        //     Resistances[Elements.Elec] = ResistanceModifiers.Weak;
+        //     Resistances[Elements.Wind] = ResistanceModifiers.Weak;
+        //     Resistances[Elements.Fire] = ResistanceModifiers.Weak;
+        //     Resistances[Elements.Ice] = ResistanceModifiers.Weak;
+        //     Resistances[Elements.Physical] = ResistanceModifiers.Weak;
+        //     Resistances[Elements.Almighty] = ResistanceModifiers.Weak;
         }
 
         protected override List<SpellBase> GetBaseSpellbook()

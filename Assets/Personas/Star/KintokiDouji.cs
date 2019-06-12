@@ -13,17 +13,17 @@ namespace Assets.Personas.Star {
         public override Elements InheritanceElement => Elements.Almighty;
 
         protected override void Awake() {
-            Level = 35;
+            Level = 1;
             base.Awake();
         }
         protected override IDictionary<Statistics, int> GetBaseStats()
         {   
             return new Dictionary<Statistics, int> {
-                {Statistics.Strength,   24}, 
-                {Statistics.Magic,      25},
-                {Statistics.Endurance,  20}, 
-                {Statistics.Agility,    22}, 
-                {Statistics.Luck,       16}
+                {Statistics.Strength,   6}, 
+                {Statistics.Magic,      8},
+                {Statistics.Endurance,  5}, 
+                {Statistics.Agility,    4}, 
+                {Statistics.Luck,       9}
             };       
         }
 
@@ -36,14 +36,16 @@ namespace Assets.Personas.Star {
         protected override List<SpellBase> GetBaseSpellbook()
         {
             return new List<SpellBase> {
-                SpellLexicon.Ice.Bufula, 
+                SpellLexicon.Ice.Bufu, 
+                SpellLexicon.Recovery.Dia, 
             };
         }
 
         protected override Dictionary<int, SpellBase> GetLockedSpells()
         {
             return new Dictionary<int, SpellBase> {
-                {38, SpellLexicon.Ice.Mabufula},
+                {8, SpellLexicon.Recovery.AmritaDrop},
+                {15, SpellLexicon.Ice.Mabufu},
             };
         }
     }

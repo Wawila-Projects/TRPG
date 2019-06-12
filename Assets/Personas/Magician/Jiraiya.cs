@@ -12,17 +12,17 @@ namespace Assets.Personas.Magician {
         public override Elements InheritanceElement => Elements.Almighty;
 
         protected override void Awake() {
-            Level = 4;
+            Level = 1;
             base.Awake();
         }
         protected override IDictionary<Statistics, int> GetBaseStats()
         {   
             return new Dictionary<Statistics, int> {
-                {Statistics.Strength,   5}, 
-                {Statistics.Magic,      3},
-                {Statistics.Endurance,  3}, 
-                {Statistics.Agility,    4}, 
-                {Statistics.Luck,       4}
+                {Statistics.Strength,   6}, 
+                {Statistics.Magic,      9},
+                {Statistics.Endurance,  7}, 
+                {Statistics.Agility,    8}, 
+                {Statistics.Luck,       5}
             };       
         }
 
@@ -43,9 +43,8 @@ namespace Assets.Personas.Magician {
         protected override Dictionary<int, SpellBase> GetLockedSpells()
         {
             return new Dictionary<int, SpellBase> {
-                {14, SpellLexicon.Physical.SonicPunch},
-                {18, SpellLexicon.Wind.Magaru},
-                {29, SpellLexicon.Wind.Garula}
+                {10, SpellLexicon.Wind.Magaru},
+                {15, SpellLexicon.Wind.Garula}
             };
         }
     }

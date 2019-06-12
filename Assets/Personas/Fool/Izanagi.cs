@@ -19,11 +19,11 @@ namespace Assets.Personas.Fool {
         protected override IDictionary<Statistics, int> GetBaseStats()
         {   
             return new Dictionary<Statistics, int> {
-                {Statistics.Strength,   2}, 
-                {Statistics.Magic,      2},
-                {Statistics.Endurance,  2}, 
-                {Statistics.Agility,    3}, 
-                {Statistics.Luck,       1}
+                {Statistics.Strength,   7}, 
+                {Statistics.Magic,      8},
+                {Statistics.Endurance,  8}, 
+                {Statistics.Agility,    6}, 
+                {Statistics.Luck,       7}
             };       
         }
 
@@ -31,7 +31,6 @@ namespace Assets.Personas.Fool {
         {
             Resistances[Elements.Curse] = ResistanceModifiers.Resist;
             Resistances[Elements.Ice] = ResistanceModifiers.Weak;
-            Resistances[Elements.Bless] = ResistanceModifiers.Weak;
         }
 
         protected override List<SpellBase> GetBaseSpellbook()
@@ -46,7 +45,8 @@ namespace Assets.Personas.Fool {
         protected override Dictionary<int, SpellBase> GetLockedSpells()
         {
             return new Dictionary<int, SpellBase> {
-                
+                {8, SpellLexicon.Elec.Mazio},
+                {15, SpellLexicon.Physical.SonicPunch},
             };
         }
     }

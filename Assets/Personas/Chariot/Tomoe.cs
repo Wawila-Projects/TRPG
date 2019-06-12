@@ -14,17 +14,17 @@ namespace Assets.Personas.Chariot
         public override Elements InheritanceElement => Elements.Almighty;
 
         protected override void Awake() {
-            Level = 4;
+            Level = 1;
             base.Awake();
         }
         protected override IDictionary<Statistics, int> GetBaseStats()
         {   
             return new Dictionary<Statistics, int> {
-                {Statistics.Strength,  4}, 
-                {Statistics.Magic,     4},
-                {Statistics.Endurance, 4}, 
-                {Statistics.Agility,   2}, 
-                {Statistics.Luck,      3}
+                {Statistics.Strength,  7}, 
+                {Statistics.Magic,     9},
+                {Statistics.Endurance, 6}, 
+                {Statistics.Agility,   7}, 
+                {Statistics.Luck,      8}
             };       
         }
 
@@ -37,6 +37,7 @@ namespace Assets.Personas.Chariot
         protected override List<SpellBase> GetBaseSpellbook()
         {
             return new List<SpellBase> {
+                SpellLexicon.Ice.Bufu,
                 SpellLexicon.Physical.Skewer, 
             };
         }
@@ -44,7 +45,8 @@ namespace Assets.Personas.Chariot
         protected override Dictionary<int, SpellBase> GetLockedSpells()
         {
             return new Dictionary<int, SpellBase> {
-                {6, SpellLexicon.Ice.Bufu},
+                {8, SpellLexicon.Ice.Mabufu},
+                {15, SpellLexicon.Physical.SonicPunch},
             };
         }
     }

@@ -13,17 +13,17 @@ namespace Assets.Personas.Emperor {
         public override Elements InheritanceElement => Elements.Almighty;
 
         protected override void Awake() {
-            Level = 25;
+            Level = 1;
             base.Awake();
         }
         protected override IDictionary<Statistics, int> GetBaseStats()
         {   
             return new Dictionary<Statistics, int> {
-                {Statistics.Strength,   20}, 
-                {Statistics.Magic,      11},
-                {Statistics.Endurance,  17}, 
-                {Statistics.Agility,    15}, 
-                {Statistics.Luck,       14}
+                {Statistics.Strength,   9}, 
+                {Statistics.Magic,      5},
+                {Statistics.Endurance,  9}, 
+                {Statistics.Agility,    4}, 
+                {Statistics.Luck,       5}
             };       
         }
 
@@ -36,16 +36,16 @@ namespace Assets.Personas.Emperor {
         protected override List<SpellBase> GetBaseSpellbook()
         {
             return new List<SpellBase> {
-                SpellLexicon.Elec.Mazio, 
-                SpellLexicon.Elec.Zionga, 
+                SpellLexicon.Physical.Cleave, 
+                SpellLexicon.Elec.Zio, 
             };
         }
 
         protected override Dictionary<int, SpellBase> GetLockedSpells()
         {
             return new Dictionary<int, SpellBase> {
-                {40, SpellLexicon.Elec.Mazionga},
-                {54, SpellLexicon.Elec.Ziodyne},
+                {8, SpellLexicon.Physical.SingleShot},
+                {15, SpellLexicon.Elec.Mazio},
             };
         }
     }
