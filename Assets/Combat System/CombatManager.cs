@@ -16,17 +16,27 @@ namespace Assets.CombatSystem {
 
         public void BasicAttack (Character attacker, Character defender) {
             if (attacker == null || defender == null) return;
-            if (!attacker.IsInRange (defender)) return;
+            if (!attacker.IsInMeleeRange (defender)) return;
             // TODO Check for miss attacks
-
+            
             var attackPower = 0;
+            var accuracy = 0f;
             switch (attacker) {
                 case Player playerAttacker:
                     attackPower = playerAttacker.Equipment.AttackPower;
+                    accuracy = playerAttacker.Equipment.Accuracy;
                     break;
                 case Enemy enemyAttacker:
                     attackPower = enemyAttacker.BasicAttack;
+                    accuracy = enemyAttacker.Accuracy;
                     break;
+            }
+
+            if (!SpellDidHit(attacker, defender, accuracy/100f)) {
+                attacker.StatusEffect.SetStatusEffect(StatusConditions.Down);
+                attacker.TurnFinished = true;
+                Debug.Log ($"Basic Attack Missed: {attacker.Name} vs {defender.Name}");
+                return;
             }
 
             var damage = BasicAttackDamageCalculation (attacker, defender, attackPower);
