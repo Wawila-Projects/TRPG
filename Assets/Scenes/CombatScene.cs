@@ -28,10 +28,10 @@ namespace Assets.Scenes {
                 character.Location = tile;
                 character.transform.position = tile.transform.position;
 
-                var levelDifference = 60 - character.Level;
-                for(var j = 0; j < levelDifference; j++) {
-                    character.LevelUp();
-                }
+                // var levelDifference = 60 - character.Level;
+                // for(var j = 0; j < levelDifference; j++) {
+                //     character.LevelUp();
+                // }
             }
         }
     }

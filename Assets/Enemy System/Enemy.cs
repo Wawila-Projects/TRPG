@@ -10,15 +10,11 @@ namespace Assets.EnemySystem
     public class Enemy : Character
     {
         public int BasicAttack;
+        public int Accuracy;
         public Tile Destiny;
         public Player Target;
         public bool isBoss;
-        
-        protected override void OnAwake()
-        {
-            BasicAttack = 100;
-        }
-
+            
         void Update()
         {
             if (Destiny != null)

@@ -9,17 +9,8 @@ namespace Assets.PlayerSystem
 {
     public class Player: Character
     {
-        public Equipment Equipment;
+        public Equipment Equipment = new Equipment();
         public bool IsMoving;
-        
-        protected override void OnAwake() {
-            Equipment = new Equipment
-            {
-                Armor = 10,
-                AttackPower = 100,
-                Accuracy = 10
-            };
-        }
         
         public void Move(Tile destination, Action<bool> completion = null) {
             StartCoroutine(TakeStep());

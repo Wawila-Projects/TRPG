@@ -69,6 +69,7 @@ namespace Assets.SpellCastingSystem {
 
             target.CurrentHP = (int) Math.Ceiling (target.Hp * spell.PercentageLifeRecovered);
             target.IsDead = false;
+            target.gameObject.GetComponent<UnityEngine.Renderer>().enabled = true;
 
             UnityEngine.Debug.Log ($"{target.Name} revived!");
         }

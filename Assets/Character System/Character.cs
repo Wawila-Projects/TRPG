@@ -46,6 +46,7 @@ namespace Assets.CharacterSystem
                 }
                 _currentHP = 0;
                 IsDead = true;
+                GetComponent<Renderer>().enabled = false;
             }
         }
 
@@ -73,13 +74,13 @@ namespace Assets.CharacterSystem
 
             Level = Persona.Level;
             Name = gameObject.name;
-            Hp = 100;
-            Sp = 75;
             Movement = 3;
             CurrentMovement = Movement;
+            
 
             CurrentHP = Hp;
-            
+            CurrentSP = Sp;
+
             IsRange = false;
             WeaponRange = IsRange ? 2 : 1;
             OnAwake();
@@ -96,8 +97,8 @@ namespace Assets.CharacterSystem
             var lostHp = Hp - CurrentHP;
             var lostSp = Sp - CurrentSP;
 
-            Hp = Mathf.RoundToInt(Hp * 1.1f);
-            Sp = Mathf.RoundToInt(Sp * 1.1f);
+            Hp += 4;
+            Sp += 3;
 
             CurrentHP = Hp - lostHp;
             CurrentSP = Sp - lostSp;
@@ -124,6 +125,10 @@ namespace Assets.CharacterSystem
         public Character ClonePlayer()
         {
             return GetComponent<Character>().gameObject.GetComponent<Character>();
+        }
+
+        public bool IsInMeleeRange(Character other) {
+            return Location.Neighbors.Any( t => t == other.Location);
         }
 
         public bool IsInRange(Character other)
