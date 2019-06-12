@@ -5,6 +5,7 @@ using Assets.CombatSystem;
 using Assets.Enums;
 using Assets.PlayerSystem;
 using Assets.Spells;
+using Assets.UI;
 using Asstes.CharacterSystem;
 
 namespace Assets.SpellCastingSystem {
@@ -31,7 +32,7 @@ namespace Assets.SpellCastingSystem {
                         CastReviveSpell (reviveSpell, player);
                     }
                     if (spell is IAssitSpell assistSpell) {
-                        CastAssistSpell (assistSpell, targets);
+                        CastAssistSpell (assistSpell, targets, spell.Name);
                     }
                     break;
             }
@@ -57,11 +58,12 @@ namespace Assets.SpellCastingSystem {
             }
         }
 
-        private void CastAssistSpell (IAssitSpell spell, List<Character> targets) {
+        private void CastAssistSpell (IAssitSpell spell, List<Character> targets, string name) {
             foreach (var target in targets) {
                 foreach (var statusConditoin in spell.CureableStatusConditions) {
                     target.StatusEffect.RemoveStatusEffect (statusConditoin);
                 }
+                UIDamageText.Create(name, target.gameObject, Elements.Recovery);
             }
         }
         private void CastReviveSpell (IReviveSpell spell, Player target) {
@@ -71,14 +73,14 @@ namespace Assets.SpellCastingSystem {
             target.IsDead = false;
             target.gameObject.GetComponent<UnityEngine.Renderer>().enabled = true;
 
-            UnityEngine.Debug.Log ($"{target.Name} revived!");
+            UIDamageText.Create($"{target.Name} revived!", target.gameObject, Elements.Recovery);
         }
 
         private void CastHealingSpell (IHealingSpell spell, Player caster, List<Character> targets) {
             if (spell.FullHeal) {
                 targets.ForEach (t => {
                     t.CurrentHP = t.Hp;
-                    UnityEngine.Debug.Log ($"{t.Name} fully healed!");
+                    UIDamageText.Create($"+{t.Hp}", t.gameObject, Elements.Recovery);
                 });
                 return;
             }
@@ -86,8 +88,7 @@ namespace Assets.SpellCastingSystem {
             foreach (var target in targets) {
                 var amount = spell.HealingPower * CombatManager.PowerVariance (caster.Persona.Luck);
                 target.CurrentHP += (int) Math.Ceiling (amount);
-
-                UnityEngine.Debug.Log ($"{target.Name} healed for {amount}!");
+                UIDamageText.Create($"+{(int) Math.Ceiling (amount)}", target.gameObject, Elements.Recovery);
             }
         }
 

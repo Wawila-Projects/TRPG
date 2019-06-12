@@ -60,13 +60,13 @@ namespace Assets.CombatSystem {
                 damage = Mathf.CeilToInt (damage * 1.3f);
             }
 
-            var (resolvedDamage, result) = ResolveResistances (attacker, defender, Elements.Physical, damage);
+            var resolvedDamage = ResolveResistances (attacker, defender, Elements.Physical, damage);
 
-            var resistance = defender.Persona.Resistances[Elements.Physical];
 
             attacker.DeactivateOneMore ();
             attacker.TurnFinished = true;
 
+            var resistance = defender.Persona.Resistances[Elements.Physical];
             if (resistance == ResistanceModifiers.Weak || didCritical) {
                 if (defender.StatusEffect == StatusConditions.Down) {
                     defender.StatusEffect.SetStatusEffect (StatusConditions.Dizzy);
@@ -76,7 +76,9 @@ namespace Assets.CombatSystem {
                 }
             }
 
-            Debug.Log ($"Basic Attack: {attacker.Name} vs {defender.Name} - {result}: {resolvedDamage}");
+            var anchor = resistance == ResistanceModifiers.Reflect ? defender.gameObject : attacker.gameObject;
+            var text = $"{(resistance == ResistanceModifiers.Absorb ? "+" : "")}{resolvedDamage}";
+            UIDamageText.Create(text, anchor, Elements.Physical);
         }
 
         public bool SpellAttack (Character attacker, Character defender, OffensiveSpell spell) {
@@ -84,7 +86,7 @@ namespace Assets.CombatSystem {
             if (!attacker.IsInRange (defender)) return false;
             if (!spell.CanBeCasted (attacker)) return false;
             if (!SpellDidHit (attacker, defender, spell.Accuracy)) {
-                Debug.Log ($"{spell.Name}: {attacker.Name} vs {defender.Name} - Missed!");
+                UIDamageText.Create("Missed", defender.gameObject);
                 return false;
             }
 
@@ -98,12 +100,14 @@ namespace Assets.CombatSystem {
 
                     didCritical = Random.value <= physicalSpell.CriticalChance;
 
-                    if (defender is Enemy enemy && enemy.isBoss) {
+                    if (defender is Enemy enemy && (enemy.isBoss 
+                        || enemy.Persona.Resistances[Elements.Physical] <= ResistanceModifiers.Resist)) {
                         didCritical = false;
                     }
 
                     if (didCritical) {
                         damage = Mathf.CeilToInt (damage * 1.6f);
+                        UIDamageText.Create("Critical Hit!", defender.gameObject);
                     }
 
                     break;
@@ -121,18 +125,14 @@ namespace Assets.CombatSystem {
                 damage = Mathf.CeilToInt (damage * 1.3f);
             }
 
-            var (resolvedDamage, result) = ResolveResistances (attacker, defender, spell.Element, damage);
-            Debug.Log ($"{spell.Name}: {attacker.Name} vs {defender.Name} - {result}: {resolvedDamage}");
+            var resolvedDamage = ResolveResistances (attacker, defender, spell.Element, damage);
+            
 
+            var resistance = defender.Persona.Resistances[spell.Element];
+            var anchor = resistance == ResistanceModifiers.Reflect ? attacker.gameObject : defender.gameObject;
+            var text = $"{(resistance == ResistanceModifiers.Absorb ? "+" : "")}{resolvedDamage}";
+            UIDamageText.Create(text, anchor, resistance == ResistanceModifiers.Absorb ? Elements.Recovery : spell.Element);
 
-            var position = defender.transform.position;
-            if (result == "Reflected") {
-                position = attacker.transform.position;
-            }
-
-            position = Camera.main.WorldToScreenPoint(position);
-            var damageText = GameObject.Instantiate(UiManager.UI.DamageText, position, Quaternion.identity, UiManager.UI.Canvas.transform);
-            damageText.GetComponent<DamageText> ().Create($"{result}: {resolvedDamage}", attacker.gameObject);
             return didCritical;
         }
 
@@ -153,7 +153,7 @@ namespace Assets.CombatSystem {
                 damage = Mathf.CeilToInt (damage * 1.3f);
             }
 
-            Debug.Log ($"All Out Attack {defender.Name} - Damage: {damage}");
+            UIDamageText.Create($"AOA! {damage}", defender.gameObject, Elements.Almighty);
             defender.IsSurrounded = true;
             defender.CurrentHP -= damage;
         }
@@ -254,29 +254,29 @@ namespace Assets.CombatSystem {
             return modifier;
         }
 
-        private (int damage, string result) ResolveResistances (Character attacker, Character defender, Elements element, int damage) {
+        private int ResolveResistances (Character attacker, Character defender, Elements element, int damage) {
             switch (defender.Persona.Resistances[element]) {
                 case ResistanceModifiers.Resist:
                     var resisted = Mathf.CeilToInt (damage * 0.6f);
                     defender.CurrentHP -= resisted;
-                    return (resisted, "Damage");
+                    return resisted;
                 case ResistanceModifiers.Weak:
                     var aumented = Mathf.CeilToInt (damage * 1.6f);
                     defender.CurrentHP -= aumented;
-                    return (aumented, "Damage");
+                    return aumented;
                 case ResistanceModifiers.Reflect:
                     attacker.CurrentHP -= damage;
-                    return (0, "Reflected");
+                    return 0;
                 case ResistanceModifiers.Absorb:
                     defender.CurrentHP += damage;
-                    return (0, "Absorbed");
+                    return damage;
                 case ResistanceModifiers.None:
                     defender.CurrentHP -= damage;
-                    return (damage, "Damage");
+                    return damage;
                 case ResistanceModifiers.Block:
-                    return (0, "Blocked");
+                    return 0;
             }
-            return (0, "");
+            return 0;
         }
     }
 }

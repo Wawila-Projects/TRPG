@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using Assets.CharacterSystem;
+using Assets.Enums;
 using Assets.GameSystem;
 using Assets.PlayerSystem;
 using Assets.Spells;
@@ -49,7 +50,23 @@ namespace Asstes.CharacterSystem {
             // var action = StatusEffectActions[statusEffect];
             // ActiveCoroutine = StartCoroutine (ActiveStatusEffect (action));
 
-            Debug.Log($"{Character.Name} inflicted with {statusEffect.ToString()}");
+
+            var text = $"{statusEffect.ToString()}";
+
+            var element = Elements.Ailment;
+            switch(statusEffect) {
+                case StatusConditions.Shock:
+                    element = Elements.Elec;
+                    break;
+                case StatusConditions.Burn:
+                    element = Elements.Fire;
+                    break;
+                case StatusConditions.Freeze:
+                    element = Elements.Ice;
+                    break;
+            }
+
+            UIDamageText.Create(text, Character.gameObject, element);
         }
 
         public bool RemoveStatusEffect (StatusConditions statusEffect) {
@@ -58,7 +75,6 @@ namespace Asstes.CharacterSystem {
             if (ActiveCoroutine == null) return false;
             StopCoroutine (ActiveCoroutine);
             CurrentEffect = StatusConditions.None;
-            Debug.Log($"{Character.Name} cured of {statusEffect.ToString()}");
             return true;
         }
 
