@@ -7,6 +7,8 @@ using Random = UnityEngine.Random;
 using System.Linq;
 using Assets.Spells;
 using Asstes.CharacterSystem;
+using Assets.UI;
+using Assets.GameSystem;
 
 namespace Assets.CombatSystem {
     public sealed class CombatManager {
@@ -122,6 +124,15 @@ namespace Assets.CombatSystem {
             var (resolvedDamage, result) = ResolveResistances (attacker, defender, spell.Element, damage);
             Debug.Log ($"{spell.Name}: {attacker.Name} vs {defender.Name} - {result}: {resolvedDamage}");
 
+
+            var position = defender.transform.position;
+            if (result == "Reflected") {
+                position = attacker.transform.position;
+            }
+
+            position = Camera.main.WorldToScreenPoint(position);
+            var damageText = GameObject.Instantiate(UiManager.UI.DamageText, position, Quaternion.identity, UiManager.UI.Canvas.transform);
+            damageText.GetComponent<DamageText> ().Create($"{result}: {resolvedDamage}", attacker.gameObject);
             return didCritical;
         }
 
