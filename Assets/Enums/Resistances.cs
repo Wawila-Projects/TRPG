@@ -1,7 +1,10 @@
-namespace Assets.Enums
-{
-    public enum ResistanceModifiers
-    {
-        None, Block, Reflect, Absorb, Resist, Weak
+namespace Assets.Enums {
+    public enum ResistanceModifiers {
+        None,
+        Weak,
+        Resist,
+        Block,
+        Reflect,
+        Absorb,
     }
 }

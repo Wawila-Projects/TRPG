@@ -7,7 +7,7 @@ namespace Assets.Spells.RecoverySpells
         public override string Description => "Slightly restores 1 ally's HP.";
         public override int Cost => 3;
         public override bool IsMultitarget => false;
-        public int HealingPower => 75;
+        public int HealingPower => 50;
         public bool FullHeal => false;
     }
 }
