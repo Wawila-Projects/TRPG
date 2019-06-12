@@ -19,14 +19,15 @@ namespace Assets.Spells
 
         public override string ToString() => $"{Id} | {Element.ToString()} | {Name}";
 
-        public virtual int HandleCostReduction(Character character)
+        public virtual void HandleCostReduction(Character character)
         {
-            var cost = Cost;
-            if (IsPhysical) {
-                cost = (int) Math.Ceiling(character.Hp * (Cost/100f));
+            if (!IsPhysical) {
+                character.CurrentSP -= Cost;
+                return;
             }
-            character.CurrentSP -= cost;
-            return cost;
+
+            var cost = (int) Math.Ceiling(character.Hp * (Cost/100f));
+            character.CurrentHP -= cost;
         }
 
         public virtual bool CanBeCasted(Character character)
