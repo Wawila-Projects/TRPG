@@ -37,7 +37,7 @@ namespace Assets.CombatSystem {
             if (!SpellDidHit(attacker, defender, accuracy/100f)) {
                 attacker.StatusEffect.SetStatusEffect(StatusConditions.Down);
                 attacker.TurnFinished = true;
-                Debug.Log ($"Basic Attack Missed: {attacker.Name} vs {defender.Name}");
+                UIDamageText.Create("Missed", defender.gameObject);
                 return;
             }
 
@@ -76,7 +76,7 @@ namespace Assets.CombatSystem {
                 }
             }
 
-            var anchor = resistance == ResistanceModifiers.Reflect ? defender.gameObject : attacker.gameObject;
+            var anchor = resistance == ResistanceModifiers.Reflect ? attacker.gameObject : defender.gameObject;
             var text = $"{(resistance == ResistanceModifiers.Absorb ? "+" : "")}{resolvedDamage}";
             UIDamageText.Create(text, anchor, Elements.Physical);
         }
