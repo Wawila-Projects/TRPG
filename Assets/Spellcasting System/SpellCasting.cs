@@ -9,6 +9,9 @@ using Assets.UI;
 using Asstes.CharacterSystem;
 
 namespace Assets.SpellCastingSystem {
+
+    // TODO: Fix Lose turn when not enough SP
+    
     public class SpellCasting {
         private Random random = new Random ();
         private const double ElementalAilmentChance = 0.1d;

@@ -24,7 +24,7 @@ namespace Assets.EnemySystem
         {
             foreach (var enemy in Enemies)
             {
-                if (enemy.IsDead)
+                if (enemy.IsDead || enemy.TurnFinished)
                     continue;
 
                 enemy.Act();
