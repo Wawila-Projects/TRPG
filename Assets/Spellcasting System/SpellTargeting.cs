@@ -99,7 +99,8 @@ namespace Assets.SpellCastingSystem {
         }
 
         private bool EscapeInput () {
-            if (!Input.GetKey (KeyCode.Escape))
+            if (!Input.GetKey (KeyCode.Escape) &&
+                !Input.GetMouseButtonDown(1))
                 return false;
 
             SelectedTile = null;

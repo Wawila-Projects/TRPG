@@ -24,7 +24,8 @@ namespace Assets.InputSystem {
         }
 
         private void EscapeInput () {
-            if (!Input.GetKeyDown (KeyCode.Escape)) return;
+            if (!Input.GetKeyDown (KeyCode.Escape) && 
+                !Input.GetMouseButtonDown(1)) return;
 
             var cameraControl = Camera.main.gameObject.GetComponent<MainCameraController> ();
             if (cameraControl != null) {
