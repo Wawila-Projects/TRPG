@@ -46,7 +46,7 @@ namespace Assets.CharacterSystem
                 }
                 _currentHP = 0;
                 IsDead = true;
-                GetComponent<Renderer>().enabled = false;
+                Die();
             }
         }
 
@@ -66,6 +66,7 @@ namespace Assets.CharacterSystem
 
         protected virtual void OnAwake() { }
         protected virtual void OnUpdate() { }
+        public abstract void Die ();
         
         void Awake() {
             if (StatusEffect == null) {
@@ -89,7 +90,7 @@ namespace Assets.CharacterSystem
         void Update() {
             OnUpdate();
         }
-        
+
        public void LevelUp() {
             var changes = Persona.LevelUp();
             Level = changes.newLevel;

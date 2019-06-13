@@ -12,6 +12,11 @@ namespace Assets.PlayerSystem
         public Equipment Equipment = new Equipment();
         public bool IsMoving;
         
+        public override void Die () {
+            //TODO Revive!
+            transform.position = new Vector3(transform.position.x,  -6, transform.position.z);
+        }
+
         public void Move(Tile destination, Action<bool> completion = null) {
             StartCoroutine(TakeStep());
 

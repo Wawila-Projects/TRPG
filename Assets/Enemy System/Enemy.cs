@@ -15,6 +15,8 @@ namespace Assets.EnemySystem
         public Player Target;
         public bool isBoss;
             
+
+        // TODO: Fix enemies going to same position
         void Update()
         {
             if (Destiny != null)
@@ -28,6 +30,12 @@ namespace Assets.EnemySystem
             CombatManager.Manager.BasicAttack(this, Target);
             Target = null;
             TurnFinished = true;
+        }
+
+        public override void Die () {
+            Location.Occupant = null;
+            Location = null;
+            GetComponent<Renderer>().enabled = false;
         }
 
         public void Act()
