@@ -36,7 +36,7 @@ namespace Assets.GameSystem {
             if (zooming) return;
             HandleZoom(Input.GetAxis("Mouse ScrollWheel"));
             HandleDrag();
-
+            HandleKeyInputs();
         }
 
         public void TargetCharacter(Character character) {
@@ -105,6 +105,19 @@ namespace Assets.GameSystem {
             transform.position = NewPosition;
         }
        
+        private void HandleKeyInputs() {
+            var moveDirection = new Vector3(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"), 0);
+
+            if (moveDirection.x == 0 && moveDirection.y == 0) return;
+
+            NewPosition = moveDirection + transform.position;
+
+             if (PointIsInsideBounds(ref NewPosition, CameraBounds)) {
+                transform.position = NewPosition;
+            } 
+        }
+
+
         private void HandleDrag() {
             if (Input.GetMouseButtonDown (0)) {
                 MouseStart = new Vector3(Input.mousePosition.x, Input.mousePosition.y, Input.mousePosition.z);
