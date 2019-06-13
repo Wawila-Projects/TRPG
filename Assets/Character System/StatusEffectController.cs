@@ -66,7 +66,7 @@ namespace Asstes.CharacterSystem {
                     break;
             }
 
-            UIDamageText.Create(text, Character.gameObject, element);
+            UIFloatingText.Create(text, Character.gameObject, element);
         }
 
         public bool RemoveStatusEffect (StatusConditions statusEffect) {

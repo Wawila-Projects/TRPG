@@ -11,7 +11,8 @@ using Asstes.CharacterSystem;
 namespace Assets.SpellCastingSystem {
 
     // TODO: Fix Lose turn when not enough SP
-    
+    // TODO: CanCastSpell() to check if has enough sp/hp
+
     public class SpellCasting {
         private Random random = new Random ();
         private const double ElementalAilmentChance = 0.1d;
@@ -66,7 +67,7 @@ namespace Assets.SpellCastingSystem {
                 foreach (var statusConditoin in spell.CureableStatusConditions) {
                     target.StatusEffect.RemoveStatusEffect (statusConditoin);
                 }
-                UIDamageText.Create(name, target.gameObject, Elements.Recovery);
+                UIFloatingText.Create(name, target.gameObject, Elements.Recovery);
             }
         }
         private void CastReviveSpell (IReviveSpell spell, Player target) {
@@ -74,16 +75,16 @@ namespace Assets.SpellCastingSystem {
 
             target.CurrentHP = (int) Math.Ceiling (target.Hp * spell.PercentageLifeRecovered);
             target.IsDead = false;
-            target.gameObject.GetComponent<UnityEngine.Renderer>().enabled = true;
+            target.transform.position = target.Location.transform.position;
 
-            UIDamageText.Create($"{target.Name} revived!", target.gameObject, Elements.Recovery);
+            UIFloatingText.Create($"{target.Name} revived!", target.gameObject, Elements.Recovery);
         }
 
         private void CastHealingSpell (IHealingSpell spell, Player caster, List<Character> targets) {
             if (spell.FullHeal) {
                 targets.ForEach (t => {
                     t.CurrentHP = t.Hp;
-                    UIDamageText.Create($"+{t.Hp}", t.gameObject, Elements.Recovery);
+                    UIFloatingText.Create($"+{t.Hp}", t.gameObject, Elements.Recovery);
                 });
                 return;
             }
@@ -91,7 +92,7 @@ namespace Assets.SpellCastingSystem {
             foreach (var target in targets) {
                 var amount = spell.HealingPower * CombatManager.PowerVariance (caster.Persona.Luck);
                 target.CurrentHP += (int) Math.Ceiling (amount);
-                UIDamageText.Create($"+{(int) Math.Ceiling (amount)}", target.gameObject, Elements.Recovery);
+                UIFloatingText.Create($"+{(int) Math.Ceiling (amount)}", target.gameObject, Elements.Recovery);
             }
         }
 

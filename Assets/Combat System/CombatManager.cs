@@ -19,8 +19,7 @@ namespace Assets.CombatSystem {
         public void BasicAttack (Character attacker, Character defender) {
             if (attacker == null || defender == null) return;
             if (!attacker.IsInMeleeRange (defender)) return;
-            // TODO Check for miss attacks
-            
+
             var attackPower = 0;
             var accuracy = 0f;
             switch (attacker) {
@@ -37,7 +36,7 @@ namespace Assets.CombatSystem {
             if (!SpellDidHit(attacker, defender, accuracy/100f)) {
                 attacker.StatusEffect.SetStatusEffect(StatusConditions.Down);
                 attacker.TurnFinished = true;
-                UIDamageText.Create("Missed", defender.gameObject);
+                UIFloatingText.Create("Missed", defender.gameObject);
                 return;
             }
 
@@ -78,7 +77,7 @@ namespace Assets.CombatSystem {
 
             var anchor = resistance == ResistanceModifiers.Reflect ? attacker.gameObject : defender.gameObject;
             var text = $"{(resistance == ResistanceModifiers.Absorb ? "+" : "")}{resolvedDamage}";
-            UIDamageText.Create(text, anchor, Elements.Physical);
+            UIFloatingText.Create(text, anchor, Elements.Physical);
         }
 
         public bool SpellAttack (Character attacker, Character defender, OffensiveSpell spell) {
@@ -86,7 +85,7 @@ namespace Assets.CombatSystem {
             if (!attacker.IsInRange (defender)) return false;
             if (!spell.CanBeCasted (attacker)) return false;
             if (!SpellDidHit (attacker, defender, spell.Accuracy)) {
-                UIDamageText.Create("Missed", defender.gameObject);
+                UIFloatingText.Create("Missed", defender.gameObject);
                 return false;
             }
 
@@ -107,7 +106,7 @@ namespace Assets.CombatSystem {
 
                     if (didCritical) {
                         damage = Mathf.CeilToInt (damage * 1.6f);
-                        UIDamageText.Create("Critical Hit!", defender.gameObject);
+                        UIFloatingText.Create("Critical Hit!", defender.gameObject);
                     }
 
                     break;
@@ -131,7 +130,7 @@ namespace Assets.CombatSystem {
             var resistance = defender.Persona.Resistances[spell.Element];
             var anchor = resistance == ResistanceModifiers.Reflect ? attacker.gameObject : defender.gameObject;
             var text = $"{(resistance == ResistanceModifiers.Absorb ? "+" : "")}{resolvedDamage}";
-            UIDamageText.Create(text, anchor, resistance == ResistanceModifiers.Absorb ? Elements.Recovery : spell.Element);
+            UIFloatingText.Create(text, anchor, resistance == ResistanceModifiers.Absorb ? Elements.Recovery : spell.Element);
 
             return didCritical;
         }
@@ -153,7 +152,7 @@ namespace Assets.CombatSystem {
                 damage = Mathf.CeilToInt (damage * 1.3f);
             }
 
-            UIDamageText.Create($"AOA! {damage}", defender.gameObject, Elements.Almighty);
+            UIFloatingText.Create($"AOA! {damage}", defender.gameObject, Elements.Almighty);
             defender.IsSurrounded = true;
             defender.CurrentHP -= damage;
         }

@@ -13,8 +13,7 @@ namespace Assets.PlayerSystem
         public bool IsMoving;
         
         public override void Die () {
-            //TODO Revive!
-            transform.position = new Vector3(transform.position.x,  -6, transform.position.z);
+            transform.position = new Vector3(transform.position.x,  -0.6f, transform.position.z);
         }
 
         public void Move(Tile destination, Action<bool> completion = null) {

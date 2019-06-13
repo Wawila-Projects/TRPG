@@ -11,15 +11,14 @@ using UnityEngine.UI;
 
 
 [RequireComponent (typeof (TextMeshPro))]
-class UIDamageText : MonoBehaviour {
-    private static Dictionary<GameObject, List<UIDamageText>> ShowingText = new Dictionary<GameObject, List<UIDamageText>> ();
+class UIFloatingText : MonoBehaviour {
+    private static Dictionary<GameObject, List<UIFloatingText>> ShowingText = new Dictionary<GameObject, List<UIFloatingText>> ();
 
     public TextMeshPro Text;
     public GameObject Anchor;
     public float FadeTime;
     public float ScrollSpeed;
     private float time;
-
     private bool ready;
 
     void Awake () { 
@@ -60,9 +59,9 @@ class UIDamageText : MonoBehaviour {
         StartCoroutine(WaitXSeconds(0.3f));  
     }
 
-    public static UIDamageText Create (string text, GameObject anchor, Elements? element = null) {
+    public static UIFloatingText Create (string text, GameObject anchor, Elements? element = null) {
         var floatingText = GameObject.Instantiate(UiManager.UI.DamageText);
-        var component =  floatingText.GetComponent<UIDamageText> ();
+        var component =  floatingText.GetComponent<UIFloatingText> ();
         component.init(text, anchor, element);
         
         return component;
@@ -130,26 +129,26 @@ class UIDamageText : MonoBehaviour {
         }
     }
     
-    private static void AddShowingText (GameObject key, UIDamageText value) {
-        if (UIDamageText.ShowingText.ContainsKey (key)) {
-            UIDamageText.ShowingText[key].Add (value);
+    private static void AddShowingText (GameObject key, UIFloatingText value) {
+        if (UIFloatingText.ShowingText.ContainsKey (key)) {
+            UIFloatingText.ShowingText[key].Add (value);
             return;
         }
-        UIDamageText.ShowingText[key] = new List<UIDamageText> () {
+        UIFloatingText.ShowingText[key] = new List<UIFloatingText> () {
             value
         };
     }
-    private static void RemoveShowingText (GameObject key, UIDamageText value) {
-        if (!UIDamageText.ShowingText.ContainsKey (key)) {
+    private static void RemoveShowingText (GameObject key, UIFloatingText value) {
+        if (!UIFloatingText.ShowingText.ContainsKey (key)) {
             return;
         }
 
-        UIDamageText.ShowingText[key].Remove (value);
+        UIFloatingText.ShowingText[key].Remove (value);
 
-        if (!UIDamageText.ShowingText[key].IsEmpty ()) {
+        if (!UIFloatingText.ShowingText[key].IsEmpty ()) {
             return;
         }
 
-        UIDamageText.ShowingText.Remove (key);
+        UIFloatingText.ShowingText.Remove (key);
     }
 }
