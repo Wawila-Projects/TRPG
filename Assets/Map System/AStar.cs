@@ -19,7 +19,7 @@ public static class AStar
             path = FindPath(start, goal, banned);
         }
 
-        paths.OrderBy((p) => p.Count);
+        paths = paths.OrderBy((p) => p.Count).ToList();
         return paths;
     }
     public static List<Tile> FindPath(Tile start, Tile goal, List<Tile> _banned = null)

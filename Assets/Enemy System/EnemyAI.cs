@@ -44,6 +44,7 @@ namespace Assets.EnemySystem {
         }
 
         public virtual (Player target, EnemyActions action, List<SpellBase> possibleSpells) NextTurnActions () {
+            // TODO: Maybe check if target is null
             var target = FindTarget ();
 
             var action = ActionProbability.GetResult ();
@@ -131,7 +132,6 @@ namespace Assets.EnemySystem {
 
                 return target;
             }
-
             
             var targetCategory = TargetCategory;
             if (TargetCategory == EnemyTargetCategory.Random) {
@@ -222,23 +222,17 @@ namespace Assets.EnemySystem {
             }
 
             Player FindClosest (IEnumerable<Player> list) {
-                Player closest = null;
-                foreach (var player in list) {
-                    if (player.IsDead)
-                        continue;
+                var playerList = list;
+                playerList = playerList.OrderBy( o => Enemy.DistanceFromCombatRange (o));
 
-                    if (closest == null) {
-                        closest = player;
-                        continue;
+                return playerList.FirstOrDefault(
+                    f => {
+                        var allOccupied = f.Location.Neighbors.TrueForAll( t => t.IsOccupied);
+                        if (!allOccupied) 
+                            return true;
+                        return f.Location.Neighbors.Contains(Enemy.Location);
                     }
-
-                    var targetDistance = Enemy.DistanceFromCombatRange (closest);
-                    var playerDistance = Enemy.DistanceFromCombatRange (player);
-
-                    if (playerDistance < targetDistance)
-                        closest = player;
-                }
-                return closest;
+                );
             }
         }
 

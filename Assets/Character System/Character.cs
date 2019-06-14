@@ -197,17 +197,20 @@ namespace Assets.CharacterSystem
                 CurrentMovement -= totalSteps;
                 return tile;
             }
-
             return null;
         }
 
         public Tile MoveToRange(Character other) {
+         try {
             var distance = DistanceFromCombatRange(other);
             if (distance > 0 )
                 return MoveTowards(other, distance);
             if (distance < 0) 
                 return MoveAway(other);
             return null;
+         } catch (System.InvalidOperationException) {
+             return null;
+         }
         }
     }
 }

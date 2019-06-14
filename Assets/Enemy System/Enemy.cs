@@ -50,8 +50,14 @@ namespace Assets.EnemySystem {
 
             var tileInRange = MoveToRange(ai.target);
 
-            //TODO: Fix this. Enemy should always do something;
-            if (tileInRange == null) {
+            while (tileInRange == null && CurrentMovement > 0) {
+                if (IsInRange(Target)) break;
+
+                --CurrentMovement;
+                tileInRange = MoveToRange(ai.target);
+            }
+
+            if (tileInRange == null && !IsInRange(Target)) {
                 IsSurrounded = false;
                 Target = null;
                 TurnFinished = true;
@@ -88,6 +94,11 @@ namespace Assets.EnemySystem {
         }
 
         public void Move (Tile destination, Action<bool> completion = null) {
+            if (destination == null) {
+                completion?.Invoke (false);
+                return;
+            }
+
             StartCoroutine (TakeStep ());
 
             IEnumerator TakeStep () {
