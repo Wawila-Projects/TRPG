@@ -1,106 +1,138 @@
-﻿using System.Linq;
+﻿using System;
+using System.Collections;
+using System.Linq;
+using Assets.CharacterSystem;
 using Assets.CombatSystem;
 using Assets.GameSystem;
-using Assets.CharacterSystem;
 using Assets.PlayerSystem;
+using Assets.Spells;
+using Assets.Utils;
 using UnityEngine;
 
-namespace Assets.EnemySystem
-{
-    public class Enemy : Character
-    {
+namespace Assets.EnemySystem {
+    public class Enemy : Character {
+
+        public EnemyAI AI;
         public int BasicAttack;
         public int Accuracy;
-        public Tile Destiny;
         public Player Target;
-        public bool isBoss;
-            
+        public bool IsBoss;
+        public bool IsMoving;
 
-        // TODO: Fix enemies going to same position
-        void Update()
-        {
-            if (Destiny != null)
-            {
-                Move();
-                return;
-            }
-
-            if (Target == null) return;
-
-            CombatManager.Manager.BasicAttack(this, Target);
-            Target = null;
-            TurnFinished = true;
-        }
+        protected override void OnAwake() => AI = new EnemyAI(this, EnemyAI.EnemyTargetCategory.Closest);
 
         public override void Die () {
             Location.Occupant = null;
             Location = null;
-            GetComponent<Renderer>().enabled = false;
+            GetComponent<Renderer> ().enabled = false;
         }
 
-        public void Act()
-        {
-            Player target = null;
-            foreach (var player in GameController.Manager.Players)
-            {
-                if (player.IsDead)
-                    continue;
+        public void Act () {
+            var ai = AI.NextTurnActions ();
 
-                if (target == null)
-                {
-                    target = player;
-                    continue;
-                }
+            Target = ai.target;
 
-                var targetDistance = DistanceFromCombatRange(target);
-                var playerDistance = DistanceFromCombatRange(player);
-
-                if (playerDistance < targetDistance)
-                    target = player;
-            }
-            ActOn(target);
-            TurnFinished = true;
-            IsSurrounded = false;
-        }
-
-        public void ActOn(Tile tile)
-        {
-            var distance = Location.GetDistance(tile);
-            if (!(distance > Movement)) return;
-            var path = AStar.FindPath(Location, tile);
-            Destiny = path[Movement] ?? path.First();
-        }
-
-        public void ActOn(Player player)
-        {
-            Destiny = MoveToRange(player);
-            Target = player;
-        }
-
-        public new Enemy ClonePlayer()
-        {
-            return GetComponent<Enemy>().gameObject.GetComponent<Enemy>();
-        }
-        private void Move()
-        {
-            var dest = Destiny.transform.position;
-            
-            if (transform.position != dest)
-            {
-                var destination = Vector3.MoveTowards(transform.position, dest, 5 * Time.deltaTime);
-                transform.position = destination;
+            if (Target == null) {
+                TurnFinished = true;
+                IsSurrounded = false;
                 return;
             }
 
-            Location.Occupant = null;
-            Destiny.Occupant = this;
-            Location = Destiny;
-            Destiny = null;
+            // TODO: Add movement actions
+            // if (ai.action == EnemyAI.EnemyActions.Stay) {
 
-            if (Target == null || DistanceFromCombatRange(Target) != 0)
-            {
+            // } else 
+            // if (ai.action == EnemyAI.EnemyActions.Disengage) {
+
+            // } else {
+                
+            // } 
+
+            var tileInRange = MoveToRange(ai.target);
+
+            //TODO: Fix this. Enemy should always do something;
+            if (tileInRange == null) {
+                IsSurrounded = false;
+                Target = null;
                 TurnFinished = true;
+                Debug.Log($"{Name} did NOTHING!");
+                return;
             }
+
+            Move (tileInRange, b => {
+                if (b || TurnFinished ||
+                    !IsInRange (Target)) {
+                    TurnFinished = true;
+                    IsSurrounded = false;
+                    return;
+                }
+
+                if (ai.action == EnemyAI.EnemyActions.BasicAttack) {
+                    CombatManager.Manager.BasicAttack (this, Target);
+                } else  {
+                    var spell = ai.possibleSpells.GetRandomValue();
+                    if (spell is OffensiveSpell offensiveSpell) {
+                        CombatManager.Manager.SpellAttack(this, Target, offensiveSpell);
+                    }
+                }
+
+                IsSurrounded = false;
+                Target = null;
+
+                if (OneMore.isActive) {
+                    Act();
+                } else {
+                    TurnFinished = true;
+                }
+            });
+        }
+
+        public void Move (Tile destination, Action<bool> completion = null) {
+            StartCoroutine (TakeStep ());
+
+            IEnumerator TakeStep () {
+                IsMoving = true;
+                while (transform.position != destination.transform.position) {
+                    transform.position = Vector3.MoveTowards (transform.position,
+                        destination.transform.position, 5 * Time.deltaTime);
+                    yield return new WaitForEndOfFrame ();
+                }
+
+                Location.Occupant = null;
+                destination.Occupant = this;
+                Location = destination;
+
+                var player = CheckForAllOutAttack ();
+                if (player != null) {
+                    player.IsSurrounded = true;
+                    TurnFinished = true;
+                    DeactivateOneMore ();
+                    CombatManager.Manager.AllOutAttack (player);
+                }
+
+                IsMoving = false;
+                completion?.Invoke (player != null);
+                yield break;
+            }
+
+            Player CheckForAllOutAttack (bool needsSixCount = false) {
+                foreach (var neighhbor in Location.Neighbors) {
+                    if (neighhbor.Occupant == null) continue;
+                    var player = neighhbor.Occupant as Player;
+                    if (player == null) continue;
+                    if (player.IsSurrounded) continue;
+
+                    if (needsSixCount || player.Location.Neighbors.Count == 6 &&
+                        player.Location.Neighbors.TrueForAll (tile => tile.Occupant is Enemy))
+                        return player;
+                }
+
+                return null;
+            }
+        }
+
+        public new Enemy ClonePlayer () {
+            return GetComponent<Enemy> ().gameObject.GetComponent<Enemy> ();
         }
     }
 }

@@ -32,17 +32,15 @@ namespace Assets.PlayerSystem
                 Location = destination;
 
                 var enemy = CheckForAllOutAttack ();
-                var didAttack = false;
                 if (enemy != null) {
                     enemy.IsSurrounded = true;
                     TurnFinished = true;
                     DeactivateOneMore();
                     CombatManager.Manager.AllOutAttack (enemy);
-                    didAttack = true;
                 }
                 
                 IsMoving = false;
-                completion?.Invoke(didAttack);
+                completion?.Invoke(enemy != null);
                 yield break;
             }
 

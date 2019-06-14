@@ -19,14 +19,16 @@ namespace Assets.EnemySystem {
                 CollectedInfo = new Dictionary<Player, HivemindInfo>();
             }
 
-            foreach(var player in GameController.Manager.Players) {
-                if (CollectedInfo.ContainsKey(player)) continue;
-                try {
-                    CollectedInfo.Add(player, new HivemindInfo(player));
-                } catch {
-                    continue;
-                }
-            }
+
+            // TODO: Temporary Fix
+            // foreach(var player in GameController.Manager.Players) {
+            //     if (CollectedInfo.ContainsKey(player)) continue;
+            //     try {
+            //         CollectedInfo.Add(player, new HivemindInfo(player));
+            //     } catch {
+            //         continue;
+            //     }
+            // }
         }
 
         public void ResetHivemind() {

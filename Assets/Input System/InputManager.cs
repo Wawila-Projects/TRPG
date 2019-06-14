@@ -18,6 +18,7 @@ namespace Assets.InputSystem {
 
         void Update () {
             if (SpellTargeter.isTargeting) return;
+            if (TurnManager.Manager.EnemyPhase) return;
 
             Raycasting ();
             EscapeInput ();

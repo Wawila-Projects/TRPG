@@ -10,8 +10,7 @@ namespace Assets.GameSystem
 {
     public class GameController : MonoBehaviour
     {
-        public static GameController Manager { get; private set; }
-
+        public static GameController Manager {get; private set;}
 
         public UiManager UIManager;
 
@@ -36,6 +35,12 @@ namespace Assets.GameSystem
         void Awake()
         {
             Manager = this;
+
+            ///TODO: Temporary Fix
+            foreach (var enemy in Enemies)
+            {
+                enemy.AI.Hivemind.ResetHivemind();
+            }
         }
     }
 }

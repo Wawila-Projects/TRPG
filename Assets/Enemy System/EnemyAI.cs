@@ -9,10 +9,11 @@ using Assets.Utils;
 using UnityEngine;
 
 namespace Assets.EnemySystem {
+    [System.Serializable]
     public class EnemyAI {
         public Hivemind Hivemind;
         public Enemy Enemy;
-        public bool StayInRange;
+        // public bool StayInRange;
         public Player FocusedTarget;
         public bool FocusPlayerOnTarget;
         public EnemyTargetCategory TargetCategory;
@@ -21,19 +22,28 @@ namespace Assets.EnemySystem {
         public Probability<EnemyActions> ActionProbability;
 
         private List<Player> AllPlayers => GameController.Manager.Players.Where (t => !t.IsDead).ToList ();
-        public EnemyAI (Enemy enemy, EnemyTargetCategory targetCategory, bool stayInRange,
-            IDictionary<EnemyActions, int> actionProbabilities,
+        public EnemyAI (Enemy enemy, EnemyTargetCategory targetCategory, /* bool stayInRange, */
+            IDictionary<EnemyActions, int> actionProbabilities = null,
             EnemyActions defaultAction = EnemyActions.SpellAttack,
             Hivemind hivemind = null) {
 
             Hivemind = hivemind ?? Hivemind.Global;
             TargetCategory = targetCategory;
-            StayInRange = stayInRange;
-            ActionProbability = new Probability<EnemyActions> (actionProbabilities);
+            // StayInRange = stayInRange;
+
+            if (actionProbabilities == null || actionProbabilities?.IsEmpty () == true) {
+                ActionProbability = new Probability<EnemyActions> (new Dictionary<EnemyActions, int> () {
+                    {EnemyActions.BasicAttack, 2},
+                    {EnemyActions.SpellAttack, 8},
+                });
+            } else {
+                ActionProbability = new Probability<EnemyActions> (actionProbabilities);
+            }
+
             Enemy = enemy;
         }
 
-        public virtual (Player, EnemyActions, List<SpellBase>) WhatToDo () {
+        public virtual (Player target, EnemyActions action, List<SpellBase> possibleSpells) NextTurnActions () {
             var target = FindTarget ();
 
             var action = ActionProbability.GetResult ();
@@ -88,12 +98,13 @@ namespace Assets.EnemySystem {
                     break;
             }
 
+            spells.RemoveAll (s => !s.CanBeCasted (Enemy));
+
             if (spells.IsEmpty ()) {
                 action = EnemyActions.BasicAttack;
                 return (target, action, new List<SpellBase> ());
             }
 
-            spells.RemoveAll (s => !s.CanBeCasted (Enemy));
 
             return (target, action, spells.ToList ());
         }
@@ -121,7 +132,13 @@ namespace Assets.EnemySystem {
                 return target;
             }
 
-            switch (TargetCategory) {
+            
+            var targetCategory = TargetCategory;
+            if (TargetCategory == EnemyTargetCategory.Random) {
+                targetCategory = EnumUtils<EnemyTargetCategory>.GetValues().GetRandomValue();
+            }
+
+            switch (targetCategory) {
                 case EnemyTargetCategory.Closest:
                     target = FindClosest (AllPlayers);
                     break;
@@ -211,11 +228,11 @@ namespace Assets.EnemySystem {
                         continue;
 
                     if (closest == null) {
-                        target = player;
+                        closest = player;
                         continue;
                     }
 
-                    var targetDistance = Enemy.DistanceFromCombatRange (target);
+                    var targetDistance = Enemy.DistanceFromCombatRange (closest);
                     var playerDistance = Enemy.DistanceFromCombatRange (player);
 
                     if (playerDistance < targetDistance)
@@ -247,6 +264,7 @@ namespace Assets.EnemySystem {
             HighestDamaged,
             LowestDamaged,
             HighestSpUsed,
+            Random, 
         }
 
         public enum EnemyActions {
@@ -259,6 +277,7 @@ namespace Assets.EnemySystem {
             Debuff,
             Disengage,
             Stay,
+            // AllOutAttackPosition,
         }
     }
 }

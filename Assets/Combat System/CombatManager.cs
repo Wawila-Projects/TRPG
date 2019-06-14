@@ -46,7 +46,7 @@ namespace Assets.CombatSystem {
 
             var didCritical = Random.Range (1, 100) <= critChance;
 
-            if (defender is Enemy enemy && enemy.isBoss) {
+            if (defender is Enemy enemy && enemy.IsBoss) {
                 didCritical = false;
             }
 
@@ -99,7 +99,7 @@ namespace Assets.CombatSystem {
 
                     didCritical = Random.value <= physicalSpell.CriticalChance;
 
-                    if (defender is Enemy enemy && (enemy.isBoss 
+                    if (defender is Enemy enemy && (enemy.IsBoss 
                         || enemy.Persona.Resistances[Elements.Physical] <= ResistanceModifiers.Resist)) {
                         didCritical = false;
                     }
@@ -209,7 +209,7 @@ namespace Assets.CombatSystem {
             float attackStat = isPhysical ? attacker.Persona.Strength : attacker.Persona.Magic;
             var defenceStat = defender.Equipment.Armor + defender.Persona.Endurance * 8f;
             var modifier = CalculateDamageModifier (attacker, defender, isPhysical);
-            var netdamage = Mathf.Sqrt ((attackStat / defenceStat) * attackPower) * modifier;
+            var netdamage = 5 * Mathf.Sqrt ((attackStat / defenceStat) * attackPower) * modifier;
             var damage = netdamage * PowerVariance (attacker.Persona.Luck);
             return Mathf.CeilToInt (damage);
         }

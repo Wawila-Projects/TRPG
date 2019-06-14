@@ -11,27 +11,36 @@ namespace Assets.EnemySystem
         public List<Enemy> Enemies;
         public List<Hivemind> Hiveminds;
 
+        public bool EnemiesActing;
+
         void Update()
         {
            Enemies = GameController.Manager?.Enemies ?? new List<Enemy>();
 
             if (!TurnManager.Manager.EnemyPhase)
                 return;
+
+            if (EnemiesActing)
+                return;
+
             StartCoroutine(EnemyAct());
-            TurnManager.Manager.NextTurn();
         }
         
         private IEnumerator EnemyAct()
         {
+            EnemiesActing = true;
             foreach (var enemy in Enemies)
             {
                 if (enemy.IsDead || enemy.TurnFinished)
                     continue;
 
                 enemy.Act();
-                yield return new WaitForSeconds(1);
                 yield return new WaitUntil(() => enemy.TurnFinished);
             }
+
+            yield return new WaitUntil(() => Enemies.TrueForAll( e => e.TurnFinished ));
+            TurnManager.Manager.NextTurn();
+            EnemiesActing = false;
         }
     }
 }
