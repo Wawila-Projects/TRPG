@@ -20,4 +20,6 @@ namespace Assets.Spells {
     public interface IAssitSpell {
         List<StatusConditions> CureableStatusConditions { get; }
     }
+    public interface ISupportSpell {
+    }
 }

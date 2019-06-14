@@ -157,7 +157,7 @@ namespace Assets.CharacterSystem
         public int DistanceFromCombatRange(Character other)
         {
             var distance = Location.GetDistance(other.Location);
-            return (int)(distance - WeaponRange);
+            return (distance - WeaponRange);
         }
 
          public Tile MoveAway(Character other) 

@@ -20,7 +20,7 @@ namespace Assets.ProbabilitySystem {
         public IDictionary<T, float> GetProbabilityTable () {
             var table = new Dictionary<T, float> ();
             foreach (var (key, value) in Table) {
-                table[key] = value / WeightAggregate;
+                table[key] = (float)value / (float)WeightAggregate;
             }
             return table;
         }

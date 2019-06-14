@@ -9,6 +9,7 @@ namespace Assets.EnemySystem
     public class EnemyDirector: MonoBehaviour
     {
         public List<Enemy> Enemies;
+        public List<Hivemind> Hiveminds;
 
         void Update()
         {

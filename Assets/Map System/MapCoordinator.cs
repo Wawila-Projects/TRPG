@@ -43,8 +43,8 @@ public class MapCoordinator: MonoBehaviour
         }
 
         var obstacles = new List<Hex>() {
-            // new Hex(1, 0 ,-1), new Hex(1,1,-2), new Hex(0,3,-3), new Hex(1,4,-5),
-            // new Hex(2,3,-5), new Hex(2,2,-4), new Hex(3,1,-4), new Hex(0,2,-2)
+            new Hex(1, 0 ,-1), new Hex(1,1,-2), new Hex(0,3,-3), new Hex(1,4,-5),
+            new Hex(2,3,-5), new Hex(2,2,-4), new Hex(3,1,-4), new Hex(0,2,-2)
         };
 
         foreach(var hex in map) {
@@ -59,15 +59,18 @@ public class MapCoordinator: MonoBehaviour
             if (tile == null) continue;
 
             var isEven = Type == MapType.PointyOdd || Type == MapType.FlatOdd || Shape != MapShapes.Rectangular;
+            
             if (Type == MapType.FlatEven || Type == MapType.FlatOdd) {
                 tile.InitFlat(hex, isEven);
             } else  {
                 tile.InitPointy(hex, isEven);
             }
+            
             Map.Add(tile);
             prefab.transform.SetParent(transform);
 
             if(!obstacles.Contains(hex)) continue;
+
             prefab.GetComponent<Renderer>().material.SetColor("_Color", Color.green);
             prefab.transform.localScale  = new Vector3(1,1,0.3f);
             var z = (1-prefab.transform.localScale.z) * 0.125f;
