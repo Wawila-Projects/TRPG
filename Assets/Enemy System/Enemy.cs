@@ -66,20 +66,21 @@ namespace Assets.EnemySystem {
             }
 
             Move (tileInRange, b => {
-                if (b || TurnFinished ||
-                    !IsInRange (Target)) {
+                if (b || TurnFinished) {
                     TurnFinished = true;
                     IsSurrounded = false;
                     return;
                 }
 
-                if (ai.action == EnemyAI.EnemyActions.BasicAttack) {
+                if (ai.action == EnemyAI.EnemyActions.BasicAttack && IsInMeleeRange (Target)) {
                     CombatManager.Manager.BasicAttack (this, Target);
-                } else  {
+                } else if (ai.action == EnemyAI.EnemyActions.SpellAttack && IsInRange (Target)) {
                     var spell = ai.possibleSpells.GetRandomValue();
                     if (spell is OffensiveSpell offensiveSpell) {
                         CombatManager.Manager.SpellAttack(this, Target, offensiveSpell);
                     }
+                } else  {
+                    Debug.Log($"{Name} not in range of {Target.Name} | Attack: ${ai.action}");
                 }
 
                 IsSurrounded = false;
