@@ -43,8 +43,22 @@ namespace Assets.EnemySystem {
             info.LastSeenLocation = player.Location;
             info.HpLost += damage;
             info.Resistances[spell.Element] = player.Persona.Resistances[spell.Element];
+
+            if (player.IsDead && !info.Death.isDead) {
+                info.Death = (info.HpLost, true);
+            }
         }
 
+        public void CaptureInfoWhenBasicAttacking (Player player, int damage) {
+            var info = CollectedInfo[player];
+            info.LastSeenLocation = player.Location;
+            info.Resistances[Elements.Physical] = player.Persona.Resistances[Elements.Physical];
+            info.HpLost += damage;
+
+            if (player.IsDead && !info.Death.isDead) {
+                info.Death = (info.HpLost, true);
+            }
+        }
         public void CaptureInfoWhenBasicAttacked (Player player, int damage) {
             var info = CollectedInfo[player];
             info.LastSeenLocation = player.Location;
@@ -83,6 +97,7 @@ namespace Assets.EnemySystem {
             public Player Player;
             public int HpLost = 0;
             public int SpLost = 0;
+            public (int diedAt, bool isDead) Death = (0, false);
             public (int count, int total, int average) BasicAttackDamage = (0,0,0);
             public Tile LastSeenLocation;
             public StatusConditions StatusEffect = StatusConditions.None;

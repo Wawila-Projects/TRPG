@@ -61,6 +61,12 @@ namespace Assets.CombatSystem {
 
             var resolvedDamage = ResolveResistances (attacker, defender, Elements.Physical, damage);
 
+            if (defender is Player playerDefender) {
+                (attacker as Enemy).AI.Hivemind.CaptureInfoWhenBasicAttacking(playerDefender, resolvedDamage);
+            } else if (attacker is Player playerAttacker) {
+                (defender as Enemy).AI.Hivemind.CaptureInfoWhenBasicAttacked(playerAttacker, resolvedDamage);
+            }
+
 
             attacker.DeactivateOneMore ();
             attacker.TurnFinished = true;
@@ -126,6 +132,11 @@ namespace Assets.CombatSystem {
 
             var resolvedDamage = ResolveResistances (attacker, defender, spell.Element, damage);
             
+            if (defender is Player playerDefender) {
+                (attacker as Enemy).AI.Hivemind.CaptureInfoWhenAttacking(playerDefender, spell, resolvedDamage);
+            } else if (attacker is Player playerAttacker) {
+                (defender as Enemy).AI.Hivemind.CaptureInfoWhenAttacked(playerAttacker, spell);
+            }
 
             var resistance = defender.Persona.Resistances[spell.Element];
             var anchor = resistance == ResistanceModifiers.Reflect ? attacker.gameObject : defender.gameObject;

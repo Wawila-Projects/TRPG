@@ -80,7 +80,7 @@ namespace Assets.EnemySystem {
                         CombatManager.Manager.SpellAttack(this, Target, offensiveSpell);
                     }
                 } else  {
-                    Debug.Log($"{Name} not in range of {Target.Name} | Attack: ${ai.action}");
+                    Debug.Log($"{Name} not in range of {Target.Name} | Attack: {ai.action}");
                 }
 
                 IsSurrounded = false;
