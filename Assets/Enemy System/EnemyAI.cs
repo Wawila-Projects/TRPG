@@ -30,18 +30,20 @@ namespace Assets.EnemySystem {
             TargetCategory = targetCategory;
             // StayInRange = stayInRange;
 
+            Enemy = enemy;
+
             if (actionProbabilities == null || actionProbabilities?.IsEmpty () == true) {
                 ActionProbability = new Probability<EnemyActions> (new Dictionary<EnemyActions, int> () {
                     {EnemyActions.BasicAttack, 20},
-                    {EnemyActions.SpellAttack, 50},
+                    {EnemyActions.SpellAttack, 40},
+                    {EnemyActions.MultitargetSpellAttack, 10},
                     {EnemyActions.TargetWeakness, 20},
                     {EnemyActions.FindWeakness, 10},
                 });
-            } else {
-                ActionProbability = new Probability<EnemyActions> (actionProbabilities);
-            }
+                return;
+            } 
 
-            Enemy = enemy;
+            ActionProbability = new Probability<EnemyActions> (actionProbabilities);
         }
 
         public virtual (Player target, EnemyActions action, List<SpellBase> possibleSpells) NextTurnActions (EnemyActions? carryAction = null) {
@@ -64,22 +66,27 @@ namespace Assets.EnemySystem {
                 return (target, action, new List<SpellBase> ());
             }
 
-            var spells = new List<SpellBase> ();
+            IEnumerable<SpellBase> spells = new List<SpellBase> ();
 
             switch (action) {
                 case EnemyActions.SpellAttack:
-                    spells = Enemy.Persona.SpellBook.Spells;
+                    spells = Enemy.Persona.SpellBook.Spells.Where(
+                        w => w is OffensiveSpell
+                    );
+                    break;
+                case EnemyActions.MultitargetSpellAttack:
+                    spells = Enemy.Persona.SpellBook.Spells.Where(
+                        w => w.IsMultitarget && w is OffensiveSpell
+                    );
                     break;
                 case EnemyActions.Buff:
                     spells = Enemy.Persona.SpellBook.Spells
                         .GetSpellsFromElement (Elements.Recovery)
-                        .Where (w => w is IAssitSpell || w is ISupportSpell)
-                        .ToList ();
+                        .Where (w => w is IAssitSpell || w is ISupportSpell);
                     break;
                 case EnemyActions.Debuff:
                     spells = Enemy.Persona.SpellBook.Spells
-                        .GetSpellsFromElement (Elements.Ailment)
-                        .ToList ();
+                        .GetSpellsFromElement (Elements.Ailment);
                     break;
                 case EnemyActions.TargetWeakness:
                     var weaknesses = Hivemind.CollectedInfo[target].Resistances
@@ -89,7 +96,7 @@ namespace Assets.EnemySystem {
                     if (weaknesses.Count () == 0) break;
 
                     foreach (var weakness in weaknesses) {
-                        spells.AddRange (Enemy.Persona.SpellBook.Spells
+                       spells.AddRange (Enemy.Persona.SpellBook.Spells
                             .GetSpellsFromElement (weakness));
                     }
                     break;
@@ -108,16 +115,17 @@ namespace Assets.EnemySystem {
                     break;
             }
 
-            spells.RemoveAll (s => !s.CanBeCasted (Enemy));
+            var spellList = spells.ToList();
+            spellList.RemoveAll (s => !s.CanBeCasted (Enemy));
 
-            if (spells.IsEmpty ()) {
+            if (spellList.IsEmpty ()) {
                 if (action == EnemyActions.SpellAttack) {
                     return NextTurnActions (EnemyActions.BasicAttack) ;
                 } 
                 return NextTurnActions (EnemyActions.SpellAttack);
             }
 
-            return (target, action, spells.ToList ());
+            return (target, action, spellList);
         }
 
         // TODO:
@@ -274,6 +282,7 @@ namespace Assets.EnemySystem {
         public enum EnemyActions {
             BasicAttack,
             SpellAttack,
+            MultitargetSpellAttack,
             FindWeakness,
             TargetWeakness,
             //Heal,

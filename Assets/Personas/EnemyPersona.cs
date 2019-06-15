@@ -39,10 +39,10 @@ namespace Assets.Personas {
         protected override List<SpellBase> GetBaseSpellbook()
         {
             return new List<SpellBase> {
-                SpellLexicon.Fire.Agi, 
-                SpellLexicon.Ice.Bufu, 
-                SpellLexicon.Wind.Garu, 
-                SpellLexicon.Elec.Zio, 
+                SpellLexicon.Fire.Maragi, 
+                SpellLexicon.Ice.Mabufu, 
+                SpellLexicon.Wind.Magaru, 
+                SpellLexicon.Elec.Mazio, 
                 SpellLexicon.Physical.Bash,
                 SpellLexicon.Recovery.Dia, 
             };

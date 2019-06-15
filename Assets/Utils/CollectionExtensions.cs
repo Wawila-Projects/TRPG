@@ -19,6 +19,12 @@ namespace Assets.Utils {
             return collection.ElementAt(index);
         }
 
+        public static void AddRange<T> (this IEnumerable<T> sequence, IEnumerable<T> other) {
+            foreach (var item in other) {
+                sequence.Append(item);
+            }
+        } 
+
         public static TValue GetValueOrDefault<TKey, TValue> (this IDictionary<TKey, TValue> dictionary,
             TKey key, TValue defaultValue = default (TValue)) {
             TValue value = defaultValue;

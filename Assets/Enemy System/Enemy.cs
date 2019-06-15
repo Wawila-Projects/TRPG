@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using Assets.CharacterSystem;
 using Assets.CombatSystem;
@@ -10,6 +11,7 @@ using Assets.Utils;
 using UnityEngine;
 
 namespace Assets.EnemySystem {
+    //TODO: Add SpellCasting to Enemy
     public class Enemy : Character {
 
         public EnemyAI AI;
@@ -76,24 +78,45 @@ namespace Assets.EnemySystem {
                     return;
                 }
 
-                if (ai.action == EnemyAI.EnemyActions.BasicAttack && IsInMeleeRange (Target)) {
-                    CombatManager.Manager.BasicAttack (this, Target);
-                } else if (ai.action == EnemyAI.EnemyActions.SpellAttack && IsInRange (Target)) {
-                    var spell = ai.possibleSpells.GetRandomValue();
-                    if (spell is OffensiveSpell offensiveSpell) {
-                        CombatManager.Manager.SpellAttack(this, Target, offensiveSpell);
-                    }
-                } else  {
-                    // Debug.Log($"{Name} not in range of {Target.Name} | Attack: {ai.action}");
-                }
+                HandleAttack();
 
                 IsSurrounded = false;
                 if (OneMore.isActive) {
                     Act();
+                    Debug.Log($"{Name} One More!!");
                 } else {
                     TurnFinished = true;
                 }
             });
+
+
+            void HandleAttack () {
+                if (ai.action == EnemyAI.EnemyActions.BasicAttack && IsInMeleeRange (Target)) {
+                    CombatManager.Manager.BasicAttack (this, Target);
+                    return;
+                } 
+                
+                if (ai.action == EnemyAI.EnemyActions.SpellAttack && IsInRange (Target)) {
+                    var spell = ai.possibleSpells.GetRandomValue();
+
+                    if (spell is OffensiveSpell offensiveSpell) {
+                        if (!offensiveSpell.IsMultitarget) {
+                            CombatManager.Manager.SpellAttack(this, Target, offensiveSpell);
+                            return;
+                        } 
+
+                        IEnumerable<Tile> tiles = new List<Tile> (Target.Location.Neighbors);
+                        tiles.Append(Target.Location);
+                        tiles = tiles.Where(
+                            w => w.IsOccupied && w.Occupant is Player
+                        );
+
+                        foreach (var tile in tiles) {
+                            CombatManager.Manager.SpellAttack(this, tile.Occupant, offensiveSpell);
+                        }
+                    } 
+                }
+            }
         }
 
         public void Move (Tile destination, Action<bool> completion = null) {
