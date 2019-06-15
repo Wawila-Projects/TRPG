@@ -43,7 +43,8 @@ namespace Assets.Personas {
                 SpellLexicon.Ice.Bufu, 
                 SpellLexicon.Wind.Garu, 
                 SpellLexicon.Elec.Zio, 
-                SpellLexicon.Physical.Bash, 
+                SpellLexicon.Physical.Bash,
+                SpellLexicon.Recovery.Dia, 
             };
         }
 

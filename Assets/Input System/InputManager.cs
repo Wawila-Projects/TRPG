@@ -17,9 +17,9 @@ namespace Assets.InputSystem {
         public SpellTargeting SpellTargeter;
 
         void Update () {
+            GameController.Manager?.UIManager.EnemyStatus.Hide();
             if (SpellTargeter.isTargeting) return;
             if (TurnManager.Manager.EnemyPhase) return;
-
             Raycasting ();
             EscapeInput ();
         }
@@ -52,6 +52,7 @@ namespace Assets.InputSystem {
 
         private void Raycasting () {
             var ray = Camera.main.ScreenPointToRay (Input.mousePosition);
+            
 
             if (!Physics.Raycast (ray, out Raycast)) {
                 Object = null;
@@ -59,6 +60,7 @@ namespace Assets.InputSystem {
             }
 
             Object = Raycast.collider.transform.gameObject;
+
             var selected = PlayerInteractions.Selected;
 
             if (!selected?.TurnFinished ?? false) {
@@ -92,12 +94,17 @@ namespace Assets.InputSystem {
         private bool TargetRayCasting (GameObject obj) {
 
             if (PlayerInteractions.Selected is null) return false;
+            
+            var target = obj.GetComponent<Tile> ()?.Occupant?.gameObject ?? obj;
+
+            var enemy = target.GetComponent<Enemy> ();
+            if (enemy != null) {
+                GameController.Manager.UIManager.EnemyStatus.Show(enemy);
+            }
+            
             if (!Input.GetMouseButtonDown (0)) return false;
 
             // Zoom on when reselecting self
-
-            var target = obj.GetComponent<Tile> ()?.Occupant?.gameObject ?? obj;
-
             if (target == PlayerInteractions.Selected.gameObject) {
                 var cameraControl = Camera.main.gameObject.GetComponent<MainCameraController> ();
                 cameraControl?.TargetCharacter (PlayerInteractions.Selected);
@@ -135,14 +142,14 @@ namespace Assets.InputSystem {
         }
 
         public void MapRayCasting (Tile tile) {
-
             if (Input.GetMouseButtonDown (0)) {
                 MapInteractions.Selected = tile;
             }
         }
 
         public void EnemyRayCasting (Enemy enemy) {
-
+            GameController.Manager.UIManager.EnemyStatus.Show(enemy);
+            
             if (Input.GetMouseButtonDown (0)) {
                 EnemyInteractions.Selected = enemy;
             }

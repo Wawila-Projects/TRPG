@@ -8,6 +8,7 @@ using UnityEngine.UI;
         public static UiManager UI { get; private set; }
 
         public GameObject DamageText;
+        public UIEnemyStatus EnemyStatus;
 
         public Canvas Canvas;
 

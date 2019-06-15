@@ -24,7 +24,12 @@ namespace Assets.EnemySystem {
         public override void Die () {
             Location.Occupant = null;
             Location = null;
-            GetComponent<Renderer> ().enabled = false;
+            gameObject.SetActive(false);
+
+            var enemyStatus = GameController.Manager.UIManager.EnemyStatus;
+            if (enemyStatus.Anchor == gameObject) {
+                enemyStatus.Hide();
+            }
         }
 
         public void Act () {
