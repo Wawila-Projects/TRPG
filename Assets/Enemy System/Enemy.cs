@@ -64,7 +64,6 @@ namespace Assets.EnemySystem {
 
             if (tileInRange == null && !IsInRange(Target)) {
                 IsSurrounded = false;
-                Target = null;
                 TurnFinished = true;
                 Debug.Log($"{Name} did NOTHING!");
                 return;
@@ -85,12 +84,10 @@ namespace Assets.EnemySystem {
                         CombatManager.Manager.SpellAttack(this, Target, offensiveSpell);
                     }
                 } else  {
-                    Debug.Log($"{Name} not in range of {Target.Name} | Attack: {ai.action}");
+                    // Debug.Log($"{Name} not in range of {Target.Name} | Attack: {ai.action}");
                 }
 
                 IsSurrounded = false;
-                Target = null;
-
                 if (OneMore.isActive) {
                     Act();
                 } else {

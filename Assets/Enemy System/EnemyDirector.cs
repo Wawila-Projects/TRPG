@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using Assets.GameSystem;
+using Assets.Utils;
 using UnityEngine;
 
 namespace Assets.EnemySystem
@@ -29,6 +30,7 @@ namespace Assets.EnemySystem
         private IEnumerator EnemyAct()
         {
             EnemiesActing = true;
+            Enemies.RemoveNull();
             foreach (var enemy in Enemies)
             {
                 if (enemy.IsDead || enemy.TurnFinished)

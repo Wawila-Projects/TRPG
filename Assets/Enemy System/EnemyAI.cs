@@ -17,7 +17,6 @@ namespace Assets.EnemySystem {
         public Player FocusedTarget;
         public bool FocusPlayerOnTarget;
         public EnemyTargetCategory TargetCategory;
-        public EnemyActions DefaultAction;
         public EnemyTargetCategory DefaultTargetCategory;
         public Probability<EnemyActions> ActionProbability;
 
@@ -33,8 +32,10 @@ namespace Assets.EnemySystem {
 
             if (actionProbabilities == null || actionProbabilities?.IsEmpty () == true) {
                 ActionProbability = new Probability<EnemyActions> (new Dictionary<EnemyActions, int> () {
-                    {EnemyActions.BasicAttack, 2},
-                    {EnemyActions.SpellAttack, 8},
+                    {EnemyActions.BasicAttack, 20},
+                    {EnemyActions.SpellAttack, 50},
+                    {EnemyActions.TargetWeakness, 20},
+                    {EnemyActions.FindWeakness, 10},
                 });
             } else {
                 ActionProbability = new Probability<EnemyActions> (actionProbabilities);
@@ -43,11 +44,19 @@ namespace Assets.EnemySystem {
             Enemy = enemy;
         }
 
-        public virtual (Player target, EnemyActions action, List<SpellBase> possibleSpells) NextTurnActions () {
+        public virtual (Player target, EnemyActions action, List<SpellBase> possibleSpells) NextTurnActions (EnemyActions? carryAction = null) {
             // TODO: Maybe check if target is null
             var target = FindTarget ();
 
-            var action = ActionProbability.GetResult ();
+            if (target == null) {
+                return (target, EnemyActions.Stay, new List<SpellBase> ());
+            }
+
+            if (carryAction != null) {
+                Debug.Log($"{Enemy.Name} Racalculate action! {carryAction}");
+            }
+
+            var action = carryAction ?? ActionProbability.GetResult ();
 
             if (action == EnemyActions.BasicAttack ||
                 action == EnemyActions.Disengage ||
@@ -102,10 +111,11 @@ namespace Assets.EnemySystem {
             spells.RemoveAll (s => !s.CanBeCasted (Enemy));
 
             if (spells.IsEmpty ()) {
-                action = EnemyActions.BasicAttack;
-                return (target, action, new List<SpellBase> ());
+                if (action == EnemyActions.SpellAttack) {
+                    return NextTurnActions (EnemyActions.BasicAttack) ;
+                } 
+                return NextTurnActions (EnemyActions.SpellAttack);
             }
-
 
             return (target, action, spells.ToList ());
         }

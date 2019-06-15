@@ -8,7 +8,6 @@ namespace Assets.UI {
         public TextMeshPro HP;
         public TextMeshPro StatusCondition;
         public GameObject Anchor;
-
         public bool isShowing;
 
         void Awake() {
