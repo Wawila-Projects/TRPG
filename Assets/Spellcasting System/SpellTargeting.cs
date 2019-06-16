@@ -18,7 +18,7 @@ namespace Assets.SpellCastingSystem {
         public bool isTargeting;
         public List<Tile> SpellTiles;
         public List<Color> originalColors;
-        private SpellCasting SpellCaster = new SpellCasting();
+        private SpellCasting<Player> SpellCaster = new SpellCasting<Player>();
 
 
         public string SpellSerialized;
@@ -88,7 +88,9 @@ namespace Assets.SpellCastingSystem {
 
             if (targets.IsEmpty ()) return false;
 
-            SpellCaster.CastSpell (Spell, caster, targets);
+           if (!SpellCaster.CastSpell (Spell, caster, targets)) {
+               return false;
+           }
 
             ClearSelection ();
             

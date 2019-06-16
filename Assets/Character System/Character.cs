@@ -18,7 +18,6 @@ namespace Assets.CharacterSystem
         public int Hp;
         public int Sp;
         public PersonaBase Persona;
-
         public StatusEffectController StatusEffect;
 
         [SerializeField]

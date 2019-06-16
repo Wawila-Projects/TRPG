@@ -6,12 +6,12 @@ using Assets.CharacterSystem;
 using Assets.CombatSystem;
 using Assets.GameSystem;
 using Assets.PlayerSystem;
+using Assets.SpellCastingSystem;
 using Assets.Spells;
 using Assets.Utils;
 using UnityEngine;
 
 namespace Assets.EnemySystem {
-    //TODO: Add SpellCasting to Enemy
     public class Enemy : Character {
 
         public EnemyAI AI;
@@ -20,6 +20,7 @@ namespace Assets.EnemySystem {
         public Player Target;
         public bool IsBoss;
         public bool IsMoving;
+        public SpellCasting<Enemy> SpellCasting = new SpellCasting<Enemy>();
 
         protected override void OnAwake() => AI = new EnemyAI(this, EnemyAI.EnemyTargetCategory.Closest);
 
@@ -90,32 +91,32 @@ namespace Assets.EnemySystem {
             });
 
 
-            void HandleAttack () {
-                if (ai.action == EnemyAI.EnemyActions.BasicAttack && IsInMeleeRange (Target)) {
-                    CombatManager.Manager.BasicAttack (this, Target);
+            void HandleAttack ()
+            {
+                if (ai.action == EnemyAI.EnemyActions.BasicAttack && IsInMeleeRange(Target)) {
+                    CombatManager.Manager.BasicAttack(this, Target);
                     return;
-                } 
-                
-                if (ai.action == EnemyAI.EnemyActions.SpellAttack && IsInRange (Target)) {
-                    var spell = ai.possibleSpells.GetRandomValue();
-
-                    if (spell is OffensiveSpell offensiveSpell) {
-                        if (!offensiveSpell.IsMultitarget) {
-                            CombatManager.Manager.SpellAttack(this, Target, offensiveSpell);
-                            return;
-                        } 
-
-                        IEnumerable<Tile> tiles = new List<Tile> (Target.Location.Neighbors);
-                        tiles.Append(Target.Location);
-                        tiles = tiles.Where(
-                            w => w.IsOccupied && w.Occupant is Player
-                        );
-
-                        foreach (var tile in tiles) {
-                            CombatManager.Manager.SpellAttack(this, tile.Occupant, offensiveSpell);
-                        }
-                    } 
                 }
+
+                if (ai.action != EnemyAI.EnemyActions.SpellAttack || !IsInRange(Target)) {
+                    return;
+                }
+
+                var spell = ai.possibleSpells.GetRandomValue();
+
+                var targets = new List<Character> () {
+                    Target
+                };
+
+                if (spell.IsMultitarget) {
+                    targets = Target.Location.Neighbors.Where(
+                        w => w.IsOccupied && w.Occupant.GetType() == Target.GetType()
+                    )
+                    .Select(s => s.Occupant)
+                    .ToList();
+                }
+                
+                SpellCasting.CastSpell(spell, this, targets);
             }
         }
 

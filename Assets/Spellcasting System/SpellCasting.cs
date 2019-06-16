@@ -9,15 +9,14 @@ using Assets.UI;
 using Asstes.CharacterSystem;
 
 namespace Assets.SpellCastingSystem {
-
     // TODO: Fix Lose turn when not enough SP
     // TODO: CanCastSpell() to check if has enough sp/hp
-
-    public class SpellCasting {
+    public class SpellCasting<T> where T : Character {
         private Random random = new Random ();
         private const double ElementalAilmentChance = 0.1d;
 
-        public void CastSpell (SpellBase spell, Player caster, List<Character> targets) {
+        public bool CastSpell (SpellBase spell, T caster, List<Character> targets) {
+
             var oneMore = false;
             caster.DeactivateOneMore();
 
@@ -32,8 +31,8 @@ namespace Assets.SpellCastingSystem {
                     if (spell is IHealingSpell healingSpell) {
                         CastHealingSpell (healingSpell, caster, targets);
                     }
-                    if (spell is IReviveSpell reviveSpell && targets[0] is Player player) {
-                        CastReviveSpell (reviveSpell, player);
+                    if (spell is IReviveSpell reviveSpell && targets[0] is T character) {
+                        CastReviveSpell (reviveSpell, character);
                     }
                     if (spell is IAssitSpell assistSpell) {
                         CastAssistSpell (assistSpell, targets, spell.Name);
@@ -45,13 +44,14 @@ namespace Assets.SpellCastingSystem {
 
             if (oneMore) {
                 caster.AddOneMore();
-                return;
+                return true;
             }
 
             caster.TurnFinished = true;
+            return true;
         }
 
-        private void CastAilementSpell (AilementSpell spell, Player caster, List<Character> targets) {
+        private void CastAilementSpell (AilementSpell spell, T caster, List<Character> targets) {
             foreach (var target in targets) {
                 var modifier = GetAilmentResistanceModifier (target);
                 if (modifier == 0) continue;
@@ -70,7 +70,7 @@ namespace Assets.SpellCastingSystem {
                 UIFloatingText.Create(name, target.gameObject, Elements.Recovery);
             }
         }
-        private void CastReviveSpell (IReviveSpell spell, Player target) {
+        private void CastReviveSpell (IReviveSpell spell, T target) {
             if (!target.IsDead) return;
 
             target.CurrentHP = (int) Math.Ceiling (target.Hp * spell.PercentageLifeRecovered);
@@ -80,7 +80,7 @@ namespace Assets.SpellCastingSystem {
             UIFloatingText.Create($"{target.Name} revived!", target.gameObject, Elements.Recovery);
         }
 
-        private void CastHealingSpell (IHealingSpell spell, Player caster, List<Character> targets) {
+        private void CastHealingSpell (IHealingSpell spell, T caster, List<Character> targets) {
             if (spell.FullHeal) {
                 targets.ForEach (t => {
                     t.CurrentHP = t.Hp;
@@ -96,7 +96,7 @@ namespace Assets.SpellCastingSystem {
             }
         }
 
-        private bool CastOffensiveSpell (OffensiveSpell spell, Player caster, List<Character> targets) {
+        private bool CastOffensiveSpell (OffensiveSpell spell, T caster, List<Character> targets) {
             var blockModifiers = new List<ResistanceModifiers> () {
                 ResistanceModifiers.Block, ResistanceModifiers.Absorb, ResistanceModifiers.Reflect
             };
