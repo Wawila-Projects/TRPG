@@ -47,15 +47,10 @@ namespace Assets.EnemySystem {
         }
 
         public virtual (Player target, EnemyActions action, List<SpellBase> possibleSpells) NextTurnActions (EnemyActions? carryAction = null) {
-            // TODO: Maybe check if target is null
             var target = FindTarget ();
 
             if (target == null) {
                 return (target, EnemyActions.Stay, new List<SpellBase> ());
-            }
-
-            if (carryAction != null) {
-                Debug.Log($"{Enemy.Name} Racalculate action! {carryAction}");
             }
 
             var action = carryAction ?? ActionProbability.GetResult ();

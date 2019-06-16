@@ -42,7 +42,6 @@ namespace Assets.GameSystem {
             }
 
             ++EnemyTurnCounter;
-            // TODO: Add One More triggers to Enemy
             foreach (var enemy in GameController.Manager.Enemies) {
                 NewTurn (enemy);
             }

@@ -17,9 +17,11 @@ namespace Assets.InputSystem {
         public SpellTargeting SpellTargeter;
 
         void Update () {
-            GameController.Manager?.UIManager.EnemyStatus.Hide();
             if (SpellTargeter.isTargeting) return;
             if (TurnManager.Manager.EnemyPhase) return;
+            
+            GameController.Manager?.UIManager.EnemyStatus.Hide();
+            
             Raycasting ();
             EscapeInput ();
         }
@@ -52,7 +54,6 @@ namespace Assets.InputSystem {
 
         private void Raycasting () {
             var ray = Camera.main.ScreenPointToRay (Input.mousePosition);
-            
 
             if (!Physics.Raycast (ray, out Raycast)) {
                 Object = null;

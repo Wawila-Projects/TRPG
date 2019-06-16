@@ -16,8 +16,8 @@ namespace Assets.UI {
 
         public TextMeshPro Text;
         public GameObject Anchor;
-        public float FadeTime;
-        public float ScrollSpeed;
+        public float FadeTime = 1;
+        public float ScrollSpeed = 1;
         private float time;
         private bool ready;
 

@@ -8,6 +8,7 @@ using Assets.PlayerSystem;
 using Assets.Spells;
 using Assets.Utils;
 using UnityEngine;
+using Assets.GameSystem;
 
 namespace Assets.SpellCastingSystem {
     public class SpellTargeting : MonoBehaviour {
@@ -29,6 +30,8 @@ namespace Assets.SpellCastingSystem {
                 isTargeting = false;
                 return;
             }
+
+            GameController.Manager?.UIManager.EnemyStatus.Hide();
 
             if (EscapeInput ()) {
                 return;
@@ -124,14 +127,23 @@ namespace Assets.SpellCastingSystem {
 
             var Object = raycast.collider.transform.gameObject;
 
+            var enemy = Object.GetComponent<Enemy> ();
+            if (enemy != null) {
+                GameController.Manager.UIManager.EnemyStatus.Show(enemy);
+            }
+
             var tile = Object.GetComponent<Tile> ();
             if (tile != null) {
+                if (tile.IsOccupied && tile.Occupant is Enemy enemyOccupant) {
+                    GameController.Manager.UIManager.EnemyStatus.Show(enemyOccupant);
+                }
+
                 return tile;
             }
 
             var character = Object.GetComponent<Character> ();
             if (character != null) {
-                return tile;
+                return character.Location;
             }
             return null;
         }

@@ -20,8 +20,6 @@ namespace Assets.UI {
             component.Show (hp, condition, anchor);
             return component;
         }
-
-        //TODO: Show when targeting
         public void Show (Enemy enemy) {
             if (enemy == null) {
                 return;
