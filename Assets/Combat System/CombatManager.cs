@@ -1,14 +1,12 @@
-using Assets.CharacterSystem;
-using Assets.EnemySystem;
-using Assets.Enums;
-using Assets.PlayerSystem;
-using UnityEngine;
-using Random = UnityEngine.Random;
 using System.Linq;
+using Assets.Enums;
 using Assets.Spells;
-using Asstes.CharacterSystem;
+using Assets.EnemySystem;
+using Assets.PlayerSystem;
+using Assets.CharacterSystem;
+using Asstes.CharacterSystem.StatusEffects;
 using Assets.UI;
-using Assets.GameSystem;
+using UnityEngine;
 
 namespace Assets.CombatSystem {
     public sealed class CombatManager {

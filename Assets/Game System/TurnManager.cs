@@ -1,5 +1,5 @@
 ﻿using Assets.CharacterSystem;
-using Asstes.CharacterSystem;
+using Asstes.CharacterSystem.StatusEffects;
 using UnityEngine;
 
 namespace Assets.GameSystem {

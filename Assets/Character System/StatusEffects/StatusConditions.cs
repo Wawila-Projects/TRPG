@@ -1,4 +1,4 @@
-namespace Asstes.CharacterSystem {
+namespace Asstes.CharacterSystem.StatusEffects {
     public enum StatusConditions {
         None,
         Freeze,

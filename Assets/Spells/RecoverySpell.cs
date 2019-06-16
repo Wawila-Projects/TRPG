@@ -1,8 +1,10 @@
+using Asstes.CharacterSystem.StatusEffects;
 using System.Collections.Generic;
 using Assets.Enums;
-using Asstes.CharacterSystem;
 
 namespace Assets.Spells {
+
+
     public abstract class RecoverySpell : SpellBase {
         public override Elements Element => Elements.Recovery;
         public override bool IsMagical => true;

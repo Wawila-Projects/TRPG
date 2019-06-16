@@ -1,7 +1,7 @@
 ﻿using System.Linq;
 using UnityEngine;
 using Assets.Personas;
-using Asstes.CharacterSystem;
+using Asstes.CharacterSystem.StatusEffects;
 
 namespace Assets.CharacterSystem
 {

@@ -1,7 +1,7 @@
 using System;
 using System.Linq;
 using System.Collections.Generic;
-using Asstes.CharacterSystem;
+using Asstes.CharacterSystem.StatusEffects;
 using Assets.Utils;
 
 namespace Assets.Spells.RecoverySpells

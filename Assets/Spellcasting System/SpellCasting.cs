@@ -1,12 +1,12 @@
 using System;
 using System.Collections.Generic;
+using Assets.Enums;
 using Assets.CharacterSystem;
 using Assets.CombatSystem;
-using Assets.Enums;
 using Assets.PlayerSystem;
 using Assets.Spells;
 using Assets.UI;
-using Asstes.CharacterSystem;
+using Asstes.CharacterSystem.StatusEffects;
 
 namespace Assets.SpellCastingSystem {
     public class SpellCasting<T> where T : Character {

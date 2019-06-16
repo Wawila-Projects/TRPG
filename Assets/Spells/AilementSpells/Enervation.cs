@@ -1,4 +1,4 @@
-using Asstes.CharacterSystem;
+using Asstes.CharacterSystem.StatusEffects;
 
 namespace Assets.Spells.AilementSpells {
     public class Enervation : AilementSpell {

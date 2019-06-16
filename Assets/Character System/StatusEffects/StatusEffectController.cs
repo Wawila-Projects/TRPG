@@ -9,7 +9,7 @@ using Assets.Spells;
 using Assets.UI;
 using UnityEngine;
 
-namespace Asstes.CharacterSystem {
+namespace Asstes.CharacterSystem.StatusEffects {
     public class StatusEffectController : MonoBehaviour {
         public StatusConditions CurrentEffect = StatusConditions.None;
         // public TurnManager TurnManager;

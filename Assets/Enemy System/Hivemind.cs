@@ -1,10 +1,10 @@
 using System;
 using System.Collections.Generic;
 using Assets.Enums;
+using Assets.Spells;
 using Assets.GameSystem;
 using Assets.PlayerSystem;
-using Assets.Spells;
-using Asstes.CharacterSystem;
+using Asstes.CharacterSystem.StatusEffects;
 using Assets.Utils;
 
 namespace Assets.EnemySystem {

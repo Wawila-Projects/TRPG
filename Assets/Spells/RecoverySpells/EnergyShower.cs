@@ -1,5 +1,5 @@
 using System.Collections.Generic;
-using Asstes.CharacterSystem;
+using Asstes.CharacterSystem.StatusEffects;
 
 namespace Assets.Spells.RecoverySpells
 {

@@ -1,6 +1,5 @@
-
+using Asstes.CharacterSystem.StatusEffects;
 using Assets.Enums;
-using Asstes.CharacterSystem;
 
 namespace Assets.Spells
 {
