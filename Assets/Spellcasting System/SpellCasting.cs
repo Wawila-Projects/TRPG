@@ -9,13 +9,14 @@ using Assets.UI;
 using Asstes.CharacterSystem;
 
 namespace Assets.SpellCastingSystem {
-    // TODO: Fix Lose turn when not enough SP
-    // TODO: CanCastSpell() to check if has enough sp/hp
     public class SpellCasting<T> where T : Character {
         private Random random = new Random ();
         private const double ElementalAilmentChance = 0.1d;
 
         public bool CastSpell (SpellBase spell, T caster, List<Character> targets) {
+            if (!spell.CanBeCasted(caster)) {
+                return false;
+            }
 
             var oneMore = false;
             caster.DeactivateOneMore();
