@@ -1,10 +1,8 @@
-using Asstes.CharacterSystem.StatusEffects;
 using System.Collections.Generic;
 using Assets.Enums;
+using Asstes.CharacterSystem.StatusEffects;
 
 namespace Assets.Spells {
-
-
     public abstract class RecoverySpell : SpellBase {
         public override Elements Element => Elements.Recovery;
         public override bool IsMagical => true;
@@ -12,7 +10,7 @@ namespace Assets.Spells {
 
     public interface IHealingSpell {
         int HealingPower { get; }
-        bool FullHeal { get; } 
+        bool FullHeal { get; }
     }
 
     public interface IReviveSpell {
@@ -21,7 +19,5 @@ namespace Assets.Spells {
 
     public interface IAssitSpell {
         List<StatusConditions> CureableStatusConditions { get; }
-    }
-    public interface ISupportSpell {
     }
 }

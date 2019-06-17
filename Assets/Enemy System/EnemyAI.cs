@@ -77,7 +77,7 @@ namespace Assets.EnemySystem {
                 case EnemyActions.Buff:
                     spells = Enemy.Persona.SpellBook.Spells
                         .GetSpellsFromElement (Elements.Recovery)
-                        .Where (w => w is IAssitSpell || w is ISupportSpell);
+                        .Where (w => w is IAssitSpell || w is SupportSpell);
                     break;
                 case EnemyActions.Debuff:
                     spells = Enemy.Persona.SpellBook.Spells
