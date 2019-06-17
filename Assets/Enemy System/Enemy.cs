@@ -25,6 +25,8 @@ namespace Assets.EnemySystem {
         protected override void OnAwake() => AI = new EnemyAI(this, EnemyAI.EnemyTargetCategory.Closest);
 
         public override void Die () {
+            base.Die();
+
             Location.Occupant = null;
             Location = null;
             gameObject.SetActive(false);

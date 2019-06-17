@@ -1,20 +1,23 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using Assets.CharacterSystem;
 using Assets.Enums;
 using Assets.GameSystem;
 using Assets.PlayerSystem;
-using Assets.Spells;
+using Assets.CharacterSystem;
 using Assets.UI;
 using UnityEngine;
 
 namespace Asstes.CharacterSystem.StatusEffects {
+
+    [System.Serializable]
     public class StatusEffectController : MonoBehaviour {
         public StatusConditions CurrentEffect = StatusConditions.None;
         // public TurnManager TurnManager;
         public Character Character;
+        [SerializeField]
         private uint LastTurnTick;
+        [SerializeField]
         private int FinalTurnTick = -1;
 
         [SerializeField]
@@ -73,10 +76,18 @@ namespace Asstes.CharacterSystem.StatusEffects {
         public bool RemoveStatusEffect (StatusConditions statusEffect) {
             if (statusEffect != CurrentEffect) return false;
             if (CurrentEffect == StatusConditions.None) return false;
-            if (ActiveCoroutine == null) return false;
-            StopCoroutine (ActiveCoroutine);
             CurrentEffect = StatusConditions.None;
+            if (ActiveCoroutine != null) {
+                StopCoroutine (ActiveCoroutine);
+            } 
             return true;
+        }
+
+         public void ClearStatusEffect () {
+            CurrentEffect = StatusConditions.None;
+            if (ActiveCoroutine != null) {
+                StopCoroutine (ActiveCoroutine);
+            }
         }
 
         IEnumerator ActiveStatusEffect (Action action) {

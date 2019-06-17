@@ -13,6 +13,7 @@ namespace Assets.PlayerSystem
         public bool IsMoving;
         
         public override void Die () {
+            base.Die();
             transform.position = new Vector3(transform.position.x,  -0.6f, transform.position.z);
         }
 

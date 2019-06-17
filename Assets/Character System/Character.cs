@@ -65,7 +65,9 @@ namespace Assets.CharacterSystem
 
         protected virtual void OnAwake() { }
         protected virtual void OnUpdate() { }
-        public abstract void Die ();
+        public virtual void Die () {
+            StatusEffect.ClearStatusEffect();
+         }
         
         void Awake() {
             if (StatusEffect == null) {
