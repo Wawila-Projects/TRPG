@@ -35,12 +35,16 @@ namespace Assets.GameSystem
         void Awake()
         {
             Manager = this;
+        }
 
+        void Start () 
+        {
             ///TODO: Temporary Fix
             foreach (var enemy in Enemies)
             {
                 enemy.AI.Hivemind.ResetHivemind();
             }
+
         }
     }
 }

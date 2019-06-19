@@ -18,7 +18,7 @@ namespace Assets.EnemySystem
         {
            Enemies = GameController.Manager?.Enemies ?? new List<Enemy>();
 
-            if (!TurnManager.Manager.EnemyPhase)
+            if (!TurnManager.Manager?.EnemyPhase ?? true)
                 return;
 
             if (EnemiesActing)

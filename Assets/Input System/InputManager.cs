@@ -18,7 +18,7 @@ namespace Assets.InputSystem {
 
         void Update () {
             if (SpellTargeter.isTargeting) return;
-            if (TurnManager.Manager.EnemyPhase) return;
+            if (TurnManager.Manager?.EnemyPhase ??  true) return;
             
             GameController.Manager?.UIManager.EnemyStatus.Hide();
             

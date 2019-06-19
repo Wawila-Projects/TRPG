@@ -4,7 +4,7 @@ using Assets.Enums;
 using Assets.Spells;
 
 public static partial class Extensions {
-    public static List<SpellBase> GetSpellsFromElement(this ICollection<SpellBase> collection, Elements element) {
+    public static IList<SpellBase> GetSpellsFromElement(this ICollection<SpellBase> collection, Elements element) {
         return collection.Where( w => w.Element == element).ToList();
     }
 }

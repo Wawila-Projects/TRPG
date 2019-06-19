@@ -15,7 +15,7 @@ namespace Assets.PlayerSystem
         {
            Players = GameController.Manager?.Players ?? new List<Player>();
 
-            if (!TurnManager.Manager.PlayerPhase)
+            if (!TurnManager.Manager?.PlayerPhase ?? true)
                 return;
 
             var finishedPlayers = Players.All(p => p.TurnFinished);

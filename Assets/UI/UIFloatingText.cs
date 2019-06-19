@@ -84,12 +84,13 @@ namespace Assets.UI {
 
             ready = CheckIfReady ();
             AddShowingText (anchor, this);
+            GetComponent<Renderer> ().enabled = false;
 
             if (ready) {
+                GetComponent<Renderer> ().enabled = true;
                 return;
             }
 
-            GetComponent<Renderer> ().enabled = false;
             StartCoroutine (WaitXSeconds (0.3f));
         }
 

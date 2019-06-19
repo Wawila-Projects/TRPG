@@ -65,7 +65,6 @@ namespace Assets.CombatSystem {
                 (defender as Enemy).AI.Hivemind.CaptureInfoWhenBasicAttacked(playerAttacker, resolvedDamage);
             }
 
-
             attacker.DeactivateOneMore ();
             attacker.TurnFinished = true;
 
@@ -78,10 +77,6 @@ namespace Assets.CombatSystem {
                     attacker.AddOneMore ();
                 }
             }
-
-            var anchor = resistance == ResistanceModifiers.Reflect ? attacker.gameObject : defender.gameObject;
-            var text = $"{(resistance == ResistanceModifiers.Absorb ? "+" : "")}{resolvedDamage}";
-            UIFloatingText.Create(text, anchor, Elements.Physical);
         }
 
         public bool SpellAttack (Character attacker, Character defender, OffensiveSpell spell) {
@@ -98,7 +93,7 @@ namespace Assets.CombatSystem {
             switch (spell) {
                 case PhysicalSpell physicalSpell:
                     for (var i = 0; i < physicalSpell.HitCount; i++) {
-                        damage += PhysicalAttack (attacker, defender, physicalSpell);
+                        damage += CalculateSpellDamage (attacker, defender, physicalSpell);
                     }
 
                     didCritical = Random.value <= physicalSpell.CriticalChance;
@@ -118,7 +113,7 @@ namespace Assets.CombatSystem {
                     damage = AlmightyAttack (attacker, defender, almightySpell.AttackPower);
                 break;
                 default:
-                    damage = MagicalAttack (attacker, defender, spell);
+                    damage = CalculateSpellDamage (attacker, defender, spell);
                     didCritical = defender.Persona.Resistances[spell.Element] == ResistanceModifiers.Weak;
                     break;
             }
@@ -135,12 +130,6 @@ namespace Assets.CombatSystem {
             } else if (attacker is Player playerAttacker) {
                 (defender as Enemy).AI.Hivemind.CaptureInfoWhenAttacked(playerAttacker, spell);
             }
-
-            var resistance = defender.Persona.Resistances[spell.Element];
-            var anchor = resistance == ResistanceModifiers.Reflect ? attacker.gameObject : defender.gameObject;
-            var text = $"{(resistance == ResistanceModifiers.Absorb ? "+" : "")}{resolvedDamage}";
-            UIFloatingText.Create(text, anchor, resistance == ResistanceModifiers.Absorb ? Elements.Recovery : spell.Element);
-
             return didCritical;
         }
 
@@ -185,23 +174,13 @@ namespace Assets.CombatSystem {
             return secondChanceToHit;
         }
 
-        private int PhysicalAttack (Character attacker, Character defender, PhysicalSpell spell) {
-            if (defender is Player player) {
-                return Attack (attacker, player, spell.AttackPower, true);
-            }
-            return Attack (attacker, defender, spell.AttackPower, true);
-        }
-
-        private int MagicalAttack (Character attacker, Character defender, OffensiveSpell spell) {
-            if (defender is Player player) {
-                return Attack (attacker, player, spell.AttackPower, false);
-            }
-            return Attack (attacker, defender, spell.AttackPower, false);
+        private int CalculateSpellDamage (Character attacker, Character defender, OffensiveSpell spell) {
+            return Attack (attacker, defender, spell);
         }
 
         private static int AlmightyAttack (Character attacker, Character defender, int attackPower) {
             var attackStat = attacker.Persona.Magic;
-            var modifier = CalculateDamageModifier (attacker, defender, false);
+            var modifier = CalculateDamageModifier (attacker, defender, Elements.Almighty);
             var netdamage = Mathf.Sqrt (attackStat * attackPower) * modifier;
             var damage = netdamage * PowerVariance (attacker.Persona.Luck);
             return Mathf.CeilToInt (damage);
@@ -214,77 +193,92 @@ namespace Assets.CombatSystem {
             return Mathf.CeilToInt (damage);
         }
 
-        private static int Attack (Character attacker, Player defender, int attackPower, bool isPhysical) {
+        private static int Attack (Character attacker, Character defender, OffensiveSpell spell) {
+            var isPhysical = spell.Element == Elements.Physical;
+            var armorModifier = defender is Player player ? (player.Equipment.Armor) : 0;
+
             float attackStat = isPhysical ? attacker.Persona.Strength : attacker.Persona.Magic;
-            var defenceStat = defender.Equipment.Armor + defender.Persona.Endurance * 8f;
-            var modifier = CalculateDamageModifier (attacker, defender, isPhysical);
-            var netdamage = 5 * Mathf.Sqrt ((attackStat / defenceStat) * attackPower) * modifier;
+            var defenceStat = armorModifier + defender.Persona.Endurance * 8;
+            var modifier = CalculateDamageModifier (attacker, defender, spell.Element);
+            var netdamage = 5 * Mathf.Sqrt ((attackStat / defenceStat) * spell.AttackPower) * modifier;
             var damage = netdamage * PowerVariance (attacker.Persona.Luck);
             return Mathf.CeilToInt (damage);
         }
 
-        private static int Attack (Character attacker, Character defender, int attackPower, bool isPhysical) {
-            float attackStat = isPhysical ? attacker.Persona.Strength : attacker.Persona.Magic;
-            var defenceStat = defender.Persona.Endurance;
-            var modifier = CalculateDamageModifier (attacker, defender, isPhysical);
-            var netdamage = 5 * Mathf.Sqrt ((attackStat / defenceStat) * attackPower) * modifier;
-            var damage = netdamage * PowerVariance (attacker.Persona.Luck);
-            return Mathf.CeilToInt (damage);
-        }
-
-        private static float CalculateDamageModifier (Character attacker, Character defender, bool? isPhysical = null) {
+        private static float CalculateDamageModifier (Character attacker, Character defender, Elements element = Elements.None) {
             var modifier = 1f;
             if (attacker.Persona.AttackBuff == StatsModifiers.Buff) {
-                modifier *= 1.3f;
+                modifier *= 1.6f;
             } else if (attacker.Persona.AttackBuff == StatsModifiers.Debuff) {
-                modifier /= 1.3f;
+                modifier /= 1.6f;
             }
 
             if (defender.Persona.DefenceBuff == StatsModifiers.Buff) {
-                modifier /= 1.3f;
+                modifier /= 1.6f;
             } else if (defender.Persona.DefenceBuff == StatsModifiers.Debuff) {
-                modifier *= 1.3f;
+                modifier *= 1.6f;
             }
 
-            if (isPhysical == null) {
+            if (element == Elements.None) {
                 return modifier;
             }
 
-            if (isPhysical == true) {
+            if (element == Elements.Physical) {
                 if (attacker.Persona.PowerCharged) {
                     modifier *= 2.5f;
                 }
             } else if (attacker.Persona.MindCharged) {
                 modifier *= 2.5f;
             }
+            
+            modifier *= attacker.Persona.ElementDamageModifier[element];
 
-            // TODO: Spell element modifiers. Amps, buffs and accesorries 
             return modifier;
         }
 
-        private int ResolveResistances (Character attacker, Character defender, Elements element, int damage) {
+        private int ResolveResistances (Character attacker, Character defender, Elements element, int damage, bool canReflect = true) {
+           if (attacker.Persona.CounterChance > 0 && canReflect) {
+                var chance  = Random.value;
+                if (chance <=  attacker.Persona.CounterChance) {
+                    UIFloatingText.Create("Reflected", attacker.gameObject, Elements.Recovery);
+                    return ResolveResistances(defender, attacker, element, damage, false);
+                } 
+           }
+           
+           var finalDamage = damage;
             switch (defender.Persona.Resistances[element]) {
+                 case ResistanceModifiers.None:
+                    defender.CurrentHP -= damage;
+                    break;
                 case ResistanceModifiers.Resist:
-                    var resisted = Mathf.CeilToInt (damage * 0.6f);
-                    defender.CurrentHP -= resisted;
-                    return resisted;
+                    finalDamage = Mathf.CeilToInt (damage * 0.6f);
+                    defender.CurrentHP -= finalDamage;
+                    break;
                 case ResistanceModifiers.Weak:
-                    var aumented = Mathf.CeilToInt (damage * 1.6f);
-                    defender.CurrentHP -= aumented;
-                    return aumented;
-                case ResistanceModifiers.Reflect:
-                    attacker.CurrentHP -= damage;
+                    finalDamage = Mathf.CeilToInt (damage * 1.6f);
+                    defender.CurrentHP -= finalDamage;
+                    break;
+
+                case ResistanceModifiers.Block:
+                    UIFloatingText.Create("Blocked", defender.gameObject, Elements.Recovery);
                     return 0;
                 case ResistanceModifiers.Absorb:
                     defender.CurrentHP += damage;
-                    return damage;
-                case ResistanceModifiers.None:
-                    defender.CurrentHP -= damage;
-                    return damage;
-                case ResistanceModifiers.Block:
+                    UIFloatingText.Create("Absorbed", defender.gameObject, Elements.Recovery);
+                    UIFloatingText.Create($"+{damage}", defender.gameObject, Elements.Recovery);
+                    return 0;
+                case ResistanceModifiers.Reflect:
+                    if (canReflect) {
+                        UIFloatingText.Create("Reflected", attacker.gameObject, Elements.Recovery);
+                        ResolveResistances(defender, attacker, element, damage, false);
+                    } else {
+                        UIFloatingText.Create("Blocked", attacker.gameObject, Elements.Recovery);
+                    }
                     return 0;
             }
-            return 0;
+
+            UIFloatingText.Create($"{finalDamage}", defender.gameObject, element);
+            return finalDamage;
         }
     }
 }
