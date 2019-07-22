@@ -21,22 +21,29 @@ namespace Assets.Spells
 
         public virtual void HandleCostReduction(Character character)
         {
+            double cost = Cost;
             if (!IsPhysical) {
-                character.CurrentSP -= Cost;
+                cost = character.Persona.SpellMaster ? cost/2 : cost;
+                character.CurrentSP -= (int)cost;
                 return;
             }
 
-            var cost = (int) Math.Ceiling(character.Hp * (Cost/100f));
-            character.CurrentHP -= cost;
+            cost = Math.Ceiling(character.Hp * (Cost/100f));
+            cost = character.Persona.ArmsMaster ? cost/2 : cost;
+            character.CurrentHP -= (int)cost;
         }
 
         public virtual bool CanBeCasted(Character character)
         {
-            if (IsPhysical) {
-                var cost = (int) Math.Ceiling(character.Hp * (Cost/100f));
-                return character.CurrentHP > cost;
+            double cost = Cost;
+            if (!IsPhysical) {
+                cost = character.Persona.SpellMaster ? cost/2 : cost;
+                return character.CurrentSP >= cost;
             }
-            return character.CurrentSP >= Cost;
+
+            cost = Math.Ceiling(character.Hp * (Cost/100f));
+            cost = character.Persona.ArmsMaster ? cost/2f : cost;
+            return character.CurrentHP > cost;
         }
 
         public bool Equals(SpellBase other)

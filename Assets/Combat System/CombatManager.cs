@@ -92,20 +92,26 @@ namespace Assets.CombatSystem {
             var damage = 0;
             switch (spell) {
                 case PhysicalSpell physicalSpell:
-                    for (var i = 0; i < physicalSpell.HitCount; i++) {
-                        damage += CalculateSpellDamage (attacker, defender, physicalSpell);
-                    }
 
-                    didCritical = Random.value <= physicalSpell.CriticalChance;
-
+                    var cannotBeCritacllyHit = false;
                     if (defender is Enemy enemy && (enemy.IsBoss 
                         || enemy.Persona.Resistances[Elements.Physical] <= ResistanceModifiers.Resist)) {
-                        didCritical = false;
+                        cannotBeCritacllyHit = true;
                     }
 
-                    if (didCritical) {
-                        damage = Mathf.CeilToInt (damage * 1.6f);
-                        UIFloatingText.Create("Critical Hit!", defender.gameObject);
+                    var criticalModifier = attacker.Persona.AptPupil ? 1.5 : 1;
+
+                    for (var i = 0; i < physicalSpell.HitCount; i++) {
+                       var  partialDamage = CalculateSpellDamage (attacker, defender, physicalSpell);
+
+                        didCritical = Random.value <= (physicalSpell.CriticalChance * criticalModifier);
+
+                        if (didCritical && !cannotBeCritacllyHit) {
+                            partialDamage = Mathf.CeilToInt (partialDamage * 1.6f);
+                            UIFloatingText.Create("Critical Hit!", defender.gameObject);
+                        }
+                            
+                        damage += partialDamage;
                     }
 
                     break;

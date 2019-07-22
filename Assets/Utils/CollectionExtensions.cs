@@ -8,6 +8,14 @@ namespace Assets.Utils {
         private static Random rnd = new Random();
         public static bool IsEmpty<T>(this ICollection<T> sequence) => sequence.Count == 0;
         
+        public static IDictionary<TKey, TValue> ToDictionary<TKey, TValue> (this IEnumerable<KeyValuePair<TKey, TValue>> collection) {
+        var dictionary = new Dictionary<TKey, TValue>();
+        foreach (var (key, value) in collection) {
+            dictionary[key] = value;
+        }
+        return dictionary;
+    }
+
         public static void Deconstruct<T1, T2>(this KeyValuePair<T1, T2> tuple, out T1 key, out T2 value)
         {
             key = tuple.Key;

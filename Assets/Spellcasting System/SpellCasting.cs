@@ -1,8 +1,8 @@
 using System;
 using System.Collections.Generic;
-using Assets.Enums;
 using Assets.CharacterSystem;
 using Assets.CombatSystem;
+using Assets.Enums;
 using Assets.PlayerSystem;
 using Assets.Spells;
 using Assets.UI;
@@ -10,16 +10,15 @@ using Asstes.CharacterSystem.StatusEffects;
 
 namespace Assets.SpellCastingSystem {
     public class SpellCasting<T> where T : Character {
-        private Random random = new Random ();
-        private const double ElementalAilmentChance = 0.1d;
+        private const float ElementalAilmentChance = 0.1f;
 
         public bool CastSpell (SpellBase spell, T caster, List<Character> targets) {
-            if (!spell.CanBeCasted(caster)) {
+            if (!spell.CanBeCasted (caster)) {
                 return false;
             }
 
             var oneMore = false;
-            caster.DeactivateOneMore();
+            caster.DeactivateOneMore ();
 
             switch (spell) {
                 case OffensiveSpell offensiveSpell:
@@ -44,7 +43,7 @@ namespace Assets.SpellCastingSystem {
             spell.HandleCostReduction (caster);
 
             if (oneMore) {
-                caster.AddOneMore();
+                caster.AddOneMore ();
                 return true;
             }
 
@@ -56,7 +55,7 @@ namespace Assets.SpellCastingSystem {
             foreach (var target in targets) {
                 var modifier = GetAilmentResistanceModifier (target);
                 if (modifier == 0) continue;
-
+                modifier *= caster.Persona.StatusConditionModifier[spell.StatusConditionInflicted];
                 if (!CombatManager.SpellDidHit (caster, target, spell.HitChange * modifier))
                     continue;
                 target.StatusEffect.SetStatusEffect (spell.StatusConditionInflicted);
@@ -68,7 +67,7 @@ namespace Assets.SpellCastingSystem {
                 foreach (var statusConditoin in spell.CureableStatusConditions) {
                     target.StatusEffect.RemoveStatusEffect (statusConditoin);
                 }
-                UIFloatingText.Create(name, target.gameObject, Elements.Recovery);
+                UIFloatingText.Create (name, target.gameObject, Elements.Recovery);
             }
         }
         private void CastReviveSpell (IReviveSpell spell, T target) {
@@ -78,14 +77,14 @@ namespace Assets.SpellCastingSystem {
             target.IsDead = false;
             target.transform.position = target.Location.transform.position;
 
-            UIFloatingText.Create($"{target.Name} revived!", target.gameObject, Elements.Recovery);
+            UIFloatingText.Create ($"{target.Name} revived!", target.gameObject, Elements.Recovery);
         }
 
         private void CastHealingSpell (IHealingSpell spell, T caster, List<Character> targets) {
             if (spell.FullHeal) {
                 targets.ForEach (t => {
                     t.CurrentHP = t.Hp;
-                    UIFloatingText.Create($"+{t.Hp}", t.gameObject, Elements.Recovery);
+                    UIFloatingText.Create ($"+{t.Hp}", t.gameObject, Elements.Recovery);
                 });
                 return;
             }
@@ -93,7 +92,7 @@ namespace Assets.SpellCastingSystem {
             foreach (var target in targets) {
                 var amount = spell.HealingPower * CombatManager.PowerVariance (caster.Persona.Luck);
                 target.CurrentHP += (int) Math.Ceiling (amount);
-                UIFloatingText.Create($"+{(int) Math.Ceiling (amount)}", target.gameObject, Elements.Recovery);
+                UIFloatingText.Create ($"+{(int) Math.Ceiling (amount)}", target.gameObject, Elements.Recovery);
             }
         }
 
@@ -105,14 +104,14 @@ namespace Assets.SpellCastingSystem {
             var oneMore = false;
 
             foreach (var target in targets) {
-                oneMore = CombatManager.Manager.SpellAttack(caster, target, spell);
+                oneMore = CombatManager.Manager.SpellAttack (caster, target, spell);
 
-                 if (oneMore) {
+                if (oneMore) {
                     if (target.StatusEffect == StatusConditions.Down) {
-                        target.StatusEffect.SetStatusEffect(StatusConditions.Dizzy);
+                        target.StatusEffect.SetStatusEffect (StatusConditions.Dizzy);
                         oneMore = false;
                     } else {
-                        target.StatusEffect.SetStatusEffect(StatusConditions.Down);
+                        target.StatusEffect.SetStatusEffect (StatusConditions.Down);
                         oneMore = true;
                     }
                 }
@@ -122,21 +121,31 @@ namespace Assets.SpellCastingSystem {
 
                 var modifier = GetAilmentResistanceModifier (target);
                 if (modifier == 0) continue;
-                if (random.NextDouble () > (ElementalAilmentChance * modifier)) continue;
 
+                modifier *= ElementalAilmentChance;
+
+                var condition = StatusConditions.None;
                 switch (spell.Element) {
                     case Elements.Fire:
-                        target.StatusEffect.SetStatusEffect (StatusConditions.Burn);
-                        continue;
+                        condition = StatusConditions.Burn;
+                        break;
                     case Elements.Ice:
-                        target.StatusEffect.SetStatusEffect (StatusConditions.Freeze);
-                        continue;
+                        condition = StatusConditions.Freeze;
+                        break;
                     case Elements.Elec:
-                        target.StatusEffect.SetStatusEffect (StatusConditions.Shock);
-                        continue;
+                        condition = StatusConditions.Shock;
+                        break;
                     default:
                         continue;
                 }
+
+                modifier *= caster.Persona.StatusConditionModifier[condition];
+
+                if (condition == StatusConditions.None ||
+                    !CombatManager.SpellDidHit (caster, target, modifier)) {
+                    continue;
+                }
+                target.StatusEffect.SetStatusEffect (condition);
             }
 
             return oneMore;
@@ -145,7 +154,7 @@ namespace Assets.SpellCastingSystem {
         private float GetAilmentResistanceModifier (Character target) {
             switch (target.Persona.Resistances[Elements.Ailment]) {
                 case ResistanceModifiers.Weak:
-                    return 2f;
+                    return 1.5f;
                 case ResistanceModifiers.Resist:
                     return 0.5f;
                 case ResistanceModifiers.None:
