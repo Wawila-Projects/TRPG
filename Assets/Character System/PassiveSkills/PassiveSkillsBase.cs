@@ -2,10 +2,10 @@ using System;
 
 namespace Assets.CharacterSystem.PassiveSkills {
     public abstract class PassiveSkillsBase : IEquatable<PassiveSkillsBase> {
-        public bool IsActive = true;
+        public bool IsActive = false;
         public abstract string Name { get; protected set; }
         public abstract string Description { get; }
-        public abstract Phase ActivationPhase { get; }
+        public virtual Phase ActivationPhase => Phase.Start;
         public abstract void Activate (Character character);
         public abstract void Terminate (Character character);
 
