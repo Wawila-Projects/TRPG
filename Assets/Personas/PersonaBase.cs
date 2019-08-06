@@ -36,8 +36,10 @@ namespace Assets.Personas
         public bool ArmsMaster = false;
         public bool SpellMaster = false;
         public bool AptPupil = false;
+        public bool DivineGrace = false;
         public IDictionary<Elements, float> ElementDamageModifier;
         public IDictionary<StatusConditions, float> StatusConditionModifier;
+        public IDictionary<Elements, ResistanceModifiers> OriginalResistances { get; private set; }
        
 
         // TODO: Add ability to buff/debuff resistances
@@ -62,7 +64,7 @@ namespace Assets.Personas
             
             var resistances = elements.Select( s => new KeyValuePair<Elements, ResistanceModifiers>(s, ResistanceModifiers.None) );
             Resistances = resistances.ToDictionary();
-
+            
             var modifiers = elements.Select( s => new KeyValuePair<Elements, float>(s, 1f) ); 
             ElementDamageModifier = modifiers.ToDictionary();
             
@@ -72,6 +74,7 @@ namespace Assets.Personas
                 .ToDictionary();
 
             SetResistances ();
+            OriginalResistances = Resistances;
             Stats = GetBaseStats ();
 
             StatsKeys = Stats.Keys.Select((k) => k.ToString()).ToList();
@@ -111,6 +114,29 @@ namespace Assets.Personas
                 ++Stats[stat];
             }
             return Level;
+        }
+
+        public bool ChangeResistances(Elements element, ResistanceModifiers modifier = ResistanceModifiers.None, 
+            bool clear = false, bool buff = false, bool debuff = false) {
+
+            if (clear && buff && debuff) return false;
+
+            if (clear) {
+                Resistances[element] = OriginalResistances[element];
+                return true;
+            } 
+
+            if (buff && modifier > Resistances[element]) {
+                Resistances[element] = modifier;
+                return true;
+            }
+
+            if (debuff && modifier < Resistances[element]) {
+                Resistances[element] = modifier;
+                return true;
+            }
+            
+            return false;
         }
 
         protected abstract IDictionary<Statistics, int> GetBaseStats();

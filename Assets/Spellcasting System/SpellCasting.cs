@@ -91,8 +91,9 @@ namespace Assets.SpellCastingSystem {
 
             foreach (var target in targets) {
                 var amount = spell.HealingPower * CombatManager.PowerVariance (caster.Persona.Luck);
-                target.CurrentHP += (int) Math.Ceiling (amount);
-                UIFloatingText.Create ($"+{(int) Math.Ceiling (amount)}", target.gameObject, Elements.Recovery);
+                var finalAmount  = (int) Math.Ceiling(amount * (caster.Persona.DivineGrace ? 1.5 : 1));
+                target.CurrentHP += finalAmount;
+                UIFloatingText.Create ($"+{finalAmount}", target.gameObject, Elements.Recovery);
             }
         }
 
