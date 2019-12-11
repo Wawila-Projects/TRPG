@@ -16,9 +16,9 @@ namespace Assets.Personas
         public abstract Arcana Arcana { get; }
         public abstract Elements InheritanceElement { get; }
         public SpellBook SpellBook { get; protected set; }
-        protected IDictionary<Statistics, int> Stats;
         public IDictionary<Elements, ResistanceModifiers> Resistances { get; protected set; }
         public virtual bool IsPlayerPersona => false;
+        protected IDictionary<Statistics, int> Stats;
 
         public int Strength => Stats[Statistics.Strength];
         public int Magic => Stats[Statistics.Magic];
@@ -82,7 +82,7 @@ namespace Assets.Personas
             _spellBook = SpellBook;
         }
 
-        public (int newLevel, List<Statistics> statUps) LevelUp(int statsUps = 3) {
+        public (int newLevel, List<Statistics> statUps, SpellBase spell) LevelUp(int statsUps = 3) {
             ++Level;
             var random = new Random(DateTime.Now.Millisecond);
             var statistics = EnumUtils<Statistics>.GetValues();
@@ -98,12 +98,12 @@ namespace Assets.Personas
                 ++Stats[stat];
             } 
 
-            SpellBook.LevelUp();
+            var (_, newSpell) = SpellBook.LevelUp();
 
             StatsValues = Stats.Values.ToList();
             BST = StatsValues.Average();
             
-            return (Level, statsToLevel);
+            return (Level, statsToLevel, newSpell);
         }
 
         public int LevelUp(List<Statistics> stats) {

@@ -1,5 +1,7 @@
 using System.Collections.Generic;
 
+
+//TODO Remove. Old System (DOS 2)
 namespace Assets.PlayerSystem
 {
     public class ActionHandler {

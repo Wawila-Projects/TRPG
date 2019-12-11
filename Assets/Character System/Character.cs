@@ -2,6 +2,7 @@
 using UnityEngine;
 using Assets.Personas;
 using Asstes.CharacterSystem.StatusEffects;
+using Assets.CharacterSystem.PassiveSkills;
 
 namespace Assets.CharacterSystem
 {
@@ -19,6 +20,7 @@ namespace Assets.CharacterSystem
         public int Sp;
         public PersonaBase Persona;
         public StatusEffectController StatusEffect;
+        public PassiveSkillController PassiveSkills;
 
         [SerializeField]
         protected int _currentHP;
@@ -67,6 +69,9 @@ namespace Assets.CharacterSystem
         protected virtual void OnUpdate() { }
         public virtual void Die () {
             StatusEffect.ClearStatusEffect();
+            PassiveSkills.HandleStartSkills(false);
+            PassiveSkills.HandleTurnSkills(false);
+            PassiveSkills.HandleEndSkills(false);
          }
         
         void Awake() {
@@ -74,11 +79,14 @@ namespace Assets.CharacterSystem
                 StatusEffect = GetComponent<StatusEffectController> ();
             }
 
+            if (PassiveSkills == null) {
+                PassiveSkills = GetComponent<PassiveSkillController>();
+            }
+
             Level = Persona.Level;
             Name = gameObject.name;
             Movement = 3;
             CurrentMovement = Movement;
-            
 
             CurrentHP = Hp;
             CurrentSP = Sp;
@@ -95,15 +103,11 @@ namespace Assets.CharacterSystem
        public void LevelUp() {
             var changes = Persona.LevelUp();
             Level = changes.newLevel;
-            
-            var lostHp = Hp - CurrentHP;
-            var lostSp = Sp - CurrentSP;
-
             Hp += 4;
             Sp += 3;
 
-            CurrentHP = Hp - lostHp;
-            CurrentSP = Sp - lostSp;
+            CurrentHP += 4;
+            CurrentSP += 3;
         }
 
         public void AddOneMore() {
