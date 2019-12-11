@@ -39,7 +39,7 @@ namespace Assets.Personas
         public bool DivineGrace = false;
         public IDictionary<Elements, float> ElementDamageModifier;
         public IDictionary<StatusConditions, float> StatusConditionModifier;
-        public IDictionary<Elements, ResistanceModifiers> OriginalResistances { get; private set; }
+        private IDictionary<Elements, ResistanceModifiers> OriginalResistances;
        
 
         // TODO: Add ability to buff/debuff resistances

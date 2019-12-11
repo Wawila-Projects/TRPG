@@ -13,7 +13,6 @@ using UnityEngine;
 
 namespace Assets.EnemySystem {
     public class Enemy : Character {
-
         public EnemyAI AI;
         public int BasicAttack;
         public int Accuracy;
