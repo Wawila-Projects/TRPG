@@ -4,9 +4,8 @@ using Assets.CharacterSystem;
 
 namespace Assets.Spells
 {
-
     // TODO Check descriptions.. "of Party" to ~MultiTarget
-    public abstract class SpellBase: IEquatable<SpellBase>
+    public abstract class CastableSpell: ISpell, IEquatable<CastableSpell>
     {
         protected abstract string Id { get; }
         public abstract string Name { get; }
@@ -15,6 +14,7 @@ namespace Assets.Spells
         public abstract bool IsMultitarget { get; } 
         public abstract bool IsMagical { get; }
         public bool IsPhysical => !IsMagical;
+
         public abstract Elements Element { get; }
 
         public override string ToString() => $"{Id} | {Element.ToString()} | {Name}";
@@ -46,14 +46,14 @@ namespace Assets.Spells
             return character.CurrentHP > cost;
         }
 
-        public bool Equals(SpellBase other)
+        public bool Equals(CastableSpell other)
         {
             return Id == other?.Id;
         }
 
         public override bool Equals(Object other)
         {
-            var spell = other as SpellBase;
+            var spell = other as CastableSpell;
             return Id == spell?.Id;
         }
 
@@ -61,7 +61,7 @@ namespace Assets.Spells
             return Id.GetHashCode();
         }
 
-        public static bool operator == (SpellBase lhs, SpellBase rhs) 
+        public static bool operator == (CastableSpell lhs, CastableSpell rhs) 
         {
             if (Object.ReferenceEquals (lhs, rhs)) 
             {
@@ -73,7 +73,7 @@ namespace Assets.Spells
             }
             return lhs.Id == rhs.Id;
         }
-        public static bool operator != (SpellBase lhs, SpellBase rhs) 
+        public static bool operator != (CastableSpell lhs, CastableSpell rhs) 
         {
             return !(lhs == rhs);
         }

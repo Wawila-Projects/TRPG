@@ -1,7 +1,7 @@
 using Assets.Enums;
 
 namespace Assets.Spells {
-    public abstract class SupportSpell : SpellBase {
+    public abstract class SupportSpell : CastableSpell {
         public override Elements Element => Elements.Recovery;
         public override bool IsMagical => true;
         public virtual int TurnsActive => 3;

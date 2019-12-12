@@ -1,9 +1,10 @@
 using System;
+using Assets.Spells;
 
 namespace Assets.CharacterSystem.PassiveSkills {
-    public abstract class PassiveSkillsBase : IEquatable<PassiveSkillsBase> {
-        public bool IsActive = false;
+    public abstract class PassiveSkillsBase : ISpell, IEquatable<PassiveSkillsBase> {
         public abstract string Name { get; protected set; }
+        public bool IsActive = false;
         public abstract string Description { get; }
         public virtual Phase ActivationPhase => Phase.Start;
         public abstract void Activate (Character character);

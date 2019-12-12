@@ -15,7 +15,7 @@ namespace Assets.SpellCastingSystem {
         public MapCoordinator Map;
         public Player Caster => GetComponent<PlayerInteractions> ().Selected;
         public Tile SelectedTile;
-        public SpellBase Spell;
+        public CastableSpell Spell;
         public bool isTargeting;
         public List<Tile> SpellTiles;
         public List<Color> originalColors;
@@ -69,7 +69,7 @@ namespace Assets.SpellCastingSystem {
             });
         }
 
-        public void SelectSpell (SpellBase spell) {
+        public void SelectSpell (CastableSpell spell) {
             if (spell is null)
                 return;
 

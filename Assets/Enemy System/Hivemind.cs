@@ -90,7 +90,7 @@ namespace Assets.EnemySystem {
             public HivemindInfo(Player player) {
                 Player = player;
 
-                Spells = new HashSet<SpellBase>();
+                Spells = new HashSet<CastableSpell>();
                 Resistances = new Dictionary<Elements, ResistanceModifiers>();
             }
 
@@ -101,7 +101,7 @@ namespace Assets.EnemySystem {
             public (int count, int total, int average) BasicAttackDamage = (0,0,0);
             public Tile LastSeenLocation;
             public StatusConditions StatusEffect = StatusConditions.None;
-            public HashSet<SpellBase> Spells;
+            public HashSet<CastableSpell> Spells;
             public IDictionary<Elements, ResistanceModifiers> Resistances;
         }
     }

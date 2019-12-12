@@ -3,7 +3,7 @@ using Assets.Enums;
 
 namespace Assets.Spells
 {
-    public abstract class AilementSpell: SpellBase
+    public abstract class AilementSpell: CastableSpell
     {
         public override bool IsMagical => true;
         public override Elements Element => Elements.Ailment;

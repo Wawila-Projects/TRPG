@@ -12,7 +12,7 @@ namespace Assets.SpellCastingSystem {
     public class SpellCasting<T> where T : Character {
         private const float ElementalAilmentChance = 0.1f;
 
-        public bool CastSpell (SpellBase spell, T caster, List<Character> targets) {
+        public bool CastSpell (CastableSpell spell, T caster, List<Character> targets) {
             if (!spell.CanBeCasted (caster)) {
                 return false;
             }

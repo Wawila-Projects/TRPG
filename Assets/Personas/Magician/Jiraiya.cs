@@ -32,17 +32,17 @@ namespace Assets.Personas.Magician {
             Resistances[Elements.Elec] = ResistanceModifiers.Weak;
         }
 
-        protected override List<SpellBase> GetBaseSpellbook()
+        protected override List<ISpell> GetBaseSpellbook()
         {
-            return new List<SpellBase> {
+            return new List<ISpell> {
                 SpellLexicon.Wind.Garu, 
                 SpellLexicon.Physical.Bash, 
             };
         }
 
-        protected override Dictionary<int, SpellBase> GetLockedSpells()
+        protected override Dictionary<int, ISpell> GetLockedSpells()
         {
-            return new Dictionary<int, SpellBase> {
+            return new Dictionary<int, ISpell> {
                 {10, SpellLexicon.Wind.Magaru},
                 {15, SpellLexicon.Wind.Garula}
             };

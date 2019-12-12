@@ -2,7 +2,7 @@ using Assets.Enums;
 
 namespace Assets.Spells.LightSpells
 {
-    public class Hama : SpellBase, IChanceSpell
+    public class Hama : CastableSpell, IChanceSpell
     {
         protected override string Id => "Light0";
         public override string Name => "Hama";

@@ -2,7 +2,7 @@ using Assets.Enums;
 
 namespace Assets.Spells.DarknessSpells
 {
-    public class Mudoon : SpellBase, IChanceSpell
+    public class Mudoon : CastableSpell, IChanceSpell
     {
         protected override string Id => "Darkness2";
         public override string Name => "Mudoon";

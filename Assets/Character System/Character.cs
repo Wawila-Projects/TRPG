@@ -9,6 +9,7 @@ namespace Assets.CharacterSystem
 
     [RequireComponent(typeof(PersonaBase))]
     [RequireComponent(typeof(StatusEffectController))]
+    [RequireComponent(typeof(PassiveSkillController))]
     public abstract class Character : MonoBehaviour
     {
         public string Name;
@@ -108,6 +109,10 @@ namespace Assets.CharacterSystem
 
             CurrentHP += 4;
             CurrentSP += 3;
+
+            if (changes.spell is PassiveSkillsBase passiveSkill) {
+                PassiveSkills.AddSkill(passiveSkill);
+            }
         }
 
         public void AddOneMore() {

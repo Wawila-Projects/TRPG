@@ -4,7 +4,7 @@ using Assets.Enums;
 
 namespace Assets.Spells.LightSpells
 {
-    public class Samsara : SpellBase, IChanceSpell, IExclusiveSpell
+    public class Samsara : CastableSpell, IChanceSpell, IExclusiveSpell
     {
         protected override string Id => "Light4";
         public override string Name => "Samsara";

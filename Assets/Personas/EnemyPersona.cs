@@ -36,9 +36,9 @@ namespace Assets.Personas {
             // Resistances[Elements.Almighty] = ResistanceModifiers.None;
         }
 
-        protected override List<SpellBase> GetBaseSpellbook()
+        protected override List<ISpell> GetBaseSpellbook()
         {
-            return new List<SpellBase> {
+            return new List<ISpell> {
                 SpellLexicon.Fire.Maragi, 
                 SpellLexicon.Ice.Mabufu, 
                 SpellLexicon.Wind.Magaru, 
@@ -48,9 +48,9 @@ namespace Assets.Personas {
             };
         }
 
-        protected override Dictionary<int, SpellBase> GetLockedSpells()
+        protected override Dictionary<int, ISpell> GetLockedSpells()
         {
-            return new Dictionary<int, SpellBase> {
+            return new Dictionary<int, ISpell> {
 
             };
         }

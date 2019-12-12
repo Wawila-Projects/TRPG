@@ -6,7 +6,6 @@ using Assets.PlayerSystem;
 using Assets.ProbabilitySystem;
 using Assets.Spells;
 using Assets.Utils;
-using UnityEngine;
 
 namespace Assets.EnemySystem {
     [System.Serializable]
@@ -19,6 +18,8 @@ namespace Assets.EnemySystem {
         public EnemyTargetCategory TargetCategory;
         public EnemyTargetCategory DefaultTargetCategory;
         public Probability<EnemyActions> ActionProbability;
+
+        private List<CastableSpell> CastableSpells => Enemy.Persona.SpellBook.Spells.ConvertTo<ISpell, CastableSpell> ();
 
         private List<Player> AllPlayers => GameController.Manager.Players.Where (t => !t.IsDead).ToList ();
         public EnemyAI (Enemy enemy, EnemyTargetCategory targetCategory, /* bool stayInRange, */
@@ -33,24 +34,19 @@ namespace Assets.EnemySystem {
             Enemy = enemy;
 
             if (actionProbabilities == null || actionProbabilities?.IsEmpty () == true) {
-                ActionProbability = new Probability<EnemyActions> (new Dictionary<EnemyActions, int> () {
-                    {EnemyActions.BasicAttack, 20},
-                    {EnemyActions.SpellAttack, 40},
-                    {EnemyActions.MultitargetSpellAttack, 10},
-                    {EnemyActions.TargetWeakness, 20},
-                    {EnemyActions.FindWeakness, 10},
+                ActionProbability = new Probability<EnemyActions> (new Dictionary<EnemyActions, int> () { { EnemyActions.BasicAttack, 20 }, { EnemyActions.SpellAttack, 40 }, { EnemyActions.MultitargetSpellAttack, 10 }, { EnemyActions.TargetWeakness, 20 }, { EnemyActions.FindWeakness, 10 },
                 });
                 return;
-            } 
+            }
 
             ActionProbability = new Probability<EnemyActions> (actionProbabilities);
         }
 
-        public virtual (Player target, EnemyActions action, List<SpellBase> possibleSpells) NextTurnActions (EnemyActions? carryAction = null) {
+        public virtual (Player target, EnemyActions action, List<CastableSpell> possibleSpells) NextTurnActions (EnemyActions? carryAction = null) {
             var target = FindTarget ();
 
             if (target == null) {
-                return (target, EnemyActions.Stay, new List<SpellBase> ());
+                return (target, EnemyActions.Stay, new List<CastableSpell> ());
             }
 
             var action = carryAction ?? ActionProbability.GetResult ();
@@ -58,30 +54,29 @@ namespace Assets.EnemySystem {
             if (action == EnemyActions.BasicAttack ||
                 action == EnemyActions.Disengage ||
                 action == EnemyActions.Stay) {
-                return (target, action, new List<SpellBase> ());
+                return (target, action, new List<CastableSpell> ());
             }
 
-            IEnumerable<SpellBase> spells = new List<SpellBase> ();
+            IEnumerable<CastableSpell> spells = new List<CastableSpell> ();
+            var castableSpells = CastableSpells;
 
             switch (action) {
                 case EnemyActions.SpellAttack:
-                    spells = Enemy.Persona.SpellBook.Spells.Where(
+                    spells = castableSpells.Where (
                         w => w is OffensiveSpell
                     );
                     break;
                 case EnemyActions.MultitargetSpellAttack:
-                    spells = Enemy.Persona.SpellBook.Spells.Where(
+                    spells = castableSpells.Where (
                         w => w.IsMultitarget && w is OffensiveSpell
                     );
                     break;
                 case EnemyActions.Buff:
-                    spells = Enemy.Persona.SpellBook.Spells
-                        .GetSpellsFromElement (Elements.Recovery)
+                    spells = castableSpells.GetSpellsFromElement (Elements.Recovery)
                         .Where (w => w is IAssitSpell || w is SupportSpell);
                     break;
                 case EnemyActions.Debuff:
-                    spells = Enemy.Persona.SpellBook.Spells
-                        .GetSpellsFromElement (Elements.Ailment);
+                    spells = castableSpells.GetSpellsFromElement (Elements.Ailment);
                     break;
                 case EnemyActions.TargetWeakness:
                     var weaknesses = Hivemind.CollectedInfo[target].Resistances
@@ -91,32 +86,32 @@ namespace Assets.EnemySystem {
                     if (weaknesses.Count () == 0) break;
 
                     foreach (var weakness in weaknesses) {
-                       spells.AddRange (Enemy.Persona.SpellBook.Spells
-                            .GetSpellsFromElement (weakness));
+                        spells.AddRange (
+                            castableSpells.GetSpellsFromElement (weakness));
                     }
                     break;
                 case EnemyActions.FindWeakness:
                     var knownResistance = Hivemind.CollectedInfo[target].Resistances
                         .Select (s => s.Key);
-                    var unknownResistance = EnumUtils<Elements>.ToList()
-                        .Except(knownResistance);
+                    var unknownResistance = EnumUtils<Elements>.ToList ()
+                        .Except (knownResistance);
 
-                    if (unknownResistance.Count() == 0) break;
-                    
+                    if (unknownResistance.Count () == 0) break;
+
                     foreach (var weakness in unknownResistance) {
-                        spells.AddRange (Enemy.Persona.SpellBook.Spells
+                        spells.AddRange (castableSpells
                             .GetSpellsFromElement (weakness));
                     }
                     break;
             }
 
-            var spellList = spells.ToList();
+            var spellList = spells.ToList ();
             spellList.RemoveAll (s => !s.CanBeCasted (Enemy));
 
             if (spellList.IsEmpty ()) {
                 if (action == EnemyActions.SpellAttack) {
-                    return NextTurnActions (EnemyActions.BasicAttack) ;
-                } 
+                    return NextTurnActions (EnemyActions.BasicAttack);
+                }
                 return NextTurnActions (EnemyActions.SpellAttack);
             }
 
@@ -145,10 +140,10 @@ namespace Assets.EnemySystem {
 
                 return target;
             }
-            
+
             var targetCategory = TargetCategory;
             if (TargetCategory == EnemyTargetCategory.Random) {
-                targetCategory = EnumUtils<EnemyTargetCategory>.GetValues().GetRandomValue();
+                targetCategory = EnumUtils<EnemyTargetCategory>.GetValues ().GetRandomValue ();
             }
 
             switch (targetCategory) {
@@ -209,7 +204,7 @@ namespace Assets.EnemySystem {
                         .Select (s => s.Key);
 
                     foreach (var weakness in weaknesses) {
-                        if (Enemy.Persona.SpellBook.Spells.GetSpellsFromElement (weakness).IsEmpty () != has) {
+                        if (CastableSpells.GetSpellsFromElement (weakness).IsEmpty () != has) {
                             possibleTargets.Add (player);
                         }
                     }
@@ -236,14 +231,14 @@ namespace Assets.EnemySystem {
 
             Player FindClosest (IEnumerable<Player> list) {
                 var playerList = list;
-                playerList = playerList.OrderBy( o => Enemy.DistanceFromCombatRange (o));
+                playerList = playerList.OrderBy (o => Enemy.DistanceFromCombatRange (o));
 
-                return playerList.FirstOrDefault(
+                return playerList.FirstOrDefault (
                     f => {
-                        var allOccupied = f.Location.Neighbors.TrueForAll( t => t.IsOccupied);
-                        if (!allOccupied) 
+                        var allOccupied = f.Location.Neighbors.TrueForAll (t => t.IsOccupied);
+                        if (!allOccupied)
                             return true;
-                        return f.Location.Neighbors.Contains(Enemy.Location);
+                        return f.Location.Neighbors.Contains (Enemy.Location);
                     }
                 );
             }
@@ -271,7 +266,7 @@ namespace Assets.EnemySystem {
             HighestDamaged,
             LowestDamaged,
             HighestSpUsed,
-            Random, 
+            Random,
         }
 
         public enum EnemyActions {

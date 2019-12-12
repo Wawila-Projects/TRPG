@@ -70,7 +70,7 @@ namespace Assets.InputSystem {
             }
 
             Target = tileInRange.gameObject;
-            Move();
+            Move ();
             clearMap = true;
             return true;
         }
@@ -109,7 +109,7 @@ namespace Assets.InputSystem {
                     var path = AStar.FindPath (Selected.Location, tile);
                     if (path.Count == 0) return false;
                     Target = path.ElementAt (Selected.CurrentMovement).gameObject;
-                    Move();
+                    Move ();
                     Selected.CurrentMovement = 0;
                 } else {
                     ClearSelected ();
@@ -119,7 +119,7 @@ namespace Assets.InputSystem {
                 return true;
             }
 
-            Move();
+            Move ();
             Selected.CurrentMovement -= Selected.Location.GetDistance (tile);
             clearMap = true;
             return true;
@@ -135,9 +135,13 @@ namespace Assets.InputSystem {
             var spellbook = Selected.Persona.SpellBook;
             for (int i = 1; i < 10; ++i) {
                 if (Input.GetKeyDown ($"{i}")) {
-                    var spell = spellbook.Spells.ElementAtOrDefault (i-1);
-                    spellTargeting.SelectSpell (spell);
-                    return spell != null;
+                    var spell = spellbook.Spells.ElementAtOrDefault (i - 1);
+
+                    if (spell is CastableSpell castableSpell) {
+                        spellTargeting.SelectSpell (castableSpell);
+                        return true;
+                    }
+                    return false;
                 }
             }
             return false;
@@ -149,15 +153,15 @@ namespace Assets.InputSystem {
             var tile = Target.GetComponent<Tile> ();
             if (tile == null)
                 return;
-            
-            Selected.Move(tile, (a) => {
+
+            Selected.Move (tile, (a) => {
                 ClearSelected ();
                 if (!a) {
                     return;
                 }
-                    IsInCombat = false;
-                    _selected = null;
-                    _target = null;
+                IsInCombat = false;
+                _selected = null;
+                _target = null;
             });
         }
 

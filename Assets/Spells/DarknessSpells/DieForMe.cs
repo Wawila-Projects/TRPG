@@ -4,7 +4,7 @@ using Assets.Enums;
 
 namespace Assets.Spells.DarknessSpells
 {
-    public class DieForMe : SpellBase, IChanceSpell, IExclusiveSpell
+    public class DieForMe : CastableSpell, IChanceSpell, IExclusiveSpell
     {
         protected override string Id => "Darkness4";
         public override string Name => "Die For Me";

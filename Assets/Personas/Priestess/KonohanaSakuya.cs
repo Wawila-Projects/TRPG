@@ -33,17 +33,17 @@ namespace Assets.Personas.Priestess {
             Resistances[Elements.Ice] = ResistanceModifiers.Weak;
         }
 
-        protected override List<SpellBase> GetBaseSpellbook()
+        protected override List<ISpell> GetBaseSpellbook()
         {
-            return new List<SpellBase> {
+            return new List<ISpell> {
                 SpellLexicon.Fire.Agi, 
                 SpellLexicon.Recovery.Dia, 
             };
         }
 
-        protected override Dictionary<int, SpellBase> GetLockedSpells()
+        protected override Dictionary<int, ISpell> GetLockedSpells()
         {
-            return new Dictionary<int, SpellBase> {
+            return new Dictionary<int, ISpell> {
                 {8, SpellLexicon.Recovery.Media},
                 {15, SpellLexicon.Fire.Maragi},
             };

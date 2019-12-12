@@ -3,7 +3,7 @@ using Assets.Enums;
 
 namespace Assets.Spells.DarknessSpells
 {
-    public class Mamudo : SpellBase, IChanceSpell
+    public class Mamudo : CastableSpell, IChanceSpell
     {
         protected override string Id => "Darkness1";
         public override string Name => "Mamudo";

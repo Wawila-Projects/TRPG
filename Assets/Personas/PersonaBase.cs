@@ -82,7 +82,7 @@ namespace Assets.Personas
             _spellBook = SpellBook;
         }
 
-        public (int newLevel, List<Statistics> statUps, SpellBase spell) LevelUp(int statsUps = 3) {
+        public (int newLevel, List<Statistics> statUps, ISpell spell) LevelUp(int statsUps = 3) {
             ++Level;
             var random = new Random(DateTime.Now.Millisecond);
             var statistics = EnumUtils<Statistics>.GetValues();
@@ -141,7 +141,7 @@ namespace Assets.Personas
 
         protected abstract IDictionary<Statistics, int> GetBaseStats();
         protected abstract void SetResistances();
-        protected abstract List<SpellBase> GetBaseSpellbook(); 
-        protected abstract Dictionary<int, SpellBase> GetLockedSpells();
+        protected abstract List<ISpell> GetBaseSpellbook(); 
+        protected abstract Dictionary<int, ISpell> GetLockedSpells();
     }     
 }

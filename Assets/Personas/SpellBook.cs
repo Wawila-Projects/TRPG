@@ -10,8 +10,8 @@ namespace Assets.Personas {
     public class SpellBook {
         public Elements BaseElement { get; }
         public PersonaBase Owner { get; }
-        public List<SpellBase> Spells { get; }
-        public Dictionary<int, SpellBase> LockedSpells { get; }
+        public List<ISpell> Spells { get; }
+        public Dictionary<int, ISpell> LockedSpells { get; }
         public List<Elements> Restrictions { get; private set; }
 
         //** For Serializing */
@@ -23,7 +23,7 @@ namespace Assets.Personas {
          //** End */
 
         public SpellBook(PersonaBase owner, Elements baseElement, 
-                         List<SpellBase> spells, Dictionary<int, SpellBase> lockedSpells) {
+                         List<ISpell> spells, Dictionary<int, ISpell> lockedSpells) {
             Owner = owner;
             BaseElement = baseElement;
             Spells = spells;
@@ -38,17 +38,17 @@ namespace Assets.Personas {
             this.restrictions = ElementalRestrinctions[baseElement];
         }
 
-        public SpellBook(PersonaBase owner, Elements baseElement, List<SpellBase> spells):
-            this(owner, baseElement, spells, new Dictionary<int, SpellBase>()) {
+        public SpellBook(PersonaBase owner, Elements baseElement, List<ISpell> spells):
+            this(owner, baseElement, spells, new Dictionary<int, ISpell>()) {
         }
         public SpellBook(PersonaBase owner, Elements baseElement): 
-            this(owner, baseElement, new List<SpellBase>(), new Dictionary<int, SpellBase>()) {
+            this(owner, baseElement, new List<ISpell>(), new Dictionary<int, ISpell>()) {
         }
-        public (bool, SpellBase) LevelUp() {
+        public (bool, ISpell) LevelUp() {
             var willAddSpell = LockedSpells.ContainsKey(Owner.Level);
             if(!willAddSpell) return (false, null);
 
-            SpellBase spell = LockedSpells[Owner.Level];
+            ISpell spell = LockedSpells[Owner.Level];
 
             var resolved = AddSpell(spell);
             if (!resolved)  return (false, null);
@@ -59,10 +59,15 @@ namespace Assets.Personas {
             this.lockedSpells = LockedSpells.Select((s) => $"{s.Key}: {s.Value.Name}").ToList();
             return (true, spell);
         }
-        public bool AddSpell(SpellBase spell) {
+        public bool AddSpell(ISpell spell) {
             var isAtSpellLimit = Spells.Count == 8;
             var alreadyHaveSpell = Spells.Contains(spell);
-            var elementRestricted = Restrictions.Contains(spell.Element);
+            
+            var elementRestricted = false;
+            if (spell is CastableSpell castableSpell) {
+                elementRestricted = Restrictions.Contains(castableSpell.Element);
+            }
+            
             if (isAtSpellLimit || alreadyHaveSpell || elementRestricted) 
             {
                 return false;
@@ -77,7 +82,7 @@ namespace Assets.Personas {
             return true;
         }
 
-        public bool DeleteSpell(SpellBase spell) {
+        public bool DeleteSpell(ISpell spell) {
             return Spells.RemoveAll((s) => s == spell) > 0;
         }
 

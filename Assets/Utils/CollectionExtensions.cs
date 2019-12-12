@@ -1,37 +1,36 @@
 using System;
-using System.Linq;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Assets.Utils {
     public static partial class Extensions {
 
-        private static Random rnd = new Random();
-        public static bool IsEmpty<T>(this ICollection<T> sequence) => sequence.Count == 0;
-        
-        public static IDictionary<TKey, TValue> ToDictionary<TKey, TValue> (this IEnumerable<KeyValuePair<TKey, TValue>> collection) {
-        var dictionary = new Dictionary<TKey, TValue>();
-        foreach (var (key, value) in collection) {
-            dictionary[key] = value;
-        }
-        return dictionary;
-    }
+        private static Random rnd = new Random ();
+        public static bool IsEmpty<T> (this ICollection<T> sequence) => sequence.Count == 0;
 
-        public static void Deconstruct<T1, T2>(this KeyValuePair<T1, T2> tuple, out T1 key, out T2 value)
-        {
+        public static IDictionary<TKey, TValue> ToDictionary<TKey, TValue> (this IEnumerable<KeyValuePair<TKey, TValue>> collection) {
+            var dictionary = new Dictionary<TKey, TValue> ();
+            foreach (var (key, value) in collection) {
+                dictionary[key] = value;
+            }
+            return dictionary;
+        }
+
+        public static void Deconstruct<T1, T2> (this KeyValuePair<T1, T2> tuple, out T1 key, out T2 value) {
             key = tuple.Key;
             value = tuple.Value;
         }
 
         public static T GetRandomValue<T> (this ICollection<T> collection) {
-            var index = rnd.Next(collection.Count);
-            return collection.ElementAt(index);
+            var index = rnd.Next (collection.Count);
+            return collection.ElementAt (index);
         }
 
         public static void AddRange<T> (this IEnumerable<T> sequence, IEnumerable<T> other) {
             foreach (var item in other) {
-                sequence.Append(item);
+                sequence.Append (item);
             }
-        } 
+        }
 
         public static TValue GetValueOrDefault<TKey, TValue> (this IDictionary<TKey, TValue> dictionary,
             TKey key, TValue defaultValue = default (TValue)) {
@@ -55,6 +54,10 @@ namespace Assets.Utils {
                 if (sequence[i] == null)
                     sequence.RemoveAt (i);
             }
+        }
+
+        public static List<T> ConvertTo<R, T> (this IList<R> sequence) where T : class {
+            return sequence.Where (s => s is T).Select (s => s as T).ToList ();
         }
     }
 }

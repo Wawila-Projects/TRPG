@@ -33,17 +33,17 @@ namespace Assets.Personas.Emperor {
             Resistances[Elements.Wind] = ResistanceModifiers.Weak;
         }
 
-        protected override List<SpellBase> GetBaseSpellbook()
+        protected override List<ISpell> GetBaseSpellbook()
         {
-            return new List<SpellBase> {
+            return new List<ISpell> {
                 SpellLexicon.Physical.Cleave, 
                 SpellLexicon.Elec.Zio, 
             };
         }
 
-        protected override Dictionary<int, SpellBase> GetLockedSpells()
+        protected override Dictionary<int, ISpell> GetLockedSpells()
         {
-            return new Dictionary<int, SpellBase> {
+            return new Dictionary<int, ISpell> {
                 {8, SpellLexicon.Physical.SingleShot},
                 {15, SpellLexicon.Elec.Mazio},
             };

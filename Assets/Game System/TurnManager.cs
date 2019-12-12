@@ -18,7 +18,7 @@ namespace Assets.GameSystem {
         void Start () {
             Manager = this;
             TurnCounter = 0;
-            NextTurn ();
+            StartRound ();
         }
 
         public void ResetTurnCounter () {
@@ -27,6 +27,28 @@ namespace Assets.GameSystem {
 
         public void StartRound () {
             TurnCounter = 1;
+
+            foreach (var player in GameController.Manager.Players) {
+                player.PassiveSkills.HandleStartSkills (true);
+            }
+
+            foreach (var enemy in GameController.Manager.Enemies) {
+                enemy.PassiveSkills.HandleStartSkills (true);
+            }
+        }
+
+        public void EndTurn () {
+            foreach (var player in GameController.Manager.Players) {
+                player.PassiveSkills.HandleEndSkills (true);
+                player.PassiveSkills.HandleStartSkills (false);
+                player.PassiveSkills.HandleTurnSkills (false);
+            }
+
+            foreach (var enemy in GameController.Manager.Enemies) {
+                enemy.PassiveSkills.HandleEndSkills (true);
+                enemy.PassiveSkills.HandleStartSkills (false);
+                enemy.PassiveSkills.HandleTurnSkills (false);
+            }
         }
 
         public void NextTurn () {
@@ -50,13 +72,14 @@ namespace Assets.GameSystem {
             void NewTurn (Character character) {
                 character.ResetOneMore ();
 
-                if (character.StatusEffect == StatusConditions.Dizzy 
-                    || character.IsDead) {
+                if (character.StatusEffect == StatusConditions.Dizzy ||
+                    character.IsDead) {
                     character.CurrentMovement = 0;
                     character.TurnFinished = true;
                     return;
                 }
 
+                character.PassiveSkills.HandleTurnSkills (true);
                 character.TurnFinished = false;
                 character.CurrentMovement = character.Movement;
             }

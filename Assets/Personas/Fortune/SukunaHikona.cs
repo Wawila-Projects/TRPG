@@ -33,17 +33,17 @@ namespace Assets.Personas.Fortune {
             Resistances[Elements.Curse] = ResistanceModifiers.Resist;
         }
 
-        protected override List<SpellBase> GetBaseSpellbook()
+        protected override List<ISpell> GetBaseSpellbook()
         {
-            return new List<SpellBase> {
+            return new List<ISpell> {
                 SpellLexicon.Fire.Agi, 
                 SpellLexicon.Wind.Garu,
             };
         }
 
-        protected override Dictionary<int, SpellBase> GetLockedSpells()
+        protected override Dictionary<int, ISpell> GetLockedSpells()
         {
-            return new Dictionary<int, SpellBase> {
+            return new Dictionary<int, ISpell> {
                 {8, SpellLexicon.Light.Hama},
                 {15, SpellLexicon.Darkness.Mudo}, 
             };

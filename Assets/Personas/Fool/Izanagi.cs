@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using Assets.Spells;
 using Assets.Spells.SpellLexicon;
 using Assets.Enums;
+using Assets.CharacterSystem.PassiveSkills.RecoverySkills;
 
 namespace Assets.Personas.Fool {
     public class Izanagi : PersonaBase
@@ -33,18 +34,18 @@ namespace Assets.Personas.Fool {
             Resistances[Elements.Ice] = ResistanceModifiers.Weak;
         }
 
-        protected override List<SpellBase> GetBaseSpellbook()
+        protected override List<ISpell> GetBaseSpellbook()
         {
-            return new List<SpellBase> {
+            return new List<ISpell> {
                 SpellLexicon.Elec.Zio, 
                 SpellLexicon.Physical.Cleave, 
-
+                Invigorate.GetInvigorate(Invigorate.Options.One)
             };
         }
 
-        protected override Dictionary<int, SpellBase> GetLockedSpells()
+        protected override Dictionary<int, ISpell> GetLockedSpells()
         {
-            return new Dictionary<int, SpellBase> {
+            return new Dictionary<int, ISpell> {
                 {8, SpellLexicon.Elec.Mazio},
                 {15, SpellLexicon.Physical.SonicPunch},
             };
