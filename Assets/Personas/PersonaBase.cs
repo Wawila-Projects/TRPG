@@ -113,6 +113,10 @@ namespace Assets.Personas
                     continue;
                 ++Stats[stat];
             }
+
+            StatsValues = Stats.Values.ToList();
+            BST = StatsValues.Average();
+            
             return Level;
         }
 

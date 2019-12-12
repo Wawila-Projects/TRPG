@@ -1,11 +1,9 @@
-using System;
 using System.Collections.Generic;
 using Assets.Enums;
 using Assets.Spells;
 using Assets.GameSystem;
 using Assets.PlayerSystem;
 using Asstes.CharacterSystem.StatusEffects;
-using Assets.Utils;
 
 namespace Assets.EnemySystem {
     public class Hivemind {

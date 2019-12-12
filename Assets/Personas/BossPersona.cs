@@ -2,13 +2,14 @@ using System.Collections.Generic;
 using Assets.Spells;
 using Assets.Spells.SpellLexicon;
 using Assets.Enums;
+using Assets.CharacterSystem.PassiveSkills.RecoverySkills;
 
 namespace Assets.Personas {
-    public class EnemyPersona : PersonaBase
+    public class BossPersona : PersonaBase
     {
-        public override string Name => "Lying Hablerie";
+        public override string Name => "Boss";
         public override bool IsPlayerPersona => false;
-        public override Arcana Arcana => Arcana.Magician;
+        public override Arcana Arcana => Arcana.Death;
         public override Elements InheritanceElement => Elements.None;
 
         protected override void Awake() {
@@ -18,18 +19,18 @@ namespace Assets.Personas {
         protected override IDictionary<Statistics, int> GetBaseStats()
         {   
             return new Dictionary<Statistics, int> {
-                {Statistics.Strength,   4}, 
-                {Statistics.Magic,      2},
-                {Statistics.Endurance,  3}, 
-                {Statistics.Agility,    5}, 
+                {Statistics.Strength,   5}, 
+                {Statistics.Magic,      5},
+                {Statistics.Endurance,  7}, 
+                {Statistics.Agility,    3}, 
                 {Statistics.Luck,       3}
             };       
         }
 
         protected override void SetResistances()
         {
-            // Resistances[Elements.Ice] = ResistanceModifiers.None;
-            // Resistances[Elements.Elec] = ResistanceModifiers.None;
+            Resistances[Elements.Bless] = ResistanceModifiers.Block;
+            Resistances[Elements.Curse] = ResistanceModifiers.Block;
             // Resistances[Elements.Wind] = ResistanceModifiers.None;
             // Resistances[Elements.Fire] = ResistanceModifiers.None;
             // Resistances[Elements.Physical] = ResistanceModifiers.None;
@@ -39,12 +40,12 @@ namespace Assets.Personas {
         protected override List<ISpell> GetBaseSpellbook()
         {
             return new List<ISpell> {
-                SpellLexicon.Fire.Agi, 
-                SpellLexicon.Ice.Bufu, 
-                SpellLexicon.Wind.Garu, 
-                SpellLexicon.Elec.Zio, 
+                SpellLexicon.Fire.Agilao, 
+                SpellLexicon.Ice.Bufula, 
+                SpellLexicon.Wind.Garula, 
+                SpellLexicon.Elec.Zionga, 
                 SpellLexicon.Physical.Bash,
-                SpellLexicon.Recovery.Dia, 
+                Regenerate.GetRegenerate(Regenerate.Options.One),
             };
         }
 

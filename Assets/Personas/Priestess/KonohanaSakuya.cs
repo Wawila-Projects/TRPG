@@ -37,6 +37,7 @@ namespace Assets.Personas.Priestess {
         {
             return new List<ISpell> {
                 SpellLexicon.Fire.Agi, 
+                SpellLexicon.Fire.Maragi, 
                 SpellLexicon.Recovery.Dia, 
             };
         }

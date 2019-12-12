@@ -14,6 +14,12 @@ namespace Assets.EnemySystem
 
         public bool EnemiesActing;
 
+        void Awake() {
+            Hiveminds = new List<Hivemind> {
+                Hivemind.Global
+            };
+        }
+
         void Update()
         {
            Enemies = GameController.Manager?.Enemies ?? new List<Enemy>();

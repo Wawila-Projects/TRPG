@@ -71,11 +71,11 @@ public class MapCoordinator: MonoBehaviour
 
             if(!obstacles.Contains(hex)) continue;
 
-            prefab.GetComponent<Renderer>().material.SetColor("_Color", Color.green);
-            prefab.transform.localScale  = new Vector3(1,1,0.3f);
-            var z = (1-prefab.transform.localScale.z) * 0.125f;
-            prefab.transform.position += new Vector3(0,0,z);
+            // prefab.transform.localScale  = new Vector3(1,1,0.3f);
+            // var z = (1-prefab.transform.localScale.z) * 0.125f;
+            // prefab.transform.position += new Vector3(0,0,z);
             tile.isObstacle = true;
+            tile.gameObject.SetActive(false);
         }
 
         Map.ForEach((T) => T.GetNeighbors());
