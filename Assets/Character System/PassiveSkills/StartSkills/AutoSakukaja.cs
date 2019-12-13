@@ -8,14 +8,13 @@ namespace Assets.CharacterSystem.PassiveSkills.StartSkills {
         private AgilityEffect effect;
         public AutoSakukaja () {
             Name = "Auto-Sakukaja";
-            effect = AgilityEffect.GetAgilityEffect(true);
+            effect = new AgilityEffect(true);
         }
 
         public override void Activate (Character character) {
             if (IsActive) return;
             IsActive = true;
             character.PassiveSkills.AddSkill(effect);
-            IsActive = true;
         }
         public override void Terminate (Character character) {
             if (!IsActive) return;

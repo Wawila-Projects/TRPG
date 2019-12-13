@@ -8,14 +8,13 @@ namespace Assets.CharacterSystem.PassiveSkills.StartSkills {
         private AttackEffect effect;
         public AutoTarukaja () {
             Name = "Auto-Tarukaja";
-            effect = AttackEffect.GetAttackEffect(true);
+            effect = new AttackEffect(true);
         }
 
         public override void Activate (Character character) {
             if (IsActive) return;
             IsActive = true;
             character.PassiveSkills.AddSkill(effect);
-            IsActive = true;
         }
         public override void Terminate (Character character) {
             if (!IsActive) return;

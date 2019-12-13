@@ -1,37 +1,22 @@
 using Assets.Enums;
 
 namespace Assets.CharacterSystem.PassiveSkills.BuffEffects {
-    public class AgilityEffect : PassiveSkillsBase {
-        public bool Buff { get; }
+    public class AgilityEffect : BuffEffect {
         public override string Name { get; protected set; }
         public override string Description { get; }
-        public override Phase ActivationPhase => Phase.Turn;
-        private int turnsActive = 0;
 
-        private AgilityEffect (string name, bool buff) {
-            Name = name;
-            Buff = buff;
-            Description = buff ? "Increases 1 ally's Agility for 3 turns" :
-                "Decreases 1 foe's Agility for 3 turns";
-        }
-
-        public static AgilityEffect GetAgilityEffect (bool buff) {
-            return new AgilityEffect (buff ? "Tarukaja" : "Tarunda", buff);
-        }
-
-        public override void Activate (Character character) {
-            if (IsActive) return;
-            IsActive = true;
-
-            var firstTime = turnsActive == 0;
-            var currentModifier = character.Persona.EvadeBuff;
-
-            if (!firstTime) {
-                if (turnsActive++ == 3) {
-                    Terminate (character);
-                }
-                return;
+        public AgilityEffect (bool buff): base(buff) {
+            if (buff) {
+                Name = "Tarukaja";
+                Description = "Increases 1 ally's Agility for 3 turns";
+            } else {
+                Name = "Tarunda";
+                Description = "Decreases 1 foe's Agility for 3 turns";
             }
+        }
+
+        protected override void Effect (Character character) {
+            var currentModifier = character.Persona.EvadeBuff;
 
             if (Buff) {
                 if (currentModifier == StatsModifiers.Debuff) {
@@ -47,15 +32,16 @@ namespace Assets.CharacterSystem.PassiveSkills.BuffEffects {
                 Terminate (character);
                 return;
             }
-            
+
             character.Persona.EvadeBuff = StatsModifiers.Debuff;
             character.Persona.HitBuff = StatsModifiers.Debuff;
         }
+
         public override void Terminate (Character character) {
             if (!IsActive) return;
             character.Persona.EvadeBuff = StatsModifiers.None;
             character.Persona.HitBuff = StatsModifiers.None;
-            base.Terminate(character);
+            base.Terminate (character);
         }
     }
 }
