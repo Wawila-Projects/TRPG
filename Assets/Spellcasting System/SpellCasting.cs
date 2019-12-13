@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using Assets.CharacterSystem;
 using Assets.CombatSystem;
 using Assets.Enums;
-using Assets.PlayerSystem;
 using Assets.Spells;
 using Assets.UI;
 using Asstes.CharacterSystem.StatusEffects;
@@ -26,6 +25,9 @@ namespace Assets.SpellCastingSystem {
                     break;
                 case AilementSpell ailemenntSpell:
                     CastAilementSpell (ailemenntSpell, caster, targets);
+                    break;
+                case SupportSpell supportSpell:
+                    CastSupportSpell (supportSpell, targets);
                     break;
                 case RecoverySpell _:
                     if (spell is IHealingSpell healingSpell) {
@@ -62,18 +64,25 @@ namespace Assets.SpellCastingSystem {
             }
         }
 
+        private void CastSupportSpell (SupportSpell spell, List<Character> targets) {
+            foreach (var target in targets) {
+                foreach (var effect in spell.Effects) {
+                    target.PassiveSkills.AddSkill (effect);
+                    effect.Activate (target);
+                    UIFloatingText.Create (effect.Name, target.gameObject, spell.Element);
+                }
+            }
+        }
+
         private void CastAssistSpell (IAssitSpell spell, List<Character> targets, string name) {
             foreach (var target in targets) {
                 foreach (var statusConditoin in spell.CureableStatusConditions) {
                     var succeess = target.StatusEffect.RemoveStatusEffect (statusConditoin);
-                    if (succeess) {
-                        UIFloatingText.Create (name, target.gameObject, Elements.Recovery);
-                    } else {
-                        UIFloatingText.Create ("Miss!", target.gameObject, Elements.Recovery);
-                    }
+                    UIFloatingText.Create (succeess ? name : "Miss!", target.gameObject, Elements.Recovery);
                 }
             }
         }
+
         private void CastReviveSpell (IReviveSpell spell, T target) {
             if (!target.IsDead) return;
 

@@ -9,6 +9,7 @@ using Assets.Spells;
 using Assets.Utils;
 using UnityEngine;
 using Assets.GameSystem;
+using Assets.Enums;
 
 namespace Assets.SpellCastingSystem {
     public class SpellTargeting : MonoBehaviour {
@@ -167,13 +168,13 @@ namespace Assets.SpellCastingSystem {
                 }
 
                 var target = tile.Occupant;
-                if ((Spell is OffensiveSpell || Spell is AilementSpell) 
+                if ((Spell is OffensiveSpell || Spell.Element == Elements.Ailment) 
                     && target is Enemy) {
                     targets.Add (target);
                     continue;
                 }
 
-                if (Spell is RecoverySpell && target is Player) {
+                if (Spell.Element == Elements.Recovery && target is Player) {
                     targets.Add (target);
                 }
             }
