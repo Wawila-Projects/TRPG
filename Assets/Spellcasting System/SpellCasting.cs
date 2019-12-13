@@ -65,9 +65,13 @@ namespace Assets.SpellCastingSystem {
         private void CastAssistSpell (IAssitSpell spell, List<Character> targets, string name) {
             foreach (var target in targets) {
                 foreach (var statusConditoin in spell.CureableStatusConditions) {
-                    target.StatusEffect.RemoveStatusEffect (statusConditoin);
+                    var succeess = target.StatusEffect.RemoveStatusEffect (statusConditoin);
+                    if (succeess) {
+                        UIFloatingText.Create (name, target.gameObject, Elements.Recovery);
+                    } else {
+                        UIFloatingText.Create ("Miss!", target.gameObject, Elements.Recovery);
+                    }
                 }
-                UIFloatingText.Create (name, target.gameObject, Elements.Recovery);
             }
         }
         private void CastReviveSpell (IReviveSpell spell, T target) {
@@ -91,7 +95,7 @@ namespace Assets.SpellCastingSystem {
 
             foreach (var target in targets) {
                 var amount = spell.HealingPower * CombatManager.PowerVariance (caster.Persona.Luck);
-                var finalAmount  = (int) Math.Ceiling(amount * (caster.Persona.DivineGrace ? 1.5 : 1));
+                var finalAmount = (int) Math.Ceiling (amount * (caster.Persona.DivineGrace ? 1.5 : 1));
                 target.CurrentHP += finalAmount;
                 UIFloatingText.Create ($"+{finalAmount}", target.gameObject, Elements.Recovery);
             }
@@ -103,9 +107,9 @@ namespace Assets.SpellCastingSystem {
             };
 
             var oneMore = false;
-
             foreach (var target in targets) {
-                oneMore = CombatManager.Manager.SpellAttack (caster, target, spell);
+                bool spellDidHit;
+                (oneMore, spellDidHit) = CombatManager.Manager.SpellAttack (caster, target, spell);
 
                 if (oneMore) {
                     if (target.StatusEffect == StatusConditions.Down) {
@@ -142,13 +146,14 @@ namespace Assets.SpellCastingSystem {
 
                 modifier *= caster.Persona.StatusConditionModifier[condition];
 
-                if (condition == StatusConditions.None ||
-                    !CombatManager.SpellDidHit (caster, target, modifier)) {
+                if (!spellDidHit || condition == StatusConditions.None) {
                     continue;
                 }
-                target.StatusEffect.SetStatusEffect (condition);
-            }
 
+                if (CombatManager.SpellDidHit (caster, target, modifier)) {
+                    target.StatusEffect.SetStatusEffect (condition);
+                }
+            }
             return oneMore;
         }
 
@@ -164,6 +169,5 @@ namespace Assets.SpellCastingSystem {
                     return 0f;
             }
         }
-
     }
 }

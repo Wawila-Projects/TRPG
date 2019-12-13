@@ -15,14 +15,12 @@ namespace Assets.GameSystem {
         public bool EnemyPhase => TurnCounter % 2 == 0;
         public bool Preround => TurnCounter == 0;
 
-        void Start () {
+        void Awake() {
             Manager = this;
-            TurnCounter = 0;
-            StartRound ();
         }
 
-        public void ResetTurnCounter () {
-            TurnCounter = 1;
+        void Start () {
+            StartRound ();
         }
 
         public void StartRound () {
@@ -37,7 +35,7 @@ namespace Assets.GameSystem {
             }
         }
 
-        public void EndTurn () {
+        public void EndRound () {
             foreach (var player in GameController.Manager.Players) {
                 player.PassiveSkills.HandleEndSkills (true);
                 player.PassiveSkills.HandleStartSkills (false);

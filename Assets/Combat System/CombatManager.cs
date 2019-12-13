@@ -79,13 +79,13 @@ namespace Assets.CombatSystem {
             }
         }
 
-        public bool SpellAttack (Character attacker, Character defender, OffensiveSpell spell) {
-            if (attacker == null || defender == null) return false;
-            if (!attacker.IsInRange (defender)) return false;
-            if (!spell.CanBeCasted (attacker)) return false;
+        public (bool oneMore, bool SpellDidHit) SpellAttack (Character attacker, Character defender, OffensiveSpell spell) {
+            if (attacker == null || defender == null) return (false, false);
+            if (!attacker.IsInRange (defender)) return (false, false);
+            if (!spell.CanBeCasted (attacker)) return (false, false);
             if (!SpellDidHit (attacker, defender, spell.Accuracy)) {
                 UIFloatingText.Create("Missed", defender.gameObject);
-                return false;
+                return (false, false);
             }
 
             var didCritical = false;
@@ -136,7 +136,7 @@ namespace Assets.CombatSystem {
             } else if (attacker is Player playerAttacker) {
                 (defender as Enemy).AI.Hivemind.CaptureInfoWhenAttacked(playerAttacker, spell);
             }
-            return didCritical;
+            return (didCritical, true);
         }
 
         public void AllOutAttack (Character defender) {
@@ -170,7 +170,7 @@ namespace Assets.CombatSystem {
             return random;
         }
 
-        // TODO: Take in consideration chances for evation
+        // TODO: Take in consideration chances for evasion
         public static bool SpellDidHit (Character attacker, Character defender, float accuracy) {
             var firstChanceToHit = Random.value <= accuracy;
             if (firstChanceToHit) return true;

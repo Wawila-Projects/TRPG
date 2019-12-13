@@ -22,7 +22,7 @@ namespace Assets.Spells
         public virtual void HandleCostReduction(Character character)
         {
             double cost = Cost;
-            if (!IsPhysical) {
+            if (IsMagical) {
                 cost = character.Persona.SpellMaster ? cost/2 : cost;
                 character.CurrentSP -= (int)cost;
                 return;
@@ -36,7 +36,7 @@ namespace Assets.Spells
         public virtual bool CanBeCasted(Character character)
         {
             double cost = Cost;
-            if (!IsPhysical) {
+            if (IsMagical) {
                 cost = character.Persona.SpellMaster ? cost/2 : cost;
                 return character.CurrentSP >= cost;
             }
