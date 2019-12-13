@@ -9,9 +9,8 @@ namespace Assets.Spells.SupportSpells {
         public override string Description => "Decrease all foes' Defence for 3 turns.";
         public override int Cost => 24;
         public override bool IsMultitarget => true;
-        public override Elements Element => Elements.Ailment;
-        public override IList<PassiveSkillsBase> Effects => new List<PassiveSkillsBase> {
-            DefenceEffect.GetDefenceEffect(false)
+        public override IList<BuffEffect> Effects => new List<BuffEffect> {
+            new DefenceEffect(false)
         };
     }
 }

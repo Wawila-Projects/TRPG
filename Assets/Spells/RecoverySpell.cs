@@ -4,8 +4,8 @@ using Asstes.CharacterSystem.StatusEffects;
 
 namespace Assets.Spells {
     public abstract class RecoverySpell : CastableSpell {
-        public override Elements Element => Elements.Recovery;
-        public override bool IsMagical => true;
+        public sealed override Elements Element => Elements.Recovery;
+        public sealed override bool IsMagical => true;
     }
 
     public interface IHealingSpell {

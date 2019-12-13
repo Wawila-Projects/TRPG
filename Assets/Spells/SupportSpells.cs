@@ -1,12 +1,13 @@
 using System.Collections.Generic;
-using Assets.CharacterSystem.PassiveSkills;
+using Assets.CharacterSystem.PassiveSkills.BuffEffects;
 using Assets.Enums;
-
 namespace Assets.Spells {
     public abstract class SupportSpell : CastableSpell {
-        public override bool IsMagical => true;
-        public abstract IList<PassiveSkillsBase> Effects { get; }
-        protected override string Id => $"SupportSpell_${Name}";
+        public sealed override bool IsMagical => true;
+        protected sealed override string Id => $"SupportSpell_${Name}";
+        public abstract IList<BuffEffect> Effects { get; }
+        public sealed override Elements Element =>
+            Effects[0].Buff ? Elements.Recovery : Elements.Ailment;
     }
 
     // public abstract class ShieldSpell : SupportSpell {

@@ -9,10 +9,9 @@ namespace Assets.Spells.SupportSpells {
         public override string Description => "Increase party's Defence for 3 turns.";
         public override int Cost => 24;
         public override bool IsMultitarget => true;
-        public override Elements Element => Elements.Recovery;
-        public override IList<PassiveSkillsBase> Effects => new List<PassiveSkillsBase> {
-            DefenceEffect.GetDefenceEffect(true)
+
+        public override IList<BuffEffect> Effects => new List<BuffEffect> {
+            new DefenceEffect(true)
         };
-        protected override string Id => "Negatable5";
     }
 }

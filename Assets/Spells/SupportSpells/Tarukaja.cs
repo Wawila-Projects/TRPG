@@ -9,9 +9,8 @@ namespace Assets.Spells.SupportSpells {
         public override string Description => "Increase 1 ally's Attack power for 3 turns.";
         public override int Cost => 8;
         public override bool IsMultitarget => false;
-        public override Elements Element => Elements.Recovery;
-        public override IList<PassiveSkillsBase> Effects => new List<PassiveSkillsBase> {
-            AttackEffect.GetAttackEffect(true)
+        public override IList<BuffEffect> Effects => new List<BuffEffect> {
+            new AttackEffect(true)
         };
     }
 }

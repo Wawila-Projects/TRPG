@@ -9,12 +9,10 @@ namespace Assets.Spells.SupportSpells {
         public override string Description => "Increase 1 ally's Attack, Defense and Agility for 3 turns.";
         public override int Cost => 30;
         public override bool IsMultitarget => false;
-        public override Elements Element => Elements.Recovery;
-        public override IList<PassiveSkillsBase> Effects => new List<PassiveSkillsBase> {
-            AttackEffect.GetAttackEffect(true),
-            AgilityEffect.GetAgilityEffect(true),
-            DefenceEffect.GetDefenceEffect(true)
+        public override IList<BuffEffect> Effects => new List<BuffEffect> {
+            new AttackEffect(true),
+            new AgilityEffect(true),
+            new DefenceEffect(true)
         };
-        protected override string Id => "Negatable3";
     }
 }
