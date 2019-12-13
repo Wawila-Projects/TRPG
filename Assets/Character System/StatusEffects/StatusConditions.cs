@@ -19,3 +19,8 @@ namespace Asstes.CharacterSystem.StatusEffects {
 
     }
 }
+
+/*
+Poison: Physical; 
+Burn: Magical;
+*/

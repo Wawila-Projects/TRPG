@@ -60,6 +60,8 @@ namespace Assets.UI {
         }
 
         public static UIFloatingText Create (string text, GameObject anchor, Elements? element = null) {
+            if (anchor == null || !anchor.gameObject.activeSelf) return null;
+
             var floatingText = GameObject.Instantiate (UiManager.UI.DamageText);
             var component = floatingText.GetComponent<UIFloatingText> ();
             component.init (text, anchor, element);

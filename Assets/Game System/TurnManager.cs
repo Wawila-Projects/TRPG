@@ -1,4 +1,5 @@
-﻿using Assets.CharacterSystem;
+﻿using System.Collections;
+using Assets.CharacterSystem;
 using Asstes.CharacterSystem.StatusEffects;
 using UnityEngine;
 
@@ -13,19 +14,19 @@ namespace Assets.GameSystem {
 
         public bool PlayerPhase => TurnCounter % 2 != 0;
         public bool EnemyPhase => TurnCounter % 2 == 0;
-        public bool Preround => TurnCounter == 0;
 
-        void Awake() {
+        void Awake () {
             Manager = this;
         }
 
         void Start () {
+            TurnCounter = 0;
             StartRound ();
+
+            StartCoroutine (EndRound ());
         }
 
         public void StartRound () {
-            TurnCounter = 1;
-
             foreach (var player in GameController.Manager.Players) {
                 player.PassiveSkills.HandleStartSkills (true);
             }
@@ -33,20 +34,29 @@ namespace Assets.GameSystem {
             foreach (var enemy in GameController.Manager.Enemies) {
                 enemy.PassiveSkills.HandleStartSkills (true);
             }
+
+            NextTurn ();
         }
 
-        public void EndRound () {
+        public IEnumerator EndRound () {
+            yield return new WaitUntil (
+                () => GameController.Manager.Enemies.TrueForAll (
+                    e => e.IsDead
+                )
+            );
+
+            Debug.Log ("Comabt Finished");
             foreach (var player in GameController.Manager.Players) {
                 player.PassiveSkills.HandleEndSkills (true);
-                player.PassiveSkills.HandleStartSkills (false);
-                player.PassiveSkills.HandleTurnSkills (false);
+                player.PassiveSkills.ClearSkills ();
             }
 
             foreach (var enemy in GameController.Manager.Enemies) {
                 enemy.PassiveSkills.HandleEndSkills (true);
-                enemy.PassiveSkills.HandleStartSkills (false);
-                enemy.PassiveSkills.HandleTurnSkills (false);
+                enemy.PassiveSkills.ClearSkills ();
             }
+
+            yield return null;
         }
 
         public void NextTurn () {

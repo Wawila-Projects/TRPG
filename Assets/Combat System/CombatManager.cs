@@ -232,9 +232,11 @@ namespace Assets.CombatSystem {
             if (element == Elements.Physical) {
                 if (attacker.Persona.PowerCharged) {
                     modifier *= 2.5f;
+                    attacker.Persona.PowerCharged = false;
                 }
             } else if (attacker.Persona.MindCharged) {
                 modifier *= 2.5f;
+                attacker.Persona.MindCharged = false;
             }
             
             modifier *= attacker.Persona.ElementDamageModifier[element];

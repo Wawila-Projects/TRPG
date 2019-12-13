@@ -21,28 +21,28 @@ namespace Assets.Spells
 
         public virtual void HandleCostReduction(Character character)
         {
-            double cost = Cost;
+            var cost = Cost;
             if (IsMagical) {
-                cost = character.Persona.SpellMaster ? cost/2 : cost;
-                character.CurrentSP -= (int)cost;
+                cost = character.Persona.SpellMaster ? (int)Math.Ceiling(cost/2f) : cost;
+                character.CurrentSP -= cost;
                 return;
             }
 
-            cost = Math.Ceiling(character.Hp * (Cost/100f));
-            cost = character.Persona.ArmsMaster ? cost/2 : cost;
-            character.CurrentHP -= (int)cost;
+            cost = (int)Math.Ceiling(character.Hp * (Cost/100f));
+            cost = character.Persona.ArmsMaster ? (int)Math.Ceiling(cost/2f) : cost;
+            character.CurrentHP -= cost;
         }
 
         public virtual bool CanBeCasted(Character character)
         {
-            double cost = Cost;
+            var cost = Cost;
             if (IsMagical) {
-                cost = character.Persona.SpellMaster ? cost/2 : cost;
+                cost = character.Persona.SpellMaster ? (int)Math.Ceiling(cost/2f) : cost;
                 return character.CurrentSP >= cost;
             }
 
-            cost = Math.Ceiling(character.Hp * (Cost/100f));
-            cost = character.Persona.ArmsMaster ? cost/2f : cost;
+            cost = (int)Math.Ceiling(character.Hp * (Cost/100f));
+            cost = character.Persona.ArmsMaster ? (int)Math.Ceiling(cost/2f) : cost;
             return character.CurrentHP > cost;
         }
 
