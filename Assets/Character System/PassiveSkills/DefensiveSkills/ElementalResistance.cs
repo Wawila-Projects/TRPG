@@ -11,7 +11,7 @@ namespace Assets.CharacterSystem.PassiveSkills.DefensiveSkills {
         public override string Description => $"{Modifier}s {Element} attacks.";
         public override Phase ActivationPhase => Phase.Start;
 
-        private ElementalResistance (Elements element, ResistanceModifiers modifier) : base () {
+        private ElementalResistance (Elements element, ResistanceModifiers modifier) {
             if (element == Elements.None || element == Elements.Recovery) {
                 throw new ArgumentException ($"Invalid Element {element}");
             }
@@ -36,8 +36,8 @@ namespace Assets.CharacterSystem.PassiveSkills.DefensiveSkills {
 
         public override void Terminate (Character character) {
             if (!IsActive) return;
-            IsActive = false;
             character.Persona.ChangeResistances(Element, Modifier, clear: true);
+            base.Terminate(character);
         }
     }
 }

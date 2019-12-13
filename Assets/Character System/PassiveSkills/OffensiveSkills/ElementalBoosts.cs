@@ -34,6 +34,7 @@ namespace Assets.CharacterSystem.PassiveSkills.OffensiveSkills {
         }
 
         public override void Activate (Character character) {
+            if (character.PassiveSkills.HasSkill(this)) return;
             if (IsActive) return;
             IsActive = true;
             character.Persona.ElementDamageModifier[Element] *= BoostAmount;
@@ -41,8 +42,8 @@ namespace Assets.CharacterSystem.PassiveSkills.OffensiveSkills {
 
         public override void Terminate (Character character) {
             if (!IsActive) return;
-            IsActive = false;
             character.Persona.ElementDamageModifier[Element] /= BoostAmount;
+            base.Terminate(character);
         }
     }
 }

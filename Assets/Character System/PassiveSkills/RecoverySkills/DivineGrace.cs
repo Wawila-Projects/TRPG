@@ -9,15 +9,16 @@ namespace Assets.CharacterSystem.PassiveSkills.RecoverySkills {
         
         public DivineGrace () {
             Name = "Divine Grace";
-            IsActive = true;
         }
 
         public override void Activate (Character character) {
+            IsActive = true;
             character.Persona.DivineGrace = true;
         }
 
         public override void Terminate (Character character) {
             character.Persona.DivineGrace = false;
+            base.Terminate(character);
         }
 
     }

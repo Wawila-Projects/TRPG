@@ -24,15 +24,12 @@ namespace Assets.CharacterSystem.PassiveSkills.RecoverySkills {
                 case Options.Three:
                     return new Regenerate("Regenerate 3", 0.06f);
             }
-
             return null;
         }
 
         public override void Activate (Character character) {
             character.CurrentHP += Mathf.CeilToInt(character.Hp * Amount);
         }
-
-        public override void Terminate (Character character) {}
 
         public enum Options {
             One,

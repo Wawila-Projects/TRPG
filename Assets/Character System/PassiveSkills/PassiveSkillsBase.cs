@@ -8,7 +8,10 @@ namespace Assets.CharacterSystem.PassiveSkills {
         public abstract string Description { get; }
         public virtual Phase ActivationPhase => Phase.Start;
         public abstract void Activate (Character character);
-        public abstract void Terminate (Character character);
+        public virtual void Terminate (Character character) {
+            IsActive = false;
+            character.PassiveSkills.RemoveSkill(this);
+        }
 
         public bool Equals (PassiveSkillsBase other) {
             if (ReferenceEquals (this, other))

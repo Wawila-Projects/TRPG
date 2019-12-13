@@ -26,14 +26,15 @@ namespace Assets.CharacterSystem.PassiveSkills.CounterSkills {
         }
 
         public override void Activate (Character character) {
+            if (character.PassiveSkills.HasSkill(this)) return;
             if (IsActive) return;
             IsActive = true;
             character.Persona.CounterChance = CounterAmount;
         }
         public override void Terminate (Character character) {
             if (!IsActive) return;
-            IsActive = false;
             character.Persona.CounterChance = 0f;
+            base.Terminate(character);
         }
 
         public enum Options {

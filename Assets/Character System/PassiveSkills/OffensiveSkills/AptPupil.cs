@@ -18,8 +18,8 @@ namespace Assets.CharacterSystem.PassiveSkills.OffensiveSkills {
 
         public override void Terminate (Character character) {
             if (!IsActive) return;
-            IsActive = false;
             character.Persona.AptPupil = false;
+            base.Terminate(character);
         }
     }
 }

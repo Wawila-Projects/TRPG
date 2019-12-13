@@ -24,15 +24,12 @@ namespace Assets.CharacterSystem.PassiveSkills.RecoverySkills {
                 case Options.Three:
                     return new Invigorate("Invigorate 3", 7);
             }
-
             return null;
         }
 
         public override void Activate (Character character) {
             character.CurrentSP += Amount;
         }
-
-        public override void Terminate (Character character) {}
 
         public enum Options {
             One,

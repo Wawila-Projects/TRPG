@@ -26,20 +26,19 @@ namespace Assets.CharacterSystem.PassiveSkills.OffensiveSkills {
 
             if (IsPhysical) {
                 character.Persona.ArmsMaster = true;
-                return;
+            } else {
+                character.Persona.SpellMaster = true;
             }
-            character.Persona.SpellMaster = true;
         }
 
         public override void Terminate (Character character) {
             if (!IsActive) return;
-            IsActive = false;
-
             if (IsPhysical) {
                 character.Persona.ArmsMaster = false;
-                return;
+            } else {
+                character.Persona.SpellMaster = false;
             }
-            character.Persona.SpellMaster = false;
+            base.Terminate (character);
         }
     }
 }
