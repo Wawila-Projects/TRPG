@@ -18,13 +18,13 @@ namespace Assets.Personas {
         public IDictionary<Elements, ResistanceModifiers> Resistances { get; protected set; }
         public virtual bool IsPlayerPersona => false;
         protected IDictionary<Statistics, int> Stats;
-
         public int Strength => Stats[Statistics.Strength];
         public int Magic => Stats[Statistics.Magic];
         public int Endurance => Stats[Statistics.Endurance];
         public int Agility => Stats[Statistics.Agility];
         public int Luck => Stats[Statistics.Luck];
 
+        // TODO: Move these to passive skills controller. 
         public StatsModifiers AttackBuff = StatsModifiers.None;
         public StatsModifiers DefenceBuff = StatsModifiers.None;
         public StatsModifiers EvadeBuff = StatsModifiers.None;
@@ -37,6 +37,8 @@ namespace Assets.Personas {
         public bool AptPupil = false;
         public bool DivineGrace = false;
         public IDictionary<Elements, float> ElementDamageModifier;
+
+        // To Cast not defend 
         public IDictionary<StatusConditions, float> StatusConditionModifier;
         private IDictionary<Elements, ResistanceModifiers> OriginalResistances;
 

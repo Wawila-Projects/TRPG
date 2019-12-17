@@ -1,6 +1,6 @@
 namespace Assets.CharacterSystem.PassiveSkills.OffensiveSkills {
     public class AilementBoost : PassiveSkillsBase {
-        public float BoostAmount => 1.5f;
+        public const float BoostAmount = 1.5f;
         public override string Name { get; protected set; }
         public override string Description => $"Increase chance of inflicting all ailments.";
         public override Phase ActivationPhase => Phase.Start;

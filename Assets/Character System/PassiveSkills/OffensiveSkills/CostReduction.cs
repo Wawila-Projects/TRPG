@@ -1,11 +1,8 @@
 namespace Assets.CharacterSystem.PassiveSkills.OffensiveSkills {
     public class CostReduction : PassiveSkillsBase {
         public override string Name { get; protected set; }
-
         public override string Description { get; }
-
         public override Phase ActivationPhase => Phase.Start;
-
         public bool IsPhysical { get; }
 
         public CostReduction (bool isPhysical) {

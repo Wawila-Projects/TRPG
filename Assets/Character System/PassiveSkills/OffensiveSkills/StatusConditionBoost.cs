@@ -4,7 +4,7 @@ using Asstes.CharacterSystem.StatusEffects;
 namespace Assets.CharacterSystem.PassiveSkills.OffensiveSkills {
     public class StatusConditionBoost : PassiveSkillsBase {
         public StatusConditions StatusCondition { get; }
-        public float BoostAmount => 1.5f;
+        public const float BoostAmount = 1.5f;
         public override string Name { get; protected set; }
         public override string Description => $"Increases chance of inflicting {StatusCondition}";
         public override Phase ActivationPhase => Phase.Start;
