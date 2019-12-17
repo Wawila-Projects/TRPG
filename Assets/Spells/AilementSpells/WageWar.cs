@@ -5,7 +5,7 @@ namespace Assets.Spells.AilementSpells {
         protected override string Id => "Ailement7";
         public override string Name => "Wage War";
         public override bool IsMultitarget => true;
-        public override StatusConditions StatusConditionInflicted => StatusConditions.Rage;
+        public override StatusCondition StatusConditionInflicted => StatusCondition.Rage;
 
     }
 }

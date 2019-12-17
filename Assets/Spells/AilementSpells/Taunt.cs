@@ -5,7 +5,7 @@ namespace Assets.Spells.AilementSpells {
         protected override string Id => "Ailement6";
         public override string Name => "Taunt";
         public override bool IsMultitarget => false;
-        public override StatusConditions StatusConditionInflicted => StatusConditions.Rage;
+        public override StatusCondition StatusConditionInflicted => StatusCondition.Rage;
 
     }
 }

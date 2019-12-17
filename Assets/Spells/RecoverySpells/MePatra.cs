@@ -10,9 +10,9 @@ namespace Assets.Spells.RecoverySpells
         public override string Description => "Cures Rage/Fear/Sleep/Silence/Confusion/Charm of party.";
         public override int Cost => 6;
         public override bool IsMultitarget => true;
-        public List<StatusConditions> CureableStatusConditions => new List<StatusConditions> {
-            StatusConditions.Rage, StatusConditions.Fear, StatusConditions.Sleep, 
-            StatusConditions.Silence, StatusConditions.Confusion, StatusConditions.Charm,
+        public List<StatusCondition> CureableStatusConditions => new List<StatusCondition> {
+            StatusCondition.Rage, StatusCondition.Fear, StatusCondition.Sleep, 
+            StatusCondition.Silence, StatusCondition.Confusion, StatusCondition.Charm,
         };
     }
 }

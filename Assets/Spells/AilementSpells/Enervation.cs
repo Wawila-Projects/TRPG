@@ -5,7 +5,7 @@ namespace Assets.Spells.AilementSpells {
         protected override string Id => "Ailement4";
         public override string Name => "Enervation";
         public override bool IsMultitarget => false;
-        public override StatusConditions StatusConditionInflicted => StatusConditions.Enervation;
+        public override StatusCondition StatusConditionInflicted => StatusCondition.Enervation;
 
     }
 }

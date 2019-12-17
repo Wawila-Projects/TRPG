@@ -5,7 +5,7 @@ namespace Assets.Spells.AilementSpells {
         protected override string Id => "Ailement14";
         public override string Name => "Bewilder";
         public override bool IsMultitarget => false;
-        public override StatusConditions StatusConditionInflicted => StatusConditions.Distress;
+        public override StatusCondition StatusConditionInflicted => StatusCondition.Distress;
 
     }
 }

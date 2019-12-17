@@ -10,8 +10,8 @@ namespace Assets.Spells.RecoverySpells
         public override string Description => "Cure Despair/Enervation/Distress of 1 ally.";
         public override int Cost => 6;
         public override bool IsMultitarget => false;
-        public List<StatusConditions> CureableStatusConditions => new List<StatusConditions> {
-            StatusConditions.Dispair,  StatusConditions.Enervation,  StatusConditions.Distress, 
+        public List<StatusCondition> CureableStatusConditions => new List<StatusCondition> {
+            StatusCondition.Dispair,  StatusCondition.Enervation,  StatusCondition.Distress, 
         };
     }
 }

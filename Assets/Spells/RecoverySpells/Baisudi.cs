@@ -10,8 +10,8 @@ namespace Assets.Spells.RecoverySpells
         public override string Description => "Cure Burn/Freeze/Shock of 1 ally.";
         public override int Cost => 4;
         public override bool IsMultitarget => false;
-        public List<StatusConditions> CureableStatusConditions => new List<StatusConditions> {
-            StatusConditions.Burn,  StatusConditions.Freeze,  StatusConditions.Shock, 
+        public List<StatusCondition> CureableStatusConditions => new List<StatusCondition> {
+            StatusCondition.Burn,  StatusCondition.Freeze,  StatusCondition.Shock, 
         };
     }
 }

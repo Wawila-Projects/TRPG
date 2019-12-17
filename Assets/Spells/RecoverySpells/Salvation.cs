@@ -15,6 +15,6 @@ namespace Assets.Spells.RecoverySpells
         public override bool IsMultitarget => true;
         public int HealingPower => 999;
         public bool FullHeal => true;
-        public List<StatusConditions> CureableStatusConditions => EnumUtils<StatusConditions>.ToList();
+        public List<StatusCondition> CureableStatusConditions => EnumUtils<StatusCondition>.ToList();
     }
 }

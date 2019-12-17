@@ -32,7 +32,7 @@ namespace Assets.CombatSystem {
             }
 
             if (!SpellDidHit(attacker, defender, accuracy/100f)) {
-                attacker.StatusEffect.SetStatusEffect(StatusConditions.Down);
+                attacker.StatusEffect.SetStatusEffect(StatusCondition.Down);
                 attacker.TurnFinished = true;
                 UIFloatingText.CreateMiss(defender.gameObject);
                 return;
@@ -52,8 +52,8 @@ namespace Assets.CombatSystem {
                 damage = Mathf.CeilToInt (damage * 1.6f);
             }
 
-            if (defender.StatusEffect == StatusConditions.Down ||
-                defender.StatusEffect == StatusConditions.Dizzy) {
+            if (defender.StatusEffect == StatusCondition.Down ||
+                defender.StatusEffect == StatusCondition.Dizzy) {
                 damage = Mathf.CeilToInt (damage * 1.3f);
             }
 
@@ -70,10 +70,10 @@ namespace Assets.CombatSystem {
 
             var resistance = defender.Persona.Resistances[Elements.Physical];
             if (resistance == ResistanceModifiers.Weak || didCritical) {
-                if (defender.StatusEffect == StatusConditions.Down) {
-                    defender.StatusEffect.SetStatusEffect (StatusConditions.Dizzy);
+                if (defender.StatusEffect == StatusCondition.Down) {
+                    defender.StatusEffect.SetStatusEffect (StatusCondition.Dizzy);
                 } else {
-                    defender.StatusEffect.SetStatusEffect (StatusConditions.Down);
+                    defender.StatusEffect.SetStatusEffect (StatusCondition.Down);
                     attacker.AddOneMore ();
                 }
             }
@@ -124,8 +124,8 @@ namespace Assets.CombatSystem {
                     break;
             }
 
-            if (defender.StatusEffect == StatusConditions.Down ||
-                defender.StatusEffect == StatusConditions.Dizzy) {
+            if (defender.StatusEffect == StatusCondition.Down ||
+                defender.StatusEffect == StatusCondition.Dizzy) {
                 damage = Mathf.CeilToInt (damage * 1.3f);
             }
 
@@ -151,8 +151,8 @@ namespace Assets.CombatSystem {
                 AlmightyAttack (a, defender, a.Equipment.AttackPower)
             );
 
-            if (defender.StatusEffect == StatusConditions.Down ||
-                defender.StatusEffect == StatusConditions.Dizzy) {
+            if (defender.StatusEffect == StatusCondition.Down ||
+                defender.StatusEffect == StatusCondition.Dizzy) {
                 damage = Mathf.CeilToInt (damage * 1.3f);
             }
 

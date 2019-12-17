@@ -98,7 +98,7 @@ namespace Assets.EnemySystem {
             public (int diedAt, bool isDead) Death = (0, false);
             public (int count, int total, int average) BasicAttackDamage = (0,0,0);
             public Tile LastSeenLocation;
-            public StatusConditions StatusEffect = StatusConditions.None;
+            public StatusCondition StatusEffect = StatusCondition.None;
             public HashSet<CastableSpell> Spells;
             public IDictionary<Elements, ResistanceModifiers> Resistances;
         }

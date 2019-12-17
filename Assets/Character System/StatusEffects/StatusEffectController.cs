@@ -1,172 +1,102 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using Assets.Enums;
-using Assets.GameSystem;
-using Assets.PlayerSystem;
 using Assets.CharacterSystem;
+using Assets.Enums;
 using Assets.UI;
 using UnityEngine;
 
 namespace Asstes.CharacterSystem.StatusEffects {
 
-    [System.Serializable]
-    public class StatusEffectController : MonoBehaviour {
-        public StatusConditions CurrentEffect = StatusConditions.None;
-        // public TurnManager TurnManager;
-        public Character Character;
-        [SerializeField]
-        private uint LastTurnTick;
-        [SerializeField]
-        private int FinalTurnTick = -1;
-
-        [SerializeField]
-        private bool IsPlayer;
-
-        private Coroutine ActiveCoroutine;
-
-        private IDictionary<StatusConditions, Action> StatusEffectActions;
-
-        public static implicit operator StatusConditions (StatusEffectController statusEffect) {
-            return statusEffect.CurrentEffect;
-        }
-
-        void Awake ()
-        {
-            Character = GetComponent<Character>();
-            IsPlayer = Character is Player;
-            SetStatusEffectActions();
-        }
-
-        public void SetStatusEffect (StatusConditions statusEffect) {
-            if (statusEffect <= CurrentEffect) {
-                return;
+        [System.Serializable]
+        public class StatusEffectController : MonoBehaviour {
+            public StatusCondition CurrentEffect = StatusCondition.None;
+            public Character Character;
+            public static implicit operator StatusCondition (StatusEffectController statusEffect) {
+                return statusEffect.CurrentEffect;
             }
 
-            // if (!StatusEffectActions.ContainsKey(statusEffect)) {
-            //     return;
+            void Awake () {
+                Character = GetComponent<Character> ();
+            }
+
+            public void SetStatusEffect (StatusCondition statusEffect) {
+                if (CurrentEffect != StatusCondition.None) {
+                    return;
+                }
+
+                CurrentEffect = statusEffect;
+                var text = $"{statusEffect.ToString()}";
+
+                CreateFloatingText();
+
+                void CreateFloatingText () {
+                    var element = Elements.Ailment;
+                    switch (statusEffect) {
+                        case StatusCondition.Shock:
+                            element = Elements.Elec;
+                            break;
+                        case StatusCondition.Burn:
+                            element = Elements.Fire;
+                            break;
+                        case StatusCondition.Freeze:
+                            element = Elements.Ice;
+                            break;
+                    }
+
+                    UIFloatingText.Create (text, Character.gameObject, element);
+                }
+            }
+
+            public bool RemoveStatusEffect (StatusCondition statusEffect) {
+                if (statusEffect != CurrentEffect) return false;
+                CurrentEffect = StatusCondition.None;
+                return true;
+            }
+
+            public void ClearStatusEffect () {
+                CurrentEffect = StatusCondition.None;
+            }
+
+            //     private void SetStatusEffectActions()
+            //     {
+            //         StatusEffectActions = new Dictionary<StatusCondition, Action> {
+            //             // {
+            //             //     StatusCondition.Exhaustion,
+            //             //         () => Character.CurrentSP -= Mathf.RoundToInt (Character.Sp * 0.1f)
+            //             // },
+            //             {
+            //                 StatusCondition.Burn,
+            //                     () => Character.CurrentHP -= Mathf.RoundToInt (Character.Hp * 0.1f)
+            //             },
+            //             {
+            //                 StatusCondition.Freeze,
+            //                 () => {
+            //                     Character.CurrentMovement = 0;
+            //                     CurrentEffect = StatusCondition.None;
+            //                 }
+            //             },
+            //             {
+            //                 StatusCondition.Sleep,
+            //                 () => {
+            //                     Character.CurrentHP += Mathf.RoundToInt (Character.Hp * 0.05f);
+            //                     Character.CurrentSP += Mathf.RoundToInt (Character.Sp * 0.05f);
+            //                     Character.TurnFinished = true;
+            //                 }
+            //             },
+            //             {
+            //                 StatusCondition.Dizzy,
+            //                 () => {
+            //                     Character.TurnFinished = true;
+            //                 }
+            //             },
+            //             {
+            //                 StatusCondition.Dispair,
+            //                 () => {
+            //                     if (TurnManager.Manager.TurnCounter < FinalTurnTick)
+            //                         return;
+            //                     Character.CurrentHP = 0;
+            //                 }
+            //             }
+            //         };
+            //     }
             // }
-
-            if (statusEffect == StatusConditions.Dispair) 
-                FinalTurnTick = (int)TurnManager.Manager.TurnCounter + 7;
-
-            CurrentEffect = statusEffect;
-            // var action = StatusEffectActions[statusEffect];
-            // ActiveCoroutine = StartCoroutine (ActiveStatusEffect (action));
-
-
-            var text = $"{statusEffect.ToString()}";
-
-            var element = Elements.Ailment;
-            switch(statusEffect) {
-                case StatusConditions.Shock:
-                    element = Elements.Elec;
-                    break;
-                case StatusConditions.Burn:
-                    element = Elements.Fire;
-                    break;
-                case StatusConditions.Freeze:
-                    element = Elements.Ice;
-                    break;
-            }
-
-            UIFloatingText.Create(text, Character.gameObject, element);
         }
-
-        public bool RemoveStatusEffect (StatusConditions statusEffect) {
-            if (statusEffect != CurrentEffect) return false;
-            if (CurrentEffect == StatusConditions.None) return false;
-            CurrentEffect = StatusConditions.None;
-            if (ActiveCoroutine != null) {
-                StopCoroutine (ActiveCoroutine);
-            } 
-            return true;
-        }
-
-         public void ClearStatusEffect () {
-            CurrentEffect = StatusConditions.None;
-            if (ActiveCoroutine != null) {
-                StopCoroutine (ActiveCoroutine);
-            }
-        }
-
-        IEnumerator ActiveStatusEffect (Action action) {
-            while (true) {
-                var (validTurn, currentTurn) = checkTurn ();
-
-                if (!validTurn) {
-                    yield return null;
-                    continue;
-                }
-
-                action ();
-                Debug.Log ($"Effect {CurrentEffect} |  Turn {currentTurn}");
-
-                LastTurnTick = currentTurn;
-                if (LastTurnTick == FinalTurnTick) {
-                    break;
-                }
-
-                yield return null;
-            }
-            yield return null;
-        }
-
-        private (bool validTurn, uint currentTurn) checkTurn () {
-            var currentTurn = TurnManager.Manager.TurnCounter;
-            if (LastTurnTick == currentTurn) {
-                return (false, currentTurn);
-            }
-            if (IsPlayer && TurnManager.Manager.PlayerPhase) {
-                return (true, currentTurn);
-            }
-            if (!IsPlayer && TurnManager.Manager.EnemyPhase) {
-                return (true, currentTurn);
-            }
-            return (false, currentTurn);
-        }
-
-        private void SetStatusEffectActions()
-        {
-            StatusEffectActions = new Dictionary<StatusConditions, Action> {
-                // {
-                //     StatusConditions.Exhaustion,
-                //         () => Character.CurrentSP -= Mathf.RoundToInt (Character.Sp * 0.1f)
-                // },
-                {
-                    StatusConditions.Burn,
-                        () => Character.CurrentHP -= Mathf.RoundToInt (Character.Hp * 0.1f)
-                },
-                {
-                    StatusConditions.Freeze,
-                    () => {
-                        Character.CurrentMovement = 0;
-                        CurrentEffect = StatusConditions.None;
-                    }
-                },
-                {
-                    StatusConditions.Sleep,
-                    () => {
-                        Character.CurrentHP += Mathf.RoundToInt (Character.Hp * 0.05f);
-                        Character.CurrentSP += Mathf.RoundToInt (Character.Sp * 0.05f);
-                        Character.TurnFinished = true;
-                    }
-                },
-                {
-                    StatusConditions.Dizzy,
-                    () => {
-                        Character.TurnFinished = true;
-                    }
-                },
-                {
-                    StatusConditions.Dispair,
-                    () => {
-                        if (TurnManager.Manager.TurnCounter < FinalTurnTick)
-                            return;
-                        Character.CurrentHP = 0;
-                    }
-                }
-            };
-        }
-    }
 }

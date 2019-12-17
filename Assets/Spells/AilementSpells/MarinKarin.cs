@@ -5,7 +5,7 @@ namespace Assets.Spells.AilementSpells {
         protected override string Id => "Ailement10";
         public override string Name => "Marin Karin";
         public override bool IsMultitarget => false;
-        public override StatusConditions StatusConditionInflicted => StatusConditions.Charm;
+        public override StatusCondition StatusConditionInflicted => StatusCondition.Charm;
 
     }
 }

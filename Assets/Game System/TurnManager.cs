@@ -80,7 +80,7 @@ namespace Assets.GameSystem {
             void NewTurn (Character character) {
                 character.ResetOneMore ();
 
-                if (character.StatusEffect == StatusConditions.Dizzy ||
+                if (character.StatusEffect == StatusCondition.Dizzy ||
                     character.IsDead) {
                     character.CurrentMovement = 0;
                     character.TurnFinished = true;

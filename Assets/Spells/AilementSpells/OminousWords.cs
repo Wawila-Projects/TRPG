@@ -5,7 +5,7 @@ namespace Assets.Spells.AilementSpells {
         protected override string Id => "Ailement8";
         public override string Name => "Ominous Words";
         public override bool IsMultitarget => false;
-        public override StatusConditions StatusConditionInflicted => StatusConditions.Rage;
+        public override StatusCondition StatusConditionInflicted => StatusCondition.Rage;
 
     }
 }

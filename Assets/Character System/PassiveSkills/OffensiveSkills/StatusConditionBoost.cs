@@ -3,14 +3,14 @@ using Asstes.CharacterSystem.StatusEffects;
 
 namespace Assets.CharacterSystem.PassiveSkills.OffensiveSkills {
     public class StatusConditionBoost : PassiveSkillsBase {
-        public StatusConditions StatusCondition { get; }
+        public StatusCondition StatusCondition { get; }
         public const float BoostAmount = 1.5f;
         public override string Name { get; protected set; }
         public override string Description => $"Increases chance of inflicting {StatusCondition}";
         public override Phase ActivationPhase => Phase.Start;
 
-        private StatusConditionBoost (StatusConditions condition) {
-            if (condition == StatusConditions.None || condition == StatusConditions.Down) {
+        private StatusConditionBoost (StatusCondition condition) {
+            if (condition == StatusCondition.None || condition == StatusCondition.Down) {
                 throw new ArgumentException ($"Invalid Status Condition {condition}");
             }
 
@@ -18,7 +18,7 @@ namespace Assets.CharacterSystem.PassiveSkills.OffensiveSkills {
             Name = $"{condition} Boost";
         }
 
-        public static StatusConditionBoost GetStatusConditionBoost (StatusConditions condition) {
+        public static StatusConditionBoost GetStatusConditionBoost (StatusCondition condition) {
             try {
                 return new StatusConditionBoost(condition);
             } catch(ArgumentException) {

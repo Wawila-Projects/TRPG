@@ -5,7 +5,7 @@ namespace Assets.Spells.AilementSpells {
         protected override string Id => "Ailement9";
         public override string Name => "Abysmal Surge";
         public override bool IsMultitarget => true;
-        public override StatusConditions StatusConditionInflicted => StatusConditions.Dispair;
+        public override StatusCondition StatusConditionInflicted => StatusCondition.Dispair;
 
     }
 }

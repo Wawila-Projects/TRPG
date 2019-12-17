@@ -13,6 +13,6 @@ namespace Assets.Spells.RecoverySpells
         public override string Description => "Cure all ailments of 1 ally.";
         public override int Cost => 8;
         public override bool IsMultitarget => false;
-        public List<StatusConditions> CureableStatusConditions => EnumUtils<StatusConditions>.ToList();
+        public List<StatusCondition> CureableStatusConditions => EnumUtils<StatusCondition>.ToList();
     }
 }

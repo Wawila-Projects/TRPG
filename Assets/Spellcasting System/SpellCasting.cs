@@ -146,11 +146,11 @@ namespace Assets.SpellCastingSystem {
                 (oneMore, spellDidHit) = CombatManager.Manager.SpellAttack (caster, target, spell);
 
                 if (oneMore) {
-                    if (target.StatusEffect == StatusConditions.Down) {
-                        target.StatusEffect.SetStatusEffect (StatusConditions.Dizzy);
+                    if (target.StatusEffect == StatusCondition.Down) {
+                        target.StatusEffect.SetStatusEffect (StatusCondition.Dizzy);
                         oneMore = false;
                     } else {
-                        target.StatusEffect.SetStatusEffect (StatusConditions.Down);
+                        target.StatusEffect.SetStatusEffect (StatusCondition.Down);
                         oneMore = true;
                     }
                 }
@@ -163,16 +163,16 @@ namespace Assets.SpellCastingSystem {
 
                 modifier *= ElementalAilmentChance;
 
-                var condition = StatusConditions.None;
+                var condition = StatusCondition.None;
                 switch (spell.Element) {
                     case Elements.Fire:
-                        condition = StatusConditions.Burn;
+                        condition = StatusCondition.Burn;
                         break;
                     case Elements.Ice:
-                        condition = StatusConditions.Freeze;
+                        condition = StatusCondition.Freeze;
                         break;
                     case Elements.Elec:
-                        condition = StatusConditions.Shock;
+                        condition = StatusCondition.Shock;
                         break;
                     default:
                         continue;
@@ -180,7 +180,7 @@ namespace Assets.SpellCastingSystem {
 
                 modifier *= caster.Persona.StatusConditionModifier[condition];
 
-                if (!spellDidHit || condition == StatusConditions.None) {
+                if (!spellDidHit || condition == StatusCondition.None) {
                     continue;
                 }
 

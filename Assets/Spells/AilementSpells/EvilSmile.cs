@@ -5,7 +5,7 @@ namespace Assets.Spells.AilementSpells {
         protected override string Id => "Ailement1";
         public override string Name => "Evil Smile";
         public override bool IsMultitarget => true;
-        public override StatusConditions StatusConditionInflicted => StatusConditions.Fear;
+        public override StatusCondition StatusConditionInflicted => StatusCondition.Fear;
 
     }
 }

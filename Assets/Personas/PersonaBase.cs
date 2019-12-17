@@ -39,7 +39,7 @@ namespace Assets.Personas {
         public IDictionary<Elements, float> ElementDamageModifier;
 
         // To Cast not defend 
-        public IDictionary<StatusConditions, float> StatusConditionModifier;
+        public IDictionary<StatusCondition, float> StatusConditionModifier;
         private IDictionary<Elements, ResistanceModifiers> OriginalResistances;
 
         // TODO: Add ability to buff/debuff resistances
@@ -67,9 +67,9 @@ namespace Assets.Personas {
             var modifiers = elements.Select (s => new KeyValuePair<Elements, float> (s, 1f));
             ElementDamageModifier = modifiers.ToDictionary ();
 
-            StatusConditionModifier = EnumUtils<StatusConditions>.GetValues ()
-                .Where (w => w != StatusConditions.None && w != StatusConditions.Down)
-                .Select (s => new KeyValuePair<StatusConditions, float> (s, 1f))
+            StatusConditionModifier = EnumUtils<StatusCondition>.GetValues ()
+                .Where (w => w != StatusCondition.None && w != StatusCondition.Down)
+                .Select (s => new KeyValuePair<StatusCondition, float> (s, 1f))
                 .ToDictionary ();
 
             SetResistances ();

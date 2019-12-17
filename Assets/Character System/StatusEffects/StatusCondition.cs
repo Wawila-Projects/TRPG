@@ -1,5 +1,5 @@
 namespace Asstes.CharacterSystem.StatusEffects {
-    public enum StatusConditions {
+    public enum StatusCondition {
         None,
         Freeze,
         Burn,
@@ -16,7 +16,6 @@ namespace Asstes.CharacterSystem.StatusEffects {
         Dispair,
         Down,
         Dizzy,
-
     }
 }
 

@@ -5,7 +5,7 @@ namespace Assets.Spells.AilementSpells {
         protected override string Id => "Ailement13";
         public override string Name => "Lullaby";
         public override bool IsMultitarget => true;
-        public override StatusConditions StatusConditionInflicted => StatusConditions.Sleep;
+        public override StatusCondition StatusConditionInflicted => StatusCondition.Sleep;
 
     }
 }

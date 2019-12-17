@@ -9,6 +9,6 @@ namespace Assets.Spells {
         public sealed override string Description =>
             $"Inflicts {StatusConditionInflicted.ToString()} to {(IsMultitarget ? "multiple foes" : "1 foe")}.";
         public float HitChange => IsMultitarget ? 0.3f : 0.4f;
-        public abstract StatusConditions StatusConditionInflicted { get; }
+        public abstract StatusCondition StatusConditionInflicted { get; }
     }
 }

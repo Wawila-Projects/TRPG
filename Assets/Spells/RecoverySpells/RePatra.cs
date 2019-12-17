@@ -10,8 +10,8 @@ namespace Assets.Spells.RecoverySpells
         public override string Description => "Recovers 1 ally from Down or Dizzy status.";
         public override int Cost => 3;
         public override bool IsMultitarget => false;
-        public List<StatusConditions> CureableStatusConditions => new List<StatusConditions> {
-            StatusConditions.Dizzy, StatusConditions.Down, 
+        public List<StatusCondition> CureableStatusConditions => new List<StatusCondition> {
+            StatusCondition.Dizzy, StatusCondition.Down, 
         };
     }
 }
