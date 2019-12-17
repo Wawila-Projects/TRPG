@@ -2,9 +2,9 @@ using Assets.Enums;
 
 namespace Assets.Spells
 {
-    public interface IChanceSpell
+    public interface IInstantKillSpell
     {
         float Chance { get; }
-        bool IsInstaKillSpell { get; }
+        Elements Element { get; }
     }
 }

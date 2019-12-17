@@ -4,7 +4,7 @@ using Assets.Enums;
 
 namespace Assets.Spells.DarknessSpells
 {
-    public class DieForMe : CastableSpell, IChanceSpell, IExclusiveSpell
+    public class DieForMe : CastableSpell, IInstantKillSpell, IExclusiveSpell
     {
         protected override string Id => "Darkness4";
         public override string Name => "Die For Me";
@@ -14,7 +14,6 @@ namespace Assets.Spells.DarknessSpells
         public override bool IsMagical => true;
         public override Elements Element => Elements.Curse;
         public float Chance => 0.6f;
-        public bool IsInstaKillSpell => true;
         public List<string> ExclusiveUnits => new List<string> {
             "Alice"
         };

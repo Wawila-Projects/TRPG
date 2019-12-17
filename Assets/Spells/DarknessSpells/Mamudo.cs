@@ -3,7 +3,7 @@ using Assets.Enums;
 
 namespace Assets.Spells.DarknessSpells
 {
-    public class Mamudo : CastableSpell, IChanceSpell
+    public class Mamudo : CastableSpell, IInstantKillSpell
     {
         protected override string Id => "Darkness1";
         public override string Name => "Mamudo";
@@ -13,7 +13,6 @@ namespace Assets.Spells.DarknessSpells
         public override bool IsMagical => true;
         public override Elements Element => Elements.Curse;
         public float Chance => 0.3f;
-        public bool IsInstaKillSpell => true;
         
     }
 }

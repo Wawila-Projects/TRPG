@@ -4,7 +4,7 @@ using Assets.Enums;
 
 namespace Assets.Spells.LightSpells
 {
-    public class Samsara : CastableSpell, IChanceSpell, IExclusiveSpell
+    public class Samsara : CastableSpell, IInstantKillSpell, IExclusiveSpell
     {
         protected override string Id => "Light4";
         public override string Name => "Samsara";
@@ -14,7 +14,6 @@ namespace Assets.Spells.LightSpells
         public override bool IsMagical => true;
         public override Elements Element => Elements.Bless;
         public float Chance => 0.6f;
-        public bool IsInstaKillSpell => true;
         public List<string> ExclusiveUnits => new List<string> {
             "Daisoujou"
         };

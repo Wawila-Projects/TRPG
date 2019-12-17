@@ -2,7 +2,7 @@ using Assets.Enums;
 
 namespace Assets.Spells.LightSpells
 {
-    public class Hama : CastableSpell, IChanceSpell
+    public class Hama : CastableSpell, IInstantKillSpell
     {
         protected override string Id => "Light0";
         public override string Name => "Hama";
@@ -12,6 +12,5 @@ namespace Assets.Spells.LightSpells
         public override bool IsMagical => true;
         public override Elements Element => Elements.Bless;
         public float Chance => 0.4f;
-        public bool IsInstaKillSpell => true;
     }
 }
