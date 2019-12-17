@@ -22,7 +22,6 @@ namespace Assets.SpellCastingSystem {
         public List<Color> originalColors;
         private SpellCasting<Player> SpellCaster = new SpellCasting<Player>();
 
-
         public string SpellSerialized;
 
         void Update () {
@@ -156,7 +155,7 @@ namespace Assets.SpellCastingSystem {
             SpellTiles.Clear ();
             originalColors.Clear ();
         }
-
+        
         private List<Character> GetTargets (List<Tile> tiles) {
             if (Spell is null) return new List<Character> ();
 
@@ -168,13 +167,18 @@ namespace Assets.SpellCastingSystem {
                 }
 
                 var target = tile.Occupant;
-                if ((Spell is OffensiveSpell || Spell.Element == Elements.Ailment) 
-                    && target is Enemy) {
+                if (target is Player && Spell.Element == Elements.Recovery) {
                     targets.Add (target);
                     continue;
                 }
 
-                if (Spell.Element == Elements.Recovery && target is Player) {
+                if (!(target is Enemy)) continue;
+
+                var isOffensiveSpell = Spell is OffensiveSpell;
+                var isInstantKill = Spell is IInstantKillSpell;
+                var isAilment = Spell.Element == Elements.Ailment;
+
+                if (isOffensiveSpell || isInstantKill || isAilment) {
                     targets.Add (target);
                 }
             }
