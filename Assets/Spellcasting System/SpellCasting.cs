@@ -21,7 +21,11 @@ namespace Assets.SpellCastingSystem {
 
             switch (spell) {
                 case OffensiveSpell offensiveSpell:
-                    oneMore = CastOffensiveSpell (offensiveSpell, caster, targets);
+                    if (spell is IInstantKillSpell chanceSpell) {
+                        oneMore = CastInstantKillSpell (chanceSpell, caster, targets);
+                    } else {
+                        oneMore = CastOffensiveSpell (offensiveSpell, caster, targets);
+                    }
                     break;
                 case AilementSpell ailemenntSpell:
                     CastAilementSpell (ailemenntSpell, caster, targets);
@@ -32,11 +36,9 @@ namespace Assets.SpellCastingSystem {
                 case RecoverySpell _:
                     if (spell is IHealingSpell healingSpell) {
                         CastHealingSpell (healingSpell, caster, targets);
-                    }
-                    if (spell is IReviveSpell reviveSpell && targets[0] is T character) {
-                        CastReviveSpell (reviveSpell, character);
-                    }
-                    if (spell is IAssitSpell assistSpell) {
+                    } else if (spell is IReviveSpell reviveSpell) {
+                        CastReviveSpell (reviveSpell, targets);
+                    } else if (spell is IAssitSpell assistSpell) {
                         CastAssistSpell (assistSpell, targets, spell.Name);
                     }
                     break;
@@ -55,7 +57,7 @@ namespace Assets.SpellCastingSystem {
 
         private void CastAilementSpell (AilementSpell spell, T caster, List<Character> targets) {
             foreach (var target in targets) {
-                var modifier = GetAilmentResistanceModifier (target);
+                var modifier = GetElementResistanceModifier (target);
                 if (modifier == 0) continue;
                 modifier *= caster.Persona.StatusConditionModifier[spell.StatusConditionInflicted];
                 if (!CombatManager.SpellDidHit (caster, target, spell.HitChange * modifier))
@@ -76,21 +78,25 @@ namespace Assets.SpellCastingSystem {
 
         private void CastAssistSpell (IAssitSpell spell, List<Character> targets, string name) {
             foreach (var target in targets) {
-                foreach (var statusConditoin in spell.CureableStatusConditions) {
-                    var succeess = target.StatusEffect.RemoveStatusEffect (statusConditoin);
+                foreach (var statusCondition in spell.CureableStatusConditions) {
+                    var succeess = target.StatusEffect.RemoveStatusEffect (statusCondition);
                     UIFloatingText.Create (succeess ? name : "Miss!", target.gameObject, Elements.Recovery);
                 }
             }
         }
 
-        private void CastReviveSpell (IReviveSpell spell, T target) {
-            if (!target.IsDead) return;
+        private void CastReviveSpell (IReviveSpell spell, List<Character> targets) {
+            foreach (var target in targets) {
+                if (!target.IsDead) {
+                    UIFloatingText.CreateMiss(target.gameObject);
+                    continue;
+                }
+                target.CurrentHP = (int) Math.Ceiling (target.Hp * spell.PercentageLifeRecovered);
+                target.IsDead = false;
+                target.transform.position = target.Location.transform.position;
 
-            target.CurrentHP = (int) Math.Ceiling (target.Hp * spell.PercentageLifeRecovered);
-            target.IsDead = false;
-            target.transform.position = target.Location.transform.position;
-
-            UIFloatingText.Create ($"{target.Name} revived!", target.gameObject, Elements.Recovery);
+                UIFloatingText.Create ($"{target.Name} revived!", target.gameObject, Elements.Recovery);
+            }
         }
 
         private void CastHealingSpell (IHealingSpell spell, T caster, List<Character> targets) {
@@ -108,6 +114,25 @@ namespace Assets.SpellCastingSystem {
                 target.CurrentHP += finalAmount;
                 UIFloatingText.Create ($"+{finalAmount}", target.gameObject, Elements.Recovery);
             }
+        }
+
+        //TODO: Reflect attacks
+        private bool CastInstantKillSpell (IInstantKillSpell spell, T caster, List<Character> targets) {
+            var oneMore = false;
+            foreach (var target in targets) {
+                var accuracy = spell.Chance * GetElementResistanceModifier (target, spell.Element);
+                if (!CombatManager.SpellDidHit (caster, target, accuracy)) {
+                    UIFloatingText.CreateMiss(target.gameObject);
+                    continue;
+                }
+
+                target.CurrentHP = 0;
+                UIFloatingText.Create ((spell as ISpell).Name, target.gameObject, spell.Element);
+                if (target.Persona.Resistances[spell.Element] == ResistanceModifiers.Weak) {
+                    oneMore = true;
+                }
+            }
+            return oneMore;
         }
 
         private bool CastOffensiveSpell (OffensiveSpell spell, T caster, List<Character> targets) {
@@ -133,7 +158,7 @@ namespace Assets.SpellCastingSystem {
                 var resistance = target.Persona.Resistances[spell.Element];
                 if (blockModifiers.Contains (resistance)) continue;
 
-                var modifier = GetAilmentResistanceModifier (target);
+                var modifier = GetElementResistanceModifier (target);
                 if (modifier == 0) continue;
 
                 modifier *= ElementalAilmentChance;
@@ -166,8 +191,8 @@ namespace Assets.SpellCastingSystem {
             return oneMore;
         }
 
-        private float GetAilmentResistanceModifier (Character target) {
-            switch (target.Persona.Resistances[Elements.Ailment]) {
+        private float GetElementResistanceModifier (Character target, Elements element = Elements.Ailment) {
+            switch (target.Persona.Resistances[element]) {
                 case ResistanceModifiers.Weak:
                     return 1.5f;
                 case ResistanceModifiers.Resist:
