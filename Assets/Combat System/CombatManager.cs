@@ -34,7 +34,7 @@ namespace Assets.CombatSystem {
             if (!SpellDidHit(attacker, defender, accuracy/100f)) {
                 attacker.StatusEffect.SetStatusEffect(StatusConditions.Down);
                 attacker.TurnFinished = true;
-                UIFloatingText.Create("Missed", defender.gameObject);
+                UIFloatingText.CreateMiss(defender.gameObject);
                 return;
             }
 
@@ -84,7 +84,7 @@ namespace Assets.CombatSystem {
             if (!attacker.IsInRange (defender)) return (false, false);
             if (!spell.CanBeCasted (attacker)) return (false, false);
             if (!SpellDidHit (attacker, defender, spell.Accuracy)) {
-                UIFloatingText.Create("Missed", defender.gameObject);
+                UIFloatingText.CreateMiss(defender.gameObject);
                 return (false, false);
             }
 

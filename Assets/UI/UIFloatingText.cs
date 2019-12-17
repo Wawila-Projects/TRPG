@@ -59,6 +59,10 @@ namespace Assets.UI {
             StartCoroutine (WaitXSeconds (0.3f));
         }
 
+        public static UIFloatingText CreateMiss(GameObject anchor, Elements? element = null) {
+            return Create("Miss!", anchor, element);
+        }
+
         public static UIFloatingText Create (string text, GameObject anchor, Elements? element = null) {
             if (anchor == null || !anchor.gameObject.activeSelf) return null;
 
