@@ -10,9 +10,9 @@ namespace Assets.Spells.SupportSpells {
         public override int Cost => 30;
         public override bool IsMultitarget => false;
         public override IList<BuffEffect> Effects => new List<BuffEffect> {
-            new AttackEffect(false),
-            new AgilityEffect(false),
-            new DefenceEffect(false)
+            BuffEffect.AttackEffect(false),
+            BuffEffect.AgilityEffect(false),
+            BuffEffect.DefenceEffect(false)
         };
     }
 }

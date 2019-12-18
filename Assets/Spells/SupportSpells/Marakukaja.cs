@@ -11,7 +11,7 @@ namespace Assets.Spells.SupportSpells {
         public override bool IsMultitarget => true;
 
         public override IList<BuffEffect> Effects => new List<BuffEffect> {
-            new DefenceEffect(true)
+            BuffEffect.DefenceEffect(true)
         };
     }
 }

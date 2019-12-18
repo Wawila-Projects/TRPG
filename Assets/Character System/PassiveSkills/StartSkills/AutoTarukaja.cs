@@ -5,10 +5,10 @@ namespace Assets.CharacterSystem.PassiveSkills.StartSkills {
         public override string Name { get; protected set; }
         public override string Description => "Automatic Tarukaja at the start of battle.";
         public override Phase ActivationPhase => Phase.Start;
-        private AttackEffect effect;
+        private BuffEffect effect;
         public AutoTarukaja () {
             Name = "Auto-Tarukaja";
-            effect = new AttackEffect(true);
+            effect = BuffEffect.AttackEffect(true);
         }
 
         public override void Activate (Character character) {

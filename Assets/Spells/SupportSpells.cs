@@ -7,7 +7,7 @@ namespace Assets.Spells {
         protected sealed override string Id => $"SupportSpell_${Name}";
         public abstract IList<BuffEffect> Effects { get; }
         public sealed override Elements Element =>
-            Effects[0].Buff ? Elements.Recovery : Elements.Ailment;
+            Effects[0].Modifier == StatsModifiers.Debuff ? Elements.Ailment : Elements.Recovery;
     }
 
     // public abstract class ShieldSpell : SupportSpell {
