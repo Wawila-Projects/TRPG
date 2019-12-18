@@ -213,18 +213,7 @@ namespace Assets.CombatSystem {
 
         private static float CalculateDamageModifier (Character attacker, Character defender, Elements element = Elements.None) {
             var modifier = 1f;
-            if (attacker.Persona.AttackBuff == StatsModifiers.Buff) {
-                modifier *= 1.6f;
-            } else if (attacker.Persona.AttackBuff == StatsModifiers.Debuff) {
-                modifier /= 1.6f;
-            }
-
-            if (defender.Persona.DefenceBuff == StatsModifiers.Buff) {
-                modifier /= 1.6f;
-            } else if (defender.Persona.DefenceBuff == StatsModifiers.Debuff) {
-                modifier *= 1.6f;
-            }
-
+          
             if (element == Elements.None) {
                 return modifier;
             }

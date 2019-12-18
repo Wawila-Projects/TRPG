@@ -18,17 +18,14 @@ namespace Assets.Personas {
         public IDictionary<Elements, ResistanceModifiers> Resistances { get; protected set; }
         public virtual bool IsPlayerPersona => false;
         protected IDictionary<Statistics, int> Stats;
-        public int Strength => Stats[Statistics.Strength];
-        public int Magic => Stats[Statistics.Magic];
-        public int Endurance => Stats[Statistics.Endurance];
-        public int Agility => Stats[Statistics.Agility];
-        public int Luck => Stats[Statistics.Luck];
+        protected IDictionary < Statistics, (StatsModifiers modifier, int amount) > StatBuffs;
+        public int Strength => Stats[Statistics.Strength] + StatBuffs[Statistics.Strength].amount;
+        public int Magic => Stats[Statistics.Magic] + StatBuffs[Statistics.Magic].amount;
+        public int Endurance => Stats[Statistics.Endurance] + StatBuffs[Statistics.Endurance].amount;
+        public int Agility => Stats[Statistics.Agility] + StatBuffs[Statistics.Agility].amount;
+        public int Luck => Stats[Statistics.Luck] + StatBuffs[Statistics.Luck].amount;
 
         // TODO: Move these to passive skills controller. 
-        public StatsModifiers AttackBuff = StatsModifiers.None;
-        public StatsModifiers DefenceBuff = StatsModifiers.None;
-        public StatsModifiers EvadeBuff = StatsModifiers.None;
-        public StatsModifiers HitBuff = StatsModifiers.None;
         public float CounterChance = 0f;
         public bool MindCharged = false;
         public bool PowerCharged = false;
@@ -119,7 +116,33 @@ namespace Assets.Personas {
             return Level;
         }
 
-        public bool ChangeResistances (Elements element, ResistanceModifiers modifier = ResistanceModifiers.None,
+        public bool BuffStats (Statistics stat, StatsModifiers modifier) {
+            if (modifier == StatsModifiers.None) {
+                StatBuffs[stat] = (modifier, 0);
+                return true;
+            }
+
+            var currentModifier = StatBuffs[stat].modifier;
+            if (currentModifier == modifier) {
+                return true;
+            }
+
+            var currentStat = Stats[stat];
+            if (currentModifier != StatsModifiers.None) {
+                StatBuffs[stat] = (StatsModifiers.None, 0);
+                return false;
+            }
+
+            if (modifier == StatsModifiers.Buff) {
+                StatBuffs[stat] = (modifier, (int) Math.Round (currentStat * 1.3));
+            } else {
+                StatBuffs[stat] = (modifier, (int) Math.Round (currentStat * 0.7));
+            }
+
+            return true;
+        }
+
+        public bool ChangeResistances (Elements element, ResistanceModifiers modifier,
             bool clear = false, bool buff = false, bool debuff = false) {
 
             if (clear) {
