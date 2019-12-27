@@ -10,7 +10,7 @@ namespace Assets.CharacterSystem.PassiveSkills {
         public abstract void Activate (Character character);
         public virtual void Terminate (Character character) {
             IsActive = false;
-            character.PassiveSkills.RemoveSkill(this);
+            character.PassiveSkills.RemoveSkill (this);
         }
 
         public bool Equals (PassiveSkillsBase other) {
@@ -45,7 +45,9 @@ namespace Assets.CharacterSystem.PassiveSkills {
         }
 
         public enum Phase {
-            Start, Turn, End
+            Start,
+            Turn,
+            End
         }
     }
 }

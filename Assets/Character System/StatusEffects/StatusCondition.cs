@@ -6,11 +6,11 @@ namespace Asstes.CharacterSystem.StatusEffects {
         Shock,
         Sleep,
         Rage,
-        Fear,
-        Confusion,
-        Charm,
-        //Exhaustion,
-        Silence,
+        Fear, // Run Away or lose turn
+        Confusion, // P5
+        Charm, // == Brainwash || P3
+        Exhaustion,
+        Silence, // == Forget
         Enervation,
         Distress,
         Dispair,

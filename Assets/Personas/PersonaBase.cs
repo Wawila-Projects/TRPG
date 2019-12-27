@@ -72,6 +72,9 @@ namespace Assets.Personas {
             SetResistances ();
             OriginalResistances = Resistances;
             Stats = GetBaseStats ();
+            StatBuffs = EnumUtils<Statistics>.GetValues ().Select (
+                s => new KeyValuePair < Statistics, (StatsModifiers modifier, int amount) > (s, (StatsModifiers.None, 0))
+            ).ToDictionary ();
 
             StatsKeys = Stats.Keys.Select ((k) => k.ToString ()).ToList ();
             StatsValues = Stats.Values.ToList ();

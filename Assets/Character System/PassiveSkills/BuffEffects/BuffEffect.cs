@@ -86,7 +86,7 @@ namespace Assets.CharacterSystem.PassiveSkills.BuffEffects {
                 name = "Taru";
                 description = "attack";
             }
-            
+
             if (Modifier == StatsModifiers.Buff) {
                 name += "kaja";
                 description = $"Increase {description}";

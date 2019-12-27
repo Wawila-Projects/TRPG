@@ -11,9 +11,9 @@ namespace Assets.CharacterSystem.PassiveSkills {
         public Character Character;
         public IList<PassiveSkillsBase> PassiveSkills { get; private set; } = new List<PassiveSkillsBase> ();
 
-        private IList<PassiveSkillsBase> _startPassiveSkills;
-        private IList<PassiveSkillsBase> _turnPassiveSkills;
-        private IList<PassiveSkillsBase> _endPassiveSkills;
+        private LinkedList<PassiveSkillsBase> _startPassiveSkills;
+        private LinkedList<PassiveSkillsBase> _turnPassiveSkills;
+        private LinkedList<PassiveSkillsBase> _endPassiveSkills;
 
         private void Awake () {
             if (Character == null) {
@@ -32,18 +32,19 @@ namespace Assets.CharacterSystem.PassiveSkills {
             PassiveSkills.Add (skill);
             switch (skill.ActivationPhase) {
                 case Phase.Start:
-                    _startPassiveSkills.Add (skill);
+                    _startPassiveSkills.AddLast (skill);
                     break;
                 case Phase.Turn:
-                    _turnPassiveSkills.Add (skill);
+                    _turnPassiveSkills.AddLast (skill);
                     break;
                 case Phase.End:
-                    _endPassiveSkills.Add (skill);
+                    _endPassiveSkills.AddLast (skill);
                     break;
             }
         }
         public void RemoveSkill (PassiveSkillsBase skill) {
-            PassiveSkills.Remove (skill);
+            if (!PassiveSkills.Remove (skill)) return;
+
             switch (skill.ActivationPhase) {
                 case Phase.Start:
                     _startPassiveSkills.Remove (skill);
@@ -59,20 +60,20 @@ namespace Assets.CharacterSystem.PassiveSkills {
         public void SetUp (IList<PassiveSkillsBase> skills) {
             PassiveSkills = skills;
 
-            _startPassiveSkills = PassiveSkills.Where (
+            _startPassiveSkills = new LinkedList<PassiveSkillsBase> (PassiveSkills.Where (
                 (s) => s.ActivationPhase == Phase.Start
-            ).ToList ();
+            ));
 
-            _turnPassiveSkills = PassiveSkills.Where (
+            _turnPassiveSkills = new LinkedList<PassiveSkillsBase> (PassiveSkills.Where (
                 (s) => s.ActivationPhase == Phase.Turn
-            ).ToList ();
+            ));
 
-            _endPassiveSkills = PassiveSkills.Where (
+            _endPassiveSkills = new LinkedList<PassiveSkillsBase> (PassiveSkills.Where (
                 (s) => s.ActivationPhase == Phase.End
-            ).ToList ();
+            ));
         }
 
-        public void ClearSkills() {
+        public void ClearSkills () {
             for (int i = PassiveSkills.Count - 1; i >= 0; i--) {
                 PassiveSkills[i].Terminate (Character);
             }
@@ -82,16 +83,18 @@ namespace Assets.CharacterSystem.PassiveSkills {
         public void HandleTurnSkills (bool activate) => HandleSkill (_turnPassiveSkills, activate);
         public void HandleEndSkills (bool activate) => HandleSkill (_endPassiveSkills, activate);
 
-        private void HandleSkill (IList<PassiveSkillsBase> skills, bool activate) {
-            if (activate) {
-                foreach (var skill in skills) {
-                    skill.Activate (Character);
-                }
-                return;
-            }
+        private void HandleSkill (LinkedList<PassiveSkillsBase> skills, bool activate) {
+            if (skills is null || skills.IsEmpty ()) return;
 
-            for (int i = skills.Count - 1; i >= 0; i--) {
-                skills[i].Terminate (Character);
+            var node = skills.First;
+            while (node != null) {
+                var next = node.Next;
+                if (activate) {
+                    node.Value.Activate (Character);
+                } else {
+                    node.Value.Terminate (Character);
+                }
+                node = next;
             }
         }
     }
