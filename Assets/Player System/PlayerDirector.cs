@@ -1,25 +1,33 @@
-using System.Linq;
 using System.Collections.Generic;
+using System.Linq;
 using Assets.GameSystem;
+using Assets.Utils;
 using UnityEngine;
 
-namespace Assets.PlayerSystem
-{
-    public class PlayerDirector: MonoBehaviour
-    {
+namespace Assets.PlayerSystem {
+    [RequireComponent (typeof (TurnManager))]
+    [RequireComponent (typeof (GameController))]
+    public class PlayerDirector : MonoBehaviour {
         public List<Player> Players;
+        public TurnManager TurnManager;
+        public GameController GameController;
 
-        void Update()
-        {
-           Players = GameController.Manager?.Players ?? new List<Player>();
+        void Start () {
+            Players = GameController.Players;
+        }
 
-            if (!TurnManager.Manager?.PlayerPhase ?? true)
+        void Update () {
+            if (Players.IsEmpty ()) {
+                Players = GameController.Manager.Players;
+            }
+
+            if (!TurnManager.PlayerPhase || Players.IsEmpty ())
                 return;
 
-            var finishedPlayers = Players.All(p => p.TurnFinished);
-            
-            if (finishedPlayers)
-                TurnManager.Manager.NextTurn();
+            var finishedPlayers = Players.All (p => p.TurnFinished);
+
+            if (finishedPlayers && TurnManager.PlayerPhase)
+                TurnManager.NextTurn ();
         }
     }
 }

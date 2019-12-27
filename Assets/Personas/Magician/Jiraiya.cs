@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using Assets.Spells;
 using Assets.Spells.SpellLexicon;
 using Assets.Enums;
+using Assets.Spells.AilementSpells;
 
 namespace Assets.Personas.Magician {
     public class Jiraiya : PersonaBase
@@ -36,6 +37,7 @@ namespace Assets.Personas.Magician {
         {
             return new List<ISpell> {
                 SpellLexicon.Wind.Garu, 
+                new Lullaby(),
                 SpellLexicon.Physical.Bash, 
             };
         }

@@ -200,6 +200,9 @@ namespace Assets.CharacterSystem
                     while (path.Count != totalSteps) 
                         path.Remove(path.Last());
                 }
+                
+                if (path.Count == 0) continue;
+
                 var tile = path.Last();
                 if (tile.Occupant != null)
                     continue;

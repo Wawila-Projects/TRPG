@@ -3,6 +3,7 @@ using Assets.Spells;
 using Assets.Spells.SpellLexicon;
 using Assets.Enums;
 using Assets.CharacterSystem.PassiveSkills.RecoverySkills;
+using Assets.CharacterSystem.PassiveSkills.EndSkills;
 
 namespace Assets.Personas.Fool {
     public class Izanagi : PersonaBase
@@ -39,7 +40,8 @@ namespace Assets.Personas.Fool {
             return new List<ISpell> {
                 SpellLexicon.Elec.Zio, 
                 SpellLexicon.Physical.Cleave, 
-                Invigorate.GetInvigorate(Invigorate.Options.One)
+                Invigorate.GetInvigorate(Invigorate.Options.One), 
+                new VictoryCry()
             };
         }
 

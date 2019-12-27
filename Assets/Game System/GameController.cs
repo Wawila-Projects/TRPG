@@ -1,48 +1,41 @@
 using System.Collections.Generic;
-using System.Linq;
 using Assets.EnemySystem;
 using Assets.PlayerSystem;
-using Assets.CharacterSystem;
-using UnityEngine;
+using Assets.Scenes;
 using Assets.UI;
+using UnityEngine;
 
-namespace Assets.GameSystem
-{
-    public class GameController : MonoBehaviour
-    {
-        public static GameController Manager {get; private set;}
+namespace Assets.GameSystem {
+
+    [RequireComponent (typeof (CombatScene))]
+    public class GameController : MonoBehaviour {
+        public static GameController Manager { get; private set; }
 
         public UiManager UIManager;
+        public CombatScene Scene;
 
-        public List<Player> Players
-        {
-            get { return _players; }
-            set { _players = new List<Player>(value.OrderByDescending(p => p.Persona.Agility)); }
-        }
+        public List<Player> Players { get; private set; } = new List<Player> ();
 
-        public List<Enemy> Enemies
-        {
-            get { return _enemies; }
-            set { _enemies = new List<Enemy>(value.OrderByDescending(p => p.Persona.Agility)); }
-        }
+        public List<Enemy> Enemies { get; private set; } = new List<Enemy> ();
 
-        [SerializeField]
-        private List<Player> _players = new List<Player>();
-
-        [SerializeField]
-        private List<Enemy> _enemies = new List<Enemy>();
-
-        void Awake()
-        {
+        void Awake () {
             Manager = this;
+
+            foreach(var character in Scene.Characters) {
+                if (character is Player player) {
+                    Players.Add(player);
+                }
+                
+                if (character is Enemy enemy) {
+                    Enemies.Add(enemy);
+                }
+            }
         }
 
-        void Start () 
-        {
+        void Start () {
             ///TODO: Temporary Fix
-            foreach (var enemy in Enemies)
-            {
-                enemy.AI.Hivemind.ResetHivemind();
+            foreach (var enemy in Enemies) {
+                enemy.AI.Hivemind.ResetHivemind ();
             }
 
         }

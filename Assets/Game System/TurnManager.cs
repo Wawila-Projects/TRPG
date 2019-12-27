@@ -1,22 +1,28 @@
 ﻿using System.Collections;
+using System.Linq;
 using Assets.CharacterSystem;
-using Asstes.CharacterSystem.StatusEffects;
+using Assets.Utils;
 using UnityEngine;
 
 namespace Assets.GameSystem {
+
+    [RequireComponent (typeof (GameController))]
     public sealed class TurnManager : MonoBehaviour {
 
         public static TurnManager Manager { get; private set; }
 
+        public GameController GameController;
+
         public uint TurnCounter;
-        public uint PlayerTurnCounter;
-        public uint EnemyTurnCounter;
 
         public bool PlayerPhase => TurnCounter % 2 != 0;
         public bool EnemyPhase => TurnCounter % 2 == 0;
 
         void Awake () {
             Manager = this;
+            if (GameController is null) {
+                GameController = GetComponent<GameController> ();
+            }
         }
 
         void Start () {
@@ -27,11 +33,11 @@ namespace Assets.GameSystem {
         }
 
         public void StartRound () {
-            foreach (var player in GameController.Manager.Players) {
+            foreach (var player in GameController.Players) {
                 player.PassiveSkills.HandleStartSkills (true);
             }
 
-            foreach (var enemy in GameController.Manager.Enemies) {
+            foreach (var enemy in GameController.Enemies) {
                 enemy.PassiveSkills.HandleStartSkills (true);
             }
 
@@ -40,18 +46,20 @@ namespace Assets.GameSystem {
 
         public IEnumerator EndRound () {
             yield return new WaitUntil (
-                () => GameController.Manager.Enemies.TrueForAll (
+                () =>
+                !GameController.Enemies.IsEmpty () &&
+                GameController.Enemies.TrueForAll (
                     e => e.IsDead
                 )
             );
 
             Debug.Log ("Comabt Finished");
-            foreach (var player in GameController.Manager.Players) {
+            foreach (var player in GameController.Players) {
                 player.PassiveSkills.HandleEndSkills (true);
                 player.PassiveSkills.ClearSkills ();
             }
 
-            foreach (var enemy in GameController.Manager.Enemies) {
+            foreach (var enemy in GameController.Enemies) {
                 enemy.PassiveSkills.HandleEndSkills (true);
                 enemy.PassiveSkills.ClearSkills ();
             }
@@ -60,36 +68,23 @@ namespace Assets.GameSystem {
         }
 
         public void NextTurn () {
+            var characters = PlayerPhase ?
+                GameController.Players.Cast<Character> () :
+                GameController.Enemies.Cast<Character> ();
+
+            foreach (var character in characters) {
+                NewTurn (character);
+            }
+
             ++TurnCounter;
-            Debug.Log ($"Turn: {TurnCounter}");
-
-            if (PlayerPhase) {
-                ++PlayerTurnCounter;
-                foreach (var player in GameController.Manager.Players) {
-                    NewTurn (player);
-                }
-                return;
-            }
-
-            ++EnemyTurnCounter;
-            foreach (var enemy in GameController.Manager.Enemies) {
-                NewTurn (enemy);
-            }
+            Debug.Log ($"Turn: {TurnCounter} {PlayerPhase}");
             return;
 
             void NewTurn (Character character) {
                 character.ResetOneMore ();
-
-                if (character.StatusEffect == StatusCondition.Dizzy ||
-                    character.IsDead) {
-                    character.CurrentMovement = 0;
-                    character.TurnFinished = true;
-                    return;
-                }
-
-                character.PassiveSkills.HandleTurnSkills (true);
                 character.TurnFinished = false;
                 character.CurrentMovement = character.Movement;
+                character.PassiveSkills.HandleTurnSkills (true);
             }
         }
     }

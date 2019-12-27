@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using Assets.Spells;
 using Assets.Spells.SpellLexicon;
 using Assets.Enums;
+using Assets.Spells.AilementSpells;
 
 namespace Assets.Personas.Star {
     public class KintokiDouji : PersonaBase
@@ -37,6 +38,7 @@ namespace Assets.Personas.Star {
         {
             return new List<ISpell> {
                 SpellLexicon.Ice.Bufu, 
+                new Lullaby(),
                 SpellLexicon.Recovery.Dia, 
             };
         }
