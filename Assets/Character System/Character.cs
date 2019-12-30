@@ -73,6 +73,7 @@ namespace Assets.CharacterSystem
             PassiveSkills.HandleStartSkills(false);
             PassiveSkills.HandleTurnSkills(false);
             PassiveSkills.HandleEndSkills(false);
+            TurnFinished = true;
          }
         
         void Awake() {
@@ -131,6 +132,7 @@ namespace Assets.CharacterSystem
 
         public void ResetOneMore() {
             OneMore = (false, 0);
+            TurnFinished = true;
         }
 
         public Character ClonePlayer()

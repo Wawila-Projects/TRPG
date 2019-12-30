@@ -88,7 +88,7 @@ namespace Assets.SpellCastingSystem {
         private void CastReviveSpell (IReviveSpell spell, List<Character> targets) {
             foreach (var target in targets) {
                 if (!target.IsDead) {
-                    UIFloatingText.CreateMiss(target.gameObject);
+                    UIFloatingText.CreateMiss (target.gameObject);
                     continue;
                 }
                 target.CurrentHP = (int) Math.Ceiling (target.Hp * spell.PercentageLifeRecovered);
@@ -122,13 +122,14 @@ namespace Assets.SpellCastingSystem {
             foreach (var target in targets) {
                 var accuracy = spell.Chance * GetElementResistanceModifier (target, spell.Element);
                 if (!CombatManager.SpellDidHit (caster, target, accuracy)) {
-                    UIFloatingText.CreateMiss(target.gameObject);
+                    UIFloatingText.CreateMiss (target.gameObject);
                     continue;
                 }
 
                 target.CurrentHP = 0;
                 UIFloatingText.Create ((spell as ISpell).Name, target.gameObject, spell.Element);
-                if (target.Persona.Resistances[spell.Element] == ResistanceModifiers.Weak) {
+                if (target.Persona.Resistances[spell.Element] == ResistanceModifiers.Weak &&
+                    target.StatusEffect < StatusCondition.Down) {
                     oneMore = true;
                 }
             }
@@ -136,33 +137,32 @@ namespace Assets.SpellCastingSystem {
         }
 
         private bool CastOffensiveSpell (OffensiveSpell spell, T caster, List<Character> targets) {
-            var blockModifiers = new List<ResistanceModifiers> () {
+            var blockModifiers = new List<ResistanceModifiers> (3) {
                 ResistanceModifiers.Block, ResistanceModifiers.Absorb, ResistanceModifiers.Reflect
             };
 
             var oneMore = false;
             foreach (var target in targets) {
                 bool spellDidHit;
-                (oneMore, spellDidHit) = CombatManager.Manager.SpellAttack (caster, target, spell);
+                (oneMore,  spellDidHit) = CombatManager.Manager.SpellAttack (caster, target, spell);
 
                 if (oneMore) {
                     if (target.StatusEffect == StatusCondition.Down) {
                         target.StatusEffect.SetStatusEffect (StatusCondition.Dizzy);
                         oneMore = false;
-                    } else {
+                    } else if (target.StatusEffect != StatusCondition.Dizzy) {
                         target.StatusEffect.SetStatusEffect (StatusCondition.Down);
                         oneMore = true;
+                    } else {
+                        oneMore = false;
                     }
                 }
 
-                var resistance = target.Persona.Resistances[spell.Element];
-                if (blockModifiers.Contains (resistance)) continue;
+                InflictElementalAilment(target, spellDidHit);                
+            }
+            return oneMore;
 
-                var modifier = GetElementResistanceModifier (target);
-                if (modifier == 0) continue;
-
-                modifier *= ElementalAilmentChance;
-
+            void InflictElementalAilment(Character target, bool spellDidHit) {
                 var condition = StatusCondition.None;
                 switch (spell.Element) {
                     case Elements.Fire:
@@ -175,20 +175,26 @@ namespace Assets.SpellCastingSystem {
                         condition = StatusCondition.Shock;
                         break;
                     default:
-                        continue;
+                        return;
                 }
+                
+                var resistance = target.Persona.Resistances[spell.Element];
+                if (blockModifiers.Contains (resistance)) return;
 
+                var modifier = GetElementResistanceModifier (target);
+                if (modifier == 0) return;
+                
+                modifier *= ElementalAilmentChance;
                 modifier *= caster.Persona.StatusConditionModifier[condition];
 
                 if (!spellDidHit || condition == StatusCondition.None) {
-                    continue;
+                    return;
                 }
 
                 if (CombatManager.SpellDidHit (caster, target, modifier)) {
                     target.StatusEffect.SetStatusEffect (condition);
                 }
             }
-            return oneMore;
         }
 
         private float GetElementResistanceModifier (Character target, Elements element = Elements.Ailment) {

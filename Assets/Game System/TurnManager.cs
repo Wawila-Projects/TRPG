@@ -78,7 +78,6 @@ namespace Assets.GameSystem {
 
             ++TurnCounter;
             Debug.Log ($"Turn: {TurnCounter} {PlayerPhase}");
-            return;
 
             void NewTurn (Character character) {
                 character.ResetOneMore ();

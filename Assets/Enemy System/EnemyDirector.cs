@@ -38,10 +38,13 @@ namespace Assets.EnemySystem {
 
         private IEnumerator EnemyAct () {
             EnemiesActing = true;
-            Enemies.RemoveNull ();
             foreach (var enemy in Enemies) {
-                if (enemy.IsDead || enemy.TurnFinished)
+                if (enemy is null) continue;
+                
+                if (enemy.IsDead || enemy.TurnFinished) {
+                    enemy.TurnFinished = true;
                     continue;
+                }
 
                 enemy.Act ();
                 yield return new WaitUntil (() => enemy.TurnFinished);

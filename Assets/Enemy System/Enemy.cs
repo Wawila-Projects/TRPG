@@ -7,7 +7,6 @@ using Assets.CombatSystem;
 using Assets.GameSystem;
 using Assets.PlayerSystem;
 using Assets.SpellCastingSystem;
-using Assets.Spells;
 using Assets.Utils;
 using UnityEngine;
 
@@ -19,20 +18,20 @@ namespace Assets.EnemySystem {
         public Player Target;
         public bool IsBoss;
         public bool IsMoving;
-        public SpellCasting<Enemy> SpellCasting = new SpellCasting<Enemy>();
+        public SpellCasting<Enemy> SpellCasting = new SpellCasting<Enemy> ();
 
-        protected override void OnAwake() => AI = new EnemyAI(this, EnemyAI.EnemyTargetCategory.Closest);
+        protected override void OnAwake () => AI = new EnemyAI (this, EnemyAI.EnemyTargetCategory.Closest);
 
         public override void Die () {
-            base.Die();
+            base.Die ();
 
             Location.Occupant = null;
             Location = null;
-            gameObject.SetActive(false);
+            gameObject.SetActive (false);
 
             var enemyStatus = GameController.Manager.UIManager.EnemyStatus;
             if (enemyStatus.Anchor == gameObject) {
-                enemyStatus.Hide();
+                enemyStatus.Hide ();
             }
         }
 
@@ -54,22 +53,22 @@ namespace Assets.EnemySystem {
             // if (ai.action == EnemyAI.EnemyActions.Disengage) {
 
             // } else {
-                
+
             // } 
 
-            var tileInRange = MoveToRange(ai.target);
+            var tileInRange = MoveToRange (ai.target);
 
             while (tileInRange == null && CurrentMovement > 0) {
-                if (IsInRange(Target)) break;
+                if (IsInRange (Target)) break;
 
                 --CurrentMovement;
-                tileInRange = MoveToRange(ai.target);
+                tileInRange = MoveToRange (ai.target);
             }
 
-            if (tileInRange == null && !IsInRange(Target)) {
+            if (tileInRange == null && !IsInRange (Target)) {
                 IsSurrounded = false;
                 TurnFinished = true;
-                Debug.Log($"{Name} did NOTHING!");
+                Debug.Log ($"{Name} did NOTHING!");
                 return;
             }
 
@@ -80,44 +79,40 @@ namespace Assets.EnemySystem {
                     return;
                 }
 
-                HandleAttack();
+                HandleAttack ();
 
                 IsSurrounded = false;
                 if (OneMore.isActive) {
-                    Act();
-                    Debug.Log($"{Name} One More!!");
+                    Act ();
                 } else {
                     TurnFinished = true;
                 }
             });
 
-
-            void HandleAttack ()
-            {
-                if (ai.action == EnemyAI.EnemyActions.BasicAttack && IsInMeleeRange(Target)) {
-                    CombatManager.Manager.BasicAttack(this, Target);
+            void HandleAttack () {
+                if (ai.action == EnemyAI.EnemyActions.BasicAttack && IsInMeleeRange (Target)) {
+                    CombatManager.Manager.BasicAttack (this, Target);
                     return;
                 }
 
-                if (ai.action != EnemyAI.EnemyActions.SpellAttack || !IsInRange(Target)) {
+                if (ai.action != EnemyAI.EnemyActions.SpellAttack || !IsInRange (Target)) {
                     return;
                 }
 
-                var spell = ai.possibleSpells.GetRandomValue();
+                var spell = ai.possibleSpells.GetRandomValue ();
 
                 var targets = new List<Character> () {
                     Target
                 };
 
                 if (spell.IsMultitarget) {
-                    targets = Target.Location.Neighbors.Where(
-                        w => w.IsOccupied && w.Occupant.GetType() == Target.GetType()
-                    )
-                    .Select(s => s.Occupant)
-                    .ToList();
+                    targets = Target.Location.Neighbors.Where (
+                            w => w.IsOccupied && w.Occupant.GetType () == Target.GetType ()
+                        )
+                        .Select (s => s.Occupant).ToList ();
                 }
-                
-                SpellCasting.CastSpell(spell, this, targets);
+
+                SpellCasting.CastSpell (spell, this, targets);
             }
         }
 

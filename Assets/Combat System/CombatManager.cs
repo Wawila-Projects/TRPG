@@ -72,7 +72,7 @@ namespace Assets.CombatSystem {
             if (resistance == ResistanceModifiers.Weak || didCritical) {
                 if (defender.StatusEffect == StatusCondition.Down) {
                     defender.StatusEffect.SetStatusEffect (StatusCondition.Dizzy);
-                } else {
+                } else if (defender.StatusEffect != StatusCondition.Dizzy) {
                     defender.StatusEffect.SetStatusEffect (StatusCondition.Down);
                     attacker.AddOneMore ();
                 }

@@ -34,7 +34,11 @@ namespace Assets.EnemySystem {
             Enemy = enemy;
 
             if (actionProbabilities == null || actionProbabilities?.IsEmpty () == true) {
-                ActionProbability = new Probability<EnemyActions> (new Dictionary<EnemyActions, int> () { { EnemyActions.BasicAttack, 20 }, { EnemyActions.SpellAttack, 40 }, { EnemyActions.MultitargetSpellAttack, 10 }, { EnemyActions.TargetWeakness, 20 }, { EnemyActions.FindWeakness, 10 },
+                ActionProbability = new Probability<EnemyActions> (
+                    new Dictionary<EnemyActions, int> () { 
+                        { EnemyActions.BasicAttack, 20 }, { EnemyActions.SpellAttack, 40 }, 
+                        { EnemyActions.MultitargetSpellAttack, 10 }, { EnemyActions.TargetWeakness, 20 }, 
+                        { EnemyActions.FindWeakness, 10 },
                 });
                 return;
             }
@@ -280,7 +284,6 @@ namespace Assets.EnemySystem {
             Debuff,
             Disengage,
             Stay,
-            // AllOutAttackPosition,
         }
     }
 }
